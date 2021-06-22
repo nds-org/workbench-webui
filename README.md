@@ -1,62 +1,46 @@
-# NDS Labs Web Interface
+# Getting Started with Create React App
 
-## Prerequisites
-* [Git](https://git-scm.com/)
-* [Docker](https://www.docker.com/)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Available Scripts
 
-## Clone this Repository
-Clone the source repo onto your local machine:
-```bash
-git clone https://github.com/nds-org/ndslabs
-cd ndslabs/gui/
-```
+In the project directory, you can run:
 
+### `yarn start`
 
-## Building the Image
-The ndslabs/angular-ui image is built using the following command:
-```bash
-docker build -t ndslabs/angular-ui .
-```
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-## Running the Image
-The ndslabs/angular-ui image is not supported in raw Docker, as we usually run it via [Kubernetes specs](https://github.com/nds-org/ndslabs-deploy-tools/tree/master/FILES.deploy-tools/usr/local/lib/ndslabs/ansible/roles/ndslabs-api-gui/templates).
+### `yarn test`
 
-If you want to try to run it in Docker, it can be run using the following command:
-```bash
-# Set these variables to point to a running API server instance
-APISERVER_HOST=
-APISERVER_PORT=
-APISERVER_PATH=
-docker run --name ndslabs-webui -it -d \
-           -p 80:8080 \
-           -e APISERVER_HOST=${APISERVER_HOST} \
-           -e APISERVER_PORT=${APISERVER_PORT} \
-           -e APISERVER_PATH=${APISERVER_PATH} \
-           ndslabs/angular-ui
-```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-NOTE: You may need to adjust the **CORS_ORIGIN_ADDR** of your API server in order to access it from this client, depending on your configuration.
+### `yarn build`
 
-## Running the Development Environment
-For a cloud-based Node.js developer environment, you can run the following commands:
-```bash
-docker run --name cloud9 -it -d \
-           -p 8080:80 \
-           -v `pwd`:/workspace \
-           ndslabs/cloud9-nodejs
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-WARNING: It is not advised to run this on a publicly exposed port, as the built-in basic auth is broken.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Regenerate Swagger API
-You can use Grunt to regenerate the AngularJS REST API client code from a Swagger API spec.
+### `yarn eject`
 
-Usage:
-```bash
-grunt swagger-js-codegen
-```
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-The spec from your local working copy of [swagger.yaml](swagger.yaml) will be used to produce `shared/ndslabs-api.js`, which contains the generated code comprising the NdsLabsApi module for AngularJS.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).

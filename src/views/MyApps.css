@@ -1,0 +1,10 @@
+
+.container {
+    height: 89vh;
+    overflow: auto;
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}

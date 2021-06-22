@@ -1,0 +1,23 @@
+.bg-light {
+    background-color: #f8f9fa!important;
+}
+.py-3 {
+    padding-top: 1rem!important;
+    padding-bottom: 1rem!important;
+}
+
+.mt-auto {
+    margin-top: auto!important;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+/* user agent stylesheet */
+footer {
+   width: 100%;
+   bottom: 0;
+   position: fixed;
+   height: 6vh;
+   display: block;
+}
