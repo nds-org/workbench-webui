@@ -1,0 +1,18 @@
+@import '~src/assets/sass/mixin/bem';
+@import '~src/assets/sass/layout/page';
+
+@include page_layout;
+
+.accordion-item {
+  margin: 30px;
+  border: 1px solid black;
+  border-radius: 20px;
+}
+
+.accordion-header, .accordion-button, .accordion-body {
+  border-radius: 20px !important;
+}
+
+.accordion-header[aria-expanded='true'] {
+  border-radius: 0 0 20px 20px !important;
+}

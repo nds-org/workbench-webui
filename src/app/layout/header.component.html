@@ -1,0 +1,45 @@
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" routerLink="/" routerLinkActive="active"><img alt="" width="30" height="24" src="assets/img/wholetale_logo_sm.png">Workbench</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{ 'active':currentRoute==='/all-apps' }" routerLink="/all-apps" routerLinkActive="active" href="#" [attr.aria-current]="currentRoute==='/all-apps' ? 'page' : ''">All Apps</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{ 'active':currentRoute==='/my-apps' }" routerLink="/my-apps" routerLinkActive="active" href="#" [attr.aria-current]="currentRoute==='/my-apps' ? 'page' : ''">My Apps</a>
+                </li>
+                <!--<li class="nav-item">
+                    <a class="nav-link" [ngClass]="{ 'active':currentRoute==='/settings' }" routerLink="/settings" routerLinkActive="active" href="#" [attr.aria-current]="currentRoute==='/settings' ? 'page' : ''">Settings</a>
+                </li>-->
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <form class="d-flex">
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="darkTheme">{{ enableDarkMode ? 'Dark Theme' : 'Default Theme' }}</label>
+                        <input name="darkTheme" id="darkTheme" class="form-check-input" type="checkbox" id="darkTheme" [(ngModel)]="enableDarkMode" />
+                    </div>
+                </form>
+                <li class="nav-item" title="Users' Guide">
+                    <a target="_blank" class="nav-link" href="#"><i class="fas fa-info-circle"></i></a>
+                </li>
+                <li class="nav-item" title="Report a Problem">
+                    <a target="_blank" class="nav-link" href="#"><i class="fas fa-bug"></i></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fas fas-user"></i> User Name
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <!--<li><a class="dropdown-item" href="#" routerLink="/settings" routerLinkActive="active">Settings</a></li>-->
+                        <li><a class="dropdown-item" href="#" (click)="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

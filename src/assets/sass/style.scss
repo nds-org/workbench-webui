@@ -1,0 +1,44 @@
+@import '~@angular/material/theming';
+@import 'func/color';
+@import 'mixin/typography';
+@import 'shared/reset';
+@import 'shared/mat-button.reset';
+@import 'shared/typography';
+@import 'shared/root';
+@import 'shared/splash-screen';
+
+@include mat-core;
+$theme: mat-light-theme($primary, $accent, $warn);
+
+@include angular-material-theme($theme);
+
+body {
+  @include font(#{$h4}/ 1.429 $font--preferred);
+
+  background: c(grey, gallery);
+}
+
+@import './theme';
+
+.clickable {
+  cursor: pointer;
+}
+
+.not.clickable {
+  cursor: not-allowed;
+}
+
+.mat-dialog-container {
+  overflow: unset !important;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}

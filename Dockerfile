@@ -1,47 +1,32 @@
+# Docker image for WT production build.
 #
-# Build: docker build -t ndslabs/angular-ui .
+# Build: docker build -t bodom0015/ng-dashboard:wt -f Dockerfile .
+# Usage: docker run --rm -it bodom0015/ng-dashboard:wt
 #
-FROM ndslabs/ng-base:latest
+# Optionally: mount in -v /path/to/src/wt-ng-dash/dist:/usr/share/nginx/html/
+#   for live updates during development
+#
 
-# Set build information here before building (or at build time with --build-args version=X.X.X)
-ARG version="1.2.0"
+# Perform build in the "nodebuild" container
+FROM node:fermium as nodebuild
+WORKDIR /srv/app/
+ARG NODE_OPTIONS=--max-old-space-size=4096
+ARG TIMEOUT=360000
 
-# Set up necessary environment variables
-ENV DEBIAN_FRONTEND="noninteractive" \
-    TERM="xterm" \
-    NODE_ENV="production" \
-    BASEDIR="/home"
+# Install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --network-timeout=${TIMEOUT} && \
+    yarn cache clean
 
-# Copy in our app source
-WORKDIR $BASEDIR
-COPY . $BASEDIR/
+# Perform an Angular production build
+COPY . ./
+RUN ./node_modules/@angular/cli/bin/ng build --prod --no-aot --build-optimizer false
 
-# Update build date / version number and enable backports
-RUN /bin/sed -i -e "s#^\.constant('BuildVersion', '.*')#.constant('BuildVersion', '${version}')#" "$BASEDIR/ConfigModule.js" && \
-    /bin/sed -i -e "s#^\.constant('BuildDate', .*)#.constant('BuildDate', new Date('$(date)'))#" "$BASEDIR/ConfigModule.js"
-
-# Install app dependencies
-RUN npm install && \
-    grunt swagger-js-codegen
-
-# Set up some default environment variable
-ENV APISERVER_HOST="localhost" \
-    APISERVER_PORT="443" \
-    APISERVER_PATH="/api" \
-    APISERVER_SECURE="true" \
-    ANALYTICS_ACCOUNT="" \
-    SHOW_CONSOLE="true" \
-    SHOW_CONFIG="false" \
-    SHOW_LOGS="false" \
-    SHOW_IMPORT_SPEC="false" \
-    SHOW_CREATE_SPEC="false" \
-    SHOW_FILE_MANAGER="false" \
-    SHOW_EDIT_SERVICE="false" \
-    SHOW_SVC_HELP_ICON="false" \
-    SUPPORT_EMAIL="ndslabs-support@nationaldataservice.org"
-
-# Expose port 3000 for ExpressJS
-EXPOSE 3000
-
-# The command to run our app when the container is run
-CMD [ "./entrypoint.sh" ]
+# Copy built artifacts from "nodebuild" to nginx
+FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=nodebuild /srv/app/dist/* /usr/share/nginx/html/
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]

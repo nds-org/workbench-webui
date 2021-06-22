@@ -1,0 +1,104 @@
+@import '~src/assets/sass/mixin/bem';
+@import '~src/assets/sass/layout/card';
+@import '~src/assets/sass/layout/page';
+
+@include page_layout;
+@include card_layout;
+
+.card_header {
+  @include el('image') {
+    background-image: url('https://avatars3.githubusercontent.com/u/19705696');
+    background-size: cover;
+  }
+}
+
+.banner {
+  width: 100%;
+}
+
+.banner-image {
+  //background-image: url(../../assets/img/login-backdrop.png);
+  background-size: cover;
+  background-image: url('../../assets/img/catalog-banner.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding-top: 100px;
+  padding-bottom: 40px;
+  position: static;
+}
+
+.banner-text {
+  color: white;
+}
+
+:host {
+  margin: 0;
+  padding: 0;
+}
+
+.col-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+/* input color class */
+::ng-deep input.mat-input-element {
+  color: #FFFFFF;
+  --placeHolder-color: #FFFFFF;
+}
+
+mat-form-field input::placeholder {
+  color: var(--placeHolder-color) !important;
+}
+
+mat-form-field input::-webkit-input-placeholder { /* Edge */
+  color: var(--placeHolder-color) !important;
+}
+
+mat-form-field input::-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: var(--placeHolder-color) !important;
+}
+
+mat-form-field input::-moz-placeholder {
+  color: var(--placeHolder-color) !important;
+}
+
+mat-form-field input:-moz-placeholder {
+  color: var(--placeHolder-color) !important;
+}
+
+//* input color class */
+::ng-deep input.mat-input-element {
+  color: #FFFFFF;
+  caret-color: #FFFFFF;
+}
+
+/* Change label color on focused */
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+  color: #FFFFFF !important;
+}
+
+/* underline border color on focused */
+::ng-deep .mat-focused .mat-form-field-underline .mat-form-field-ripple{
+  background-color: #FFFFFF !important;
+}
+
+/* Change label color on focused */
+::ng-deep .mat-form-field .mat-form-field-label {
+  color: #FFFFFF !important;
+}
+
+/* underline border color on focused */
+::ng-deep .mat-form-field-underline .mat-form-field-ripple {
+  background-color: #FFFFFF !important;
+}

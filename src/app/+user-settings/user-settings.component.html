@@ -1,0 +1,11 @@
+<div fxLayoutAlign="center" [@routeAnimation]>
+    <form #settingsForm (ngSubmit)="saveSettings()">
+        <select class="form-select" name="theme" id="theme" aria-label="Change the theme of the site" [(ngModel)]="selectedTheme">
+            <option [value]="theme.value" *ngFor="let theme of themes">{{ theme.name }}</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Save
+        </button>
+    </form>
+</div>
