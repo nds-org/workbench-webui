@@ -14,9 +14,11 @@ export const $Config = {
         },
         canOverride: {
             type: 'boolean',
+            isRequired: true,
         },
         isPassword: {
             type: 'boolean',
+            isRequired: true,
         },
     },
 };

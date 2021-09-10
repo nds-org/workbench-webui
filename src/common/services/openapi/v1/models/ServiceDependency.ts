@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type ServiceDependency = {
-    serviceId?: string;
+    key?: string;
     required?: boolean;
 }

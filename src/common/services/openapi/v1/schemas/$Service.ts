@@ -32,7 +32,11 @@ export const $Service = {
             type: 'string',
         },
         config: {
-            type: 'Config',
+            type: 'array',
+            contains: {
+                type: 'Config',
+            },
+            isRequired: true,
         },
         readinessProbe: {
             type: 'ReadyProbe',
@@ -48,42 +52,49 @@ export const $Service = {
             contains: {
                 type: 'ServiceDependency',
             },
+            isRequired: true,
         },
         ports: {
             type: 'array',
             contains: {
                 type: 'Port',
             },
+            isRequired: true,
         },
         volumeMounts: {
             type: 'array',
             contains: {
                 type: 'VolumeMount',
             },
+            isRequired: true,
         },
         repositories: {
             type: 'array',
             contains: {
                 type: 'Repository',
             },
+            isRequired: true,
         },
         command: {
             type: 'array',
             contains: {
                 type: 'string',
             },
+            isRequired: true,
         },
         args: {
             type: 'array',
             contains: {
                 type: 'string',
             },
+            isRequired: true,
         },
         tags: {
             type: 'array',
             contains: {
                 type: 'string',
             },
+            isRequired: true,
         },
         createdTime: {
             type: 'number',

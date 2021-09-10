@@ -672,7 +672,10 @@ definitions:
       developerEnvironment:
         type: string
       config:
-        $ref: '#/definitions/Config'
+        type: array
+        items:
+          $ref: '#/definitions/Config'
+        default: []
       readinessProbe:
         $ref: '#/definitions/ReadyProbe'
       image:
@@ -683,30 +686,37 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ServiceDependency'
+        default: []
       ports:
         type: array
         items:
           $ref: '#/definitions/Port'
+        default: []
       volumeMounts:
         type: array
         items:
           $ref: '#/definitions/VolumeMount'
+        default: []
       repositories:
         type: array
         items:
           $ref: '#/definitions/Repository'
+        default: []
       command:
         type: array
         items:
           type: string
+        default: []
       args:
         type: array
         items:
           type: string
+        default: []
       tags:
         type: array
         items:
           type: string
+        default: []
       createdTime:
         type: integer
       updatedTime:
@@ -741,7 +751,7 @@ definitions:
   ServiceDependency:
     type: object
     properties:
-      serviceId:
+      key:
         type: string
       required:
         type: boolean
@@ -818,12 +828,28 @@ definitions:
         type: string
       status:
         type: string
-      imageTag:
-        type: string
       statusMessage:
         type: array
         items:
           type: string
+      developerEnvironment:
+        type: string
+      config:
+        type: object
+        additionalProperties:
+          type: string
+        default: {}
+      readinessProbe:
+        $ref: '#/definitions/ReadyProbe'
+      image:
+        $ref: '#/definitions/ServiceImage'
+      resourceLimits:
+        $ref: '#/definitions/ResourceLimits'
+      volumeMounts:
+        type: object
+        additionalProperties:
+          type: string
+        default: {}
       endpoints:
         type: array
         items:
@@ -863,8 +889,10 @@ definitions:
         type: string
       canOverride:
         type: boolean
+        default: true
       isPassword:
         type: boolean
+        default: false
   ServiceImage:
     type: object
     properties:
@@ -879,12 +907,16 @@ definitions:
     properties:
       cpuMax:
         type: string
+        default: "400m"
       cpuDefault:
         type: string
+        default: "200m"
       memMax:
         type: string
+        default: "512mb"
       memDefault:
         type: string
+        default: "1gb"
   Vocabulary:
     type: object
     properties:

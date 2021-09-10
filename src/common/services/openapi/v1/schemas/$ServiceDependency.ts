@@ -3,7 +3,7 @@
 /* eslint-disable */
 export const $ServiceDependency = {
     properties: {
-        serviceId: {
+        key: {
             type: 'string',
         },
         required: {

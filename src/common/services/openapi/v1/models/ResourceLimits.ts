@@ -3,8 +3,8 @@
 /* eslint-disable */
 
 export type ResourceLimits = {
-    cpuMax?: string;
-    cpuDefault?: string;
-    memMax?: string;
-    memDefault?: string;
+    cpuMax: string;
+    cpuDefault: string;
+    memMax: string;
+    memDefault: string;
 }

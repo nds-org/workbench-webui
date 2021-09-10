@@ -1,9 +1,16 @@
+import { createStore } from 'redux';
+
 import {Account} from "../common/services/openapi/v1";
 import Cookies from 'universal-cookie';
 import {V1} from "../common/services";
 
+
+import rootReducer from './reducers'
+
 // Set auth cookie
 const cookies = new Cookies();
+
+const store = createStore(rootReducer);
 
 interface AppState {
     token?: string;
@@ -42,4 +49,5 @@ if (state.token && state.username && !(state.user && state.user.namespace)) {
 }
 
 export type { AppState };
-export { state, fetchUser };
+export { state, fetchUser, store };
+

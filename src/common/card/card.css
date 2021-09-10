@@ -1,0 +1,9 @@
+.spec-card-body {
+    margin-top: 0;
+    height: 300px;
+}
+
+img.spec-card-img {
+    height: 60px;
+    width: 60px;
+}

@@ -21,17 +21,17 @@ export type Service = {
     display?: string;
     access?: string;
     developerEnvironment?: string;
-    config?: Config;
+    config: Array<Config>;
     readinessProbe?: ReadyProbe;
     image?: ServiceImage;
     resourceLimits?: ResourceLimits;
-    depends?: Array<ServiceDependency>;
-    ports?: Array<Port>;
-    volumeMounts?: Array<VolumeMount>;
-    repositories?: Array<Repository>;
-    command?: Array<string>;
-    args?: Array<string>;
-    tags?: Array<string>;
+    depends: Array<ServiceDependency>;
+    ports: Array<Port>;
+    volumeMounts: Array<VolumeMount>;
+    repositories: Array<Repository>;
+    command: Array<string>;
+    args: Array<string>;
+    tags: Array<string>;
     createdTime?: number;
     updatedTime?: number;
 }

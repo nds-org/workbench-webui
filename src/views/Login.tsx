@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Component} from 'react';
+import React, {ChangeEvent, Component, useState} from 'react';
 import {Alert, Button, Container, Form, FormControl, FormGroup, FormLabel} from 'react-bootstrap';
 import { V1 } from '../common';
 import { Redirect } from 'react-router-dom';
@@ -10,54 +10,51 @@ interface LoginState {
     error?: string;
 }
 
-class LoginPage extends Component<{ onLogin: Function }, LoginState> {
-    constructor(props: any) {
+//class LoginPage extends Component<{ onLogin: Function }, LoginState> {
+function LoginPage(props: { onLogin: (username: string, token?: string) => void }) {
+    /*constructor(props: any) {
         super(props);
         this.state = {username: '', password: ''};
 
         this.usernameChanged = this.usernameChanged.bind(this);
         this.passwordChanged = this.passwordChanged.bind(this);
         this.login = this.login.bind(this);
-    }
+    }*/
 
-    // Bind user inputs
-    usernameChanged = (e: any) => this.setState((state, props) => ({username: e.target.value}));
-    passwordChanged = (e: any) => this.setState((state, props) => ({password: e.target.value}));
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [redirect, setRedirect] = useState('');
+    const [error, setError] = useState('');
 
     // Bind component outputs
-    handleLogin = (username: string, token?: string) => this.props.onLogin(username, token);
+    const handleLogin = (username: string, token?: string) => props.onLogin(username, token);
 
-    login() {
-        const username = this.state.username;
-        const password = this.state.password;
-
+    const login = () => {
         V1.UserAccountService.postAuthenticate({username, password}).then(response => {
-            this.handleLogin(username, response.token);
+            handleLogin(username, response.token);
             window.location.href = '/all-apps';
         }).catch(reason =>{
             console.error("Login was invalid: ", reason);
-            this.setState((state, props) => ({ error: "Invalid credentials" }))
+            setError("Invalid credentials");
         });
     }
 
-    render() {
-        return (
-            <Container fluid={false}>
-                <Alert className='alert-danger' show={this.state.error ? true : false}>{this.state.error}</Alert>
-                <Form onSubmit={this.login}>
-                    <FormGroup>
-                        <FormLabel htmlFor='username'>Username</FormLabel>
-                        <FormControl id='username' name='username' type='text' value={this.state.username} onChange={this.usernameChanged} />
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel htmlFor='password'>Password</FormLabel>
-                        <FormControl id='password' name='password' type='password' value={this.state.password} onChange={this.passwordChanged} />
-                    </FormGroup>
-                </Form>
-                <Button onClick={this.login}>Login</Button>
-            </Container>
-        );
-    }
+    return (
+        <Container fluid={false}>
+            <Alert className='alert-danger' show={error ? true : false}>{error}</Alert>
+            <Form onSubmit={login}>
+                <FormGroup>
+                    <FormLabel htmlFor='username'>Username</FormLabel>
+                    <FormControl id='username' name='username' type='text' value={username} onChange={(e) => setUsername(e.target.value)} />
+                </FormGroup>
+                <FormGroup>
+                    <FormLabel htmlFor='password'>Password</FormLabel>
+                    <FormControl id='password' name='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                </FormGroup>
+            </Form>
+            <Button onClick={login}>Login</Button>
+        </Container>
+    );
 }
 
 export default LoginPage;

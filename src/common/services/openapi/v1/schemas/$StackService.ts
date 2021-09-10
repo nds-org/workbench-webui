@@ -17,14 +17,37 @@ export const $StackService = {
         status: {
             type: 'string',
         },
-        imageTag: {
-            type: 'string',
-        },
         statusMessage: {
             type: 'array',
             contains: {
                 type: 'string',
             },
+        },
+        developerEnvironment: {
+            type: 'string',
+        },
+        config: {
+            type: 'dictionary',
+            contains: {
+                type: 'string',
+            },
+            isRequired: true,
+        },
+        readinessProbe: {
+            type: 'ReadyProbe',
+        },
+        image: {
+            type: 'ServiceImage',
+        },
+        resourceLimits: {
+            type: 'ResourceLimits',
+        },
+        volumeMounts: {
+            type: 'dictionary',
+            contains: {
+                type: 'string',
+            },
+            isRequired: true,
         },
         endpoints: {
             type: 'array',

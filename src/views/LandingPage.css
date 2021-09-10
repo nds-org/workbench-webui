@@ -1,0 +1,189 @@
+
+.login.icon.backdrop {
+  margin: 0 20%;
+  background-color: #dcd9de;
+  color: #000;
+  margin-top: 10vh;
+}
+
+
+.login.area {
+  text-align: center;
+  margin: auto;
+  color: #fff;
+  height: 300px;
+  overflow: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+.container {
+  margin-top: 100px;
+}
+
+.col {
+  text-align: center;
+}
+
+.text-header {
+  width: 349px;
+  height: 43px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 44px;
+  text-align: left;
+  margin-top: 45px;
+
+  /* side bar */
+
+  color: #475362;
+
+}
+
+.header-text {
+  margin-top: 10px;
+}
+
+.col-5 > img {
+  margin-top: 45px;
+}
+
+.text-content {
+  text-align: left;
+  margin-top: 45px;
+}
+
+.numeric-header {
+  bottom: 10px;
+  width: 291px;
+  height: 116px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 80pt;
+  line-height: 116px;
+
+  /* mid */
+
+  color: #EB2A52;
+
+  opacity: 0.6;
+}
+
+.card.bg-warning {
+  background-color: #F9E784 !important;
+  height: 440px;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.ui.blue.button {
+  margin-top: 10vh;
+  background-color: #0075d8;
+  color: #fff;
+  text-shadow: none;
+  background-image: none;
+}
+
+/*
+i.icon.criss.cross {
+  background-size: 60px 60px;
+  background-image: url('/criss-cross.png');
+  width: 60px;
+  height: 60px;
+  margin: auto;
+}
+ */
+
+.ui.white.header {
+  color: white;
+}
+.nomargin {
+  margin: 0;
+  padding: 0;
+}
+
+.botmargin {
+  margin: 0 0 -5px 0;
+  padding: 0;
+}
+
+.ui.inverted.menu {
+  margin-bottom: 0;
+  border-radius: 0;
+  background: #1e2e44;
+  height: 48px;
+  padding: 0 2rem;
+}
+
+.ui.inverted.blue.segment {
+  background-color: #283b49 !important;
+  color: #fff !important;
+}
+
+.footer {
+  bottom: 0;
+  left: 0;
+  border-radius: 0;
+  height: 40px;
+}
+
+
+.header span {
+  margin-right: 1rem;
+}
+
+
+.ui.grid.centered.footer {
+  position: fixed;
+  width: 100vw;
+  bottom: 48px;
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+.description,
+.item,
+p {
+  font-size: 1em;
+}
+
+.ui.white.header {
+  font-weight: bold;
+}
+
+#sectionOne {
+
+}
+#sectionOneHeader {
+  margin: 50px;
+}
+
+#sectionOneBody {
+  margin: 25px;
+}
+#sectionOneDiagram {
+  text-align: center;
+}
+
+#sectionTwo {
+  margin: 50px;
+}
+#sectionTwoDiagram {
+  text-align: center;
+}
+#sectionTwoHeader {
+
+}
+#sectionTwoBody {
+
+}
+#contactUs {
+  margin: 50px;
+}
+#visitAllApps {
+  margin: 50px;
+}
