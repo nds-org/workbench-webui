@@ -1,38 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import { V1, V2 } from "../services";
 import './footer.css';
+import {Container} from "react-bootstrap";
 
-interface FooterState {
-    version?: string;
-}
+function Footer(props: {}) {
+    const [version, setVersion] = useState('');
 
-class Footer extends Component<{}, FooterState> {
-    constructor(props: any) {
-        super(props);
-        this.state = { version: '' };
-    }
-
-     componentDidMount() {
-        //const version = await V2.SystemService.getVersion()
-        V1.SystemService.getVersion().then(version => {
-            console.log("Version has been fetched: ", version);
-            this.setState((state, props) => ({version: version}), () => {
-                console.log("Version has been set in state: ", this.state.version);
-            })
+     useEffect(() => {
+        V1.SystemService.getVersion().then((v: string) => {
+            console.log("Version has been fetched: ", v);
+            setVersion(v)
         }).catch(reason => console.error("Failed to fetch version: ", reason));
-    }
+    }, [])
 
-    render() {
-        return (
-            <footer className="footer mt-auto py-3 bg-light">
-                <div className="container">
-                    <span className="text-muted">
-                        {this.state.version || 'No version data'}
-                    </span>
-                </div>
-            </footer>
-        );
-    }
+    return (
+        <footer className="footer mt-auto py-3 bg-light text-center">
+            <Container fluid={true}>
+                <span className="text-muted">
+                    {version || 'No version data'}
+                </span>
+            </Container>
+        </footer>
+    );
 }
 
 export default Footer;

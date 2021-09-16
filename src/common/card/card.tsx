@@ -8,9 +8,10 @@ import {Stack} from "../services/openapi/v1";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import Taglist from "../taglist/Taglist";
+import {Redirect} from "react-router-dom";
 
 interface CardState {
-
+    redirect: string;
 }
 
 interface CardProps {
@@ -23,7 +24,7 @@ interface CardProps {
 class Card extends Component<CardProps, CardState> {
     constructor(props: CardProps) {
         super(props);
-        this.state = {};
+        this.state = { redirect: '' };
 
         this.installApplication = this.installApplication.bind(this);
     }
@@ -121,7 +122,7 @@ class Card extends Component<CardProps, CardState> {
         // POST /stacks
         V1.UserAppService.createStack(userApp).then(stk => {
             this.props.stacks.push(stk);
-            window.location.href = `/my-apps/${stk.id}`;
+            this.setState({ redirect: `/my-apps/${stk.id}` });
         }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
     }
 
@@ -132,10 +133,13 @@ class Card extends Component<CardProps, CardState> {
     render() {
         return (
             <BootstrapCard>
+                {
+                    this.state.redirect && <Redirect to={this.state.redirect} />
+                }
                 <BootstrapCard.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px"}}>
                     <Row>
                         <Col style={{ textAlign: "left" }}>
-                            <img width="60" height="60" id="spec-card-img" src={this.props.spec.logo || '/logos/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey" }}/>
+                            <img width="60" height="60" id="spec-card-img" src={this.props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey" }}/>
                         </Col>
                         <Col>
                             <Button style={{ borderRadius: "25px", marginTop: "15px" }} className="btn-light" onClick={this.installApplication}>
@@ -146,14 +150,14 @@ class Card extends Component<CardProps, CardState> {
                             </Button>
                         </Col>
                     </Row>
-                    <Row title={this.props.spec.key} onClick={() => window.location.href = `/all-apps/${this.props.spec?.key}`} style={{ cursor: "pointer", marginTop: "10px" }}>
+                    <Row title={this.props.spec.key} onClick={() => this.setState({ redirect: `/all-apps/${this.props.spec?.key}` })} style={{ cursor: "pointer", marginTop: "10px" }}>
                         <h5>{this.props.spec.label || this.props.spec.key}</h5>
                     </Row>
                     <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                         {this.props.spec.description}
                     </Row>
                     <Row>
-                        <Taglist tags={this.props.tags} spec={this.props.spec} onClick={(tag) => window.location.href = '/all-apps#' + tag?.name} />
+                        <Taglist tags={this.props.tags} spec={this.props.spec} chunkSize={2} onClick={(tag) => this.setState({ redirect: '/all-apps#' + tag?.name})} />
                     </Row>
                 </BootstrapCard.Body>
             </BootstrapCard>

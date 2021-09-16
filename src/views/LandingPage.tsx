@@ -1,12 +1,16 @@
 import {Footer} from "../common";
-import React from "react";
+import React, {useState} from "react";
 import './LandingPage.css';
 import {Button} from "react-bootstrap";
-
-//import Background from './login-banner.jpg';
+import {Redirect} from "react-router-dom";
 
 const LandingPage = () => {
+    const [redirect, setRedirect] = useState('');
+
     return (
+        redirect ?
+            <Redirect to={redirect} />
+            :
         <>
             <div className="login area row">
                 <div className="login banner" style={{
@@ -24,7 +28,7 @@ const LandingPage = () => {
                         <p className="nomargin">NDS framework and services.</p>
                     </h1>
 
-                    <Button style={{ marginTop: "100px", padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => window.location.href="/login"}>Log In</Button>
+                    <Button style={{ marginTop: "100px", padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => setRedirect("/login")}>Log In</Button>
                 </div>
             </div>
 
@@ -87,7 +91,7 @@ const LandingPage = () => {
 
                 <div id="visitAllApps" className="row justify-content-md-center">
                     <div className="col">
-                        <Button className="btn btn-dark btn-lg" onClick={() => window.location.href='/all-apps'}>Visit All the Apps</Button>
+                        <Button className="btn btn-dark btn-lg" onClick={() => setRedirect('/all-apps')}>Visit All the Apps</Button>
                     </div>
                 </div>
 
@@ -102,6 +106,8 @@ const LandingPage = () => {
                     </div>
                 </div>
             </div>
+
+            <Footer></Footer>
         </>
     );
 }

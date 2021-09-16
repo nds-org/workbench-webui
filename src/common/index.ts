@@ -15,13 +15,14 @@ const handleError = (message: string, reason: Error) => {
     console.error(`${message}: `, reason);
 
     if (reason.message.includes('Unauthorized')) {
-        cookies.remove('token');
-        cookies.remove('username');
-        cookies.remove('user');
+        // Clear any stale auth info
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        //cookies.remove('user');
 
         if (!window.location.href.includes('login')) {
             console.error("Redirecting to login view...");
-            window.location.href = '/login';
+            window.location.href = '/login?rd='+encodeURIComponent(window.location.pathname);
         }
     }
 }

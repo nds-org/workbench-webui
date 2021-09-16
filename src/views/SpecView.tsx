@@ -1,5 +1,5 @@
 import {handleError, V1} from "../common";
-import {useParams} from "react-router-dom";
+import {Redirect, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {Button, Col, Image, Row} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,60 +23,63 @@ function SpecView() {
     const [ tags, setTags ] = useState<Array<any>>([]);
     const [ spec, setSpec ] = useState<V1.Service>();
 
+    const [ redirect, setRedirect ] = useState('');
+
     useEffect(() => {
         V1.VocabularyService.getVocabularyByName("tags").then((tags: V1.Vocabulary) => {
             setTags(tags.terms || []);
-        });
+        }).catch(reason => handleError('Failed to fetch tags: ', reason));
     }, []);
 
     useEffect(() => {
         V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
             setSpec(target);
-        });
+        }).catch(reason => handleError(`Failed to fetch spec=${specKey}: `, reason));
     }, [specKey]);
 
     return (
         <>
-            <pre>{!spec && "Loading... Please Wait!"}</pre>
+            {!spec && <p>Loading... Please Wait!</p>}
+            {
+                redirect && <Redirect to={redirect} />
+            }
             {spec &&
-                <>
-                    <Row>
-                        <Col xs={1}>
-                            <Button variant="link" onClick={() => window.history.back()}><FontAwesomeIcon icon={faChevronLeft} style={{ color: "black" }}/></Button>
-                        </Col>
-                        <Col>
-                            <Row>
-                                <Col xs={1}>
-                                    <img height="75" width="75" src={spec?.logo} style={{ borderRadius: "50px" }} />
-                                </Col>
-                                <Col>
-                                    <Row><Col style={{ textAlign: "left" }}><h1>{spec?.label || spec?.key}</h1></Col></Row>
-                                    <Row><Col><Taglist tags={tags} spec={spec} onClick={(tag) => window.location.href = '/all-apps#' + tag?.name} /></Col></Row>
-                                </Col>
-                                <Col xs={2}>
-                                    <Button variant="dark">Add</Button>
-                                    <Button variant="link" style={{ color: "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
-                                </Col>
-                            </Row>
+                <Row style={{ marginTop: "50px" }}>
+                    <Col xs={1} style={{ textAlign: "center", paddingTop: "20px" }}>
+                        <Button variant="link" onClick={() => setRedirect('/all-apps')}><FontAwesomeIcon icon={faChevronLeft} style={{ color: "black" }}/></Button>
+                    </Col>
+                    <Col>
+                        <Row>
+                            <Col xs={1}>
+                                <img height="75" width="75" src={spec?.logo} style={{ borderRadius: "50px" }} />
+                            </Col>
+                            <Col>
+                                <Row><Col style={{ textAlign: "left" }}><h1>{spec?.label || spec?.key}</h1></Col></Row>
+                                <Row><Col><Taglist tags={tags} spec={spec} chunkSize={4} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} /></Col></Row>
+                            </Col>
+                            <Col xs={2}>
+                                <Button variant="dark">Add</Button>
+                                <Button variant="link" style={{ color: "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
+                            </Col>
+                        </Row>
 
-                            <Row style={{ marginTop: "50px",minHeight:"200px"}}>{spec?.description}</Row>
-                            <hr style={{ marginTop: "100px" }} />
-                            <Row>
-                                <Col xs={6}>
-                                    <h4>Information</h4>
-                                </Col>
-                                <Col xs={6}>
-                                    <h4>Help & Support</h4>
-                                </Col>
-                            </Row>
+                        <Row style={{ marginTop: "50px",minHeight:"200px"}}>{spec?.description}</Row>
+                        <hr style={{ marginTop: "100px" }} />
+                        <Row>
+                            <Col xs={6}>
+                                <h4>Information</h4>
+                            </Col>
+                            <Col xs={6}>
+                                <h4>Help & Support</h4>
+                            </Col>
+                        </Row>
 
-                        </Col>
-                        <Col xs={3}>
-                            <h4>Related Apps</h4>
+                    </Col>
+                    <Col xs={3}>
+                        <h4>Related Apps</h4>
 
-                        </Col>
-                    </Row>
-                </>
+                    </Col>
+                </Row>
             }
         </>
     );

@@ -1,22 +1,14 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container, Row, Col, ListGroup, Jumbotron, Dropdown, DropdownButton} from 'react-bootstrap';
 import { V1, Card, handleError } from '../common';
 
-import Cookies from "universal-cookie";
 import {createMuiTheme, Input, MuiThemeProvider} from "@material-ui/core";
-
-const cookies = new Cookies();
+import {StringParam, useQueryParam} from "use-query-params";
 
 interface VocabTerm {
     id?: string;
     name?: string;
     definition?: string;
-}
-
-interface AllAppsState {
-    specs: Array<V1.Service>;
-    tags: Array<VocabTerm>;
-    stacks: Array<V1.Stack>;
 }
 
 const theme = createMuiTheme({
@@ -31,10 +23,11 @@ function AllAppsPage() {
 
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
-    const [categoryName, setCategoryName] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
     const [filter, setFilter] = useState('');
+
+    const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
 
 
     useEffect(() => {
@@ -94,7 +87,6 @@ function AllAppsPage() {
                 <Row style={{ marginLeft: "20px", marginRight: "20px", marginTop: "40px" }}>
                     <Col className='col-3'>
                         <h3>Tags</h3>
-
                         <Dropdown style={{ margin: "20px" }}>
                             <DropdownButton title={categoryName || 'Select a category...'} style={{ width: "100%", borderRadius: "20px" }}>
                                 <Dropdown.Item onClick={() => setCategoryName('')}>All Categories</Dropdown.Item>
@@ -131,7 +123,7 @@ function AllAppsPage() {
                         <Row>
                             {
                                 specs.map(spec =>
-                                    <Col className='col-3' key={spec.key} style={{ padding: "20px"}}>
+                                    spec.display === 'stack' && <Col className='col-3' key={spec.key} style={{ padding: "20px"}}>
                                         <Card key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags} />
                                     </Col>
                                 )

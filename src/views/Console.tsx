@@ -5,23 +5,26 @@ import { V1 } from '../common';
 import { XTerm } from 'xterm-for-react';
 
 import useWebSocket from "react-use-websocket";
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
 
 const Console = (props: { stackService?: V1.StackService }) => {
-    const username = cookies.get('username');
+    const username = localStorage.getItem('username');
     const ssid = props.stackService?.id;
     const host = `localhost:30001`;
 
     const socketUrl = `ws://${host}/api/console?namespace=${username}&ssid=${ssid}`;
 
     const xtermRef = createRef<XTerm>();
-    const [ref, setRef] = useState<any>();
+    const [count, setCount] = useState(0);
+    const [interval, setInterv] = useState<any>(undefined);
 
-    /*useEffect(() => {
-        console.log(xtermRef);
-    }, []);*/
+    useEffect(() => {
+        if (!interval) {
+            const interv = setInterval(() => {
+                setCount(count+1);
+            },1000);
+            setInterv(interv);
+        }
+    }, []);
 
     const {
         sendMessage,

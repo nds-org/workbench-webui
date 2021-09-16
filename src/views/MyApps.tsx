@@ -3,7 +3,6 @@ import {Accordion, Button, Card, Col, Container, Modal, Row, Table} from "react-
 import '../index.css';
 
 import { V1, handleError, waitFor } from '../common';
-import Cookies from "universal-cookie";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faCheckCircle, faExclamationCircle, faPowerOff, faSpinner, faTerminal} from "@fortawesome/free-solid-svg-icons";
 import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -14,10 +13,8 @@ import {faStop} from "@fortawesome/free-solid-svg-icons/faStop";
 import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 
-const cookies = new Cookies();
 
 interface MyAppsState {
-    username: string;
     stacks: Array<V1.Stack>;
     selectedService: V1.StackService;
     showSelected: boolean;
@@ -46,7 +43,7 @@ const getSpec = async (key: string) => {
     return await V1.AppSpecService.getServiceById(key);
 }
 
-function MyAppsPage(props: { username: string }) {
+function MyAppsPage(props: any) {
     let nextRefresh: any;
 
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -56,7 +53,7 @@ function MyAppsPage(props: { username: string }) {
     const [showSelected, setShowSelected] = useState(false);
 
     useEffect(() => {
-        V1.AppSpecService.listServices().then(setSpecs); //.catch(handleError);
+        V1.AppSpecService.listServices().then(setSpecs).catch(reason => handleError('Failed to fetch specs: ', reason));
     }, []);
 
     const deleteStack = (stack: V1.Stack) => {
@@ -148,7 +145,7 @@ function MyAppsPage(props: { username: string }) {
                             }} >
                                 <Row>
                                     <Col xs={1}>
-                                        <img width="60" height="60" src="/logos/ndslabs-badge.png" style={{
+                                        <img width="60" height="60" src="/ndslabs-badge.png" style={{
                                             borderRadius: "50px",
                                             border: "solid 1px lightgrey"
                                         }} />
