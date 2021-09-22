@@ -7,6 +7,7 @@ import {faCaretLeft} from "@fortawesome/free-solid-svg-icons/faCaretLeft";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import Taglist from "../common/taglist/Taglist";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
+import {useSelector} from "react-redux";
 
 interface SpecViewParams {
     specKey: string;
@@ -17,6 +18,8 @@ interface SpecViewProps {
 }
 
 function SpecView() {
+    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
     const { specKey } = useParams<SpecViewParams>();
@@ -46,7 +49,7 @@ function SpecView() {
             {spec &&
                 <Row style={{ marginTop: "50px" }}>
                     <Col xs={1} style={{ textAlign: "center", paddingTop: "20px" }}>
-                        <Button variant="link" onClick={() => setRedirect('/all-apps')}><FontAwesomeIcon icon={faChevronLeft} style={{ color: "black" }}/></Button>
+                        <Button variant="link" onClick={() => setRedirect('/all-apps')}><FontAwesomeIcon icon={faChevronLeft} style={{ color: darkThemeEnabled ? "white" : "black" }}/></Button>
                     </Col>
                     <Col>
                         <Row>
@@ -58,8 +61,8 @@ function SpecView() {
                                 <Row><Col><Taglist tags={tags} spec={spec} chunkSize={4} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} /></Col></Row>
                             </Col>
                             <Col xs={2}>
-                                <Button variant="dark">Add</Button>
-                                <Button variant="link" style={{ color: "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
+                                <Button variant={ darkThemeEnabled ? 'light' : 'dark' }>Add</Button>
+                                <Button variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
                             </Col>
                         </Row>
 

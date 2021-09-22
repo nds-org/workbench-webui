@@ -4,21 +4,12 @@ import { V1, Card, handleError } from '../common';
 
 import {createMuiTheme, Input, MuiThemeProvider} from "@material-ui/core";
 import {StringParam, useQueryParam} from "use-query-params";
-
-interface VocabTerm {
-    id?: string;
-    name?: string;
-    definition?: string;
-}
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark'
-    },
-})
+import {useSelector} from "react-redux";
 
 
 function AllAppsPage() {
+    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+
     const [tags, setTags] = useState<Array<VocabTerm>>([]);
 
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -28,6 +19,18 @@ function AllAppsPage() {
     const [filter, setFilter] = useState('');
 
     const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
+
+    interface VocabTerm {
+        id?: string;
+        name?: string;
+        definition?: string;
+    }
+
+    const theme = createMuiTheme({
+        palette: {
+            type: darkThemeEnabled ? 'dark' : 'light'
+        },
+    })
 
 
     useEffect(() => {
@@ -70,11 +73,11 @@ function AllAppsPage() {
 
     return (
         <MuiThemeProvider theme={theme}>
-            <Container fluid={true} style={{ paddingLeft: "0", paddingRight: "0" }}>
+            <Container fluid={true} style={{ paddingLeft: "0", paddingRight: "0", height: "100%" }}>
                 <Jumbotron className='bg-banner' style={{
                     width: "100%",
                     color: "white",
-                    background: "linear-gradient(rgba(200, 0, 0, 0.35),rgba(200, 0, 0, 0.35)),url('/catalog-banner.jpg')",
+                    background: darkThemeEnabled ? "linear-gradient(rgba(100, 100, 0, 0.35),rgba(100, 100, 0, 0.35)),url('/catalog-banner.jpg')" : "linear-gradient(rgba(200, 0, 0, 0.35),rgba(200, 0, 0, 0.35)),url('/catalog-banner.jpg')",
                     backgroundSize: "1800px 500px",
                     backgroundPosition: "-120px -100px",
                     backgroundRepeat: "no-repeat",
@@ -84,7 +87,7 @@ function AllAppsPage() {
                     <h1 style={{paddingTop: "25px"}}>Explore Apps from NCSA</h1>
                     <Input style={{ color: "white", width: "450px" }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </Jumbotron>
-                <Row style={{ marginLeft: "20px", marginRight: "20px", marginTop: "40px" }}>
+                <Row style={{ marginLeft: "20px", marginRight: "20px", marginTop: "40px", height: "100%" }}>
                     <Col className='col-3'>
                         <h3>Tags</h3>
                         <Dropdown style={{ margin: "20px" }}>
@@ -97,15 +100,15 @@ function AllAppsPage() {
                         </Dropdown>
 
                         <ListGroup defaultActiveKey="#all">
-                            <ListGroup.Item active={filter==='featured'} key={"tag-featured"} action href={"#Featured"} onClick={() => setFilter('featured')} title="Show all applications">
+                            <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={filter==='featured'} key={"tag-featured"} action href={"#Featured"} onClick={() => setFilter('featured')} title="Show all applications">
                                 Featured
                             </ListGroup.Item>
-                            <ListGroup.Item active={!filter} key={"tag-all"} action href={"#All"} onClick={() => setFilter('')} title="Show all applications">
+                            <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#All"} onClick={() => setFilter('')} title="Show all applications">
                                 Show All
                             </ListGroup.Item>
                             {
                                 tags.map(tag =>
-                                    <ListGroup.Item active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                    <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
                                         {tag.name}
                                     </ListGroup.Item>
                                 )

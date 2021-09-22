@@ -12,6 +12,8 @@ import MyTerminal from "./Terminal";
 import {faStop} from "@fortawesome/free-solid-svg-icons/faStop";
 import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
+import {useSelector} from "react-redux";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 
 interface MyAppsState {
@@ -45,6 +47,8 @@ const getSpec = async (key: string) => {
 
 function MyAppsPage(props: any) {
     let nextRefresh: any;
+
+    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
@@ -135,14 +139,15 @@ function MyAppsPage(props: any) {
             <Accordion defaultActiveKey="0">
                 {
                     stacks.map((stack, index) =>
-                        <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px" }}>
+                        <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px" }} text={darkThemeEnabled ? 'light' : 'dark'} bg={darkThemeEnabled ? 'dark' : 'light'}>
                             <Card.Header style={{
                                 textAlign: "left",
                                 borderRadius: activated === index ? "18px 18px 0 0" : "18px",
                                 backgroundColor: (stack.status === 'started' ? '#CDFFD2' :      // green / ready
                                     (stack.status?.endsWith('ing') ? '#F8DB66' :                // yellow / warning
-                                        (stack.status === 'error' ? '#EB2A52' : '#FFFFFF')))    // red / error
-                            }} >
+                                        (stack.status === 'error' ? '#EB2A52' : '#FFFFFF'))),    // red / error
+                                color: 'black',
+                            }}>
                                 <Row>
                                     <Col xs={1}>
                                         <img width="60" height="60" src="/ndslabs-badge.png" style={{
@@ -177,13 +182,13 @@ function MyAppsPage(props: any) {
                                 </Row>
                             </Card.Header>
                             <Accordion.Collapse as={Card.Body} eventKey={index+""} style={{ padding: "40px 120px" }}>
-                                <Table className='compact' responsive='sm' borderless={true}>
+                                <Table className='compact' responsive='sm' borderless={true} variant={darkThemeEnabled ? 'dark' : 'light'}>
                                     <thead>
                                     <tr>
                                         <th>Status</th>
                                         <th>Name</th>
                                         <th>ID</th>
-                                        <th>Console</th>
+                                        <th hidden={stack.status !== 'started'}>Console</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -208,7 +213,12 @@ function MyAppsPage(props: any) {
                                                 </td>
                                                 <td key={svc.id+"-id"}>{svc.id}</td>
                                                 <td key={svc.id+"-console"} width='5%' style={{ textAlign: "center"}}>
-                                                    <Button variant="link" size={'sm'} style={{ color: "black", width: "35px", height: "30px", border: "2px solid black", borderRadius: "0", padding: "3px" }} disabled={svc.status !== 'ready'} onClick={() => openConsole(stack, svc)}>
+                                                    <Button variant="link" size={'sm'} style={{
+                                                        color: darkThemeEnabled ? 'white' : 'black',
+                                                        borderColor: darkThemeEnabled ? 'white' : 'black',
+                                                        width: "35px", height: "30px",
+                                                        borderWidth: "2px", borderRadius: "0",
+                                                        padding: "3px" }} hidden={svc.status !== 'ready'} onClick={() => openConsole(stack, svc)}>
                                                         <FontAwesomeIcon icon={faTerminal} />
                                                     </Button>
                                                 </td>
@@ -227,23 +237,30 @@ function MyAppsPage(props: any) {
             <Modal show={showSelected}
                    onHide={closeConsole}
                    backdrop="static"
-                   fullscreen={'xl-down'}
                    size={'xl'}
+                   autoFocus={true}
                    keyboard={false}>
-                <Modal.Header closeButton>
+                <Modal.Header style={{
+                    backgroundColor: darkThemeEnabled ? '#212529' : 'white',
+                    color: darkThemeEnabled ? 'white' : 'black',
+                }}>
                     <Modal.Title>Application Console: {selectedService?.id}</Modal.Title>
+                    <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={closeConsole}>
+                        <FontAwesomeIcon icon={faTimes} />
+                    </Button>
                 </Modal.Header>
-                <Modal.Body>
-                    <Console stackService={selectedService} />
-                </Modal.Body>
-                <Modal.Footer>
+                <Modal.Body as={Console} stackService={selectedService} />
+
+            </Modal>
+        </Container>
+    );
+    /*
+    <Modal.Footer>
                     <Button variant="secondary" onClick={closeConsole}>
                         Close
                     </Button>
                 </Modal.Footer>
-            </Modal>
-        </Container>
-    );
+     */
 }
 
 export default MyAppsPage;

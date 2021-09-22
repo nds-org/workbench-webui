@@ -32,12 +32,12 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
         <>
             <Carousel controls={false}>
                 {
-                    chunkedTags.map((values: Array<any>) =>
-                        <Carousel.Item>
+                    chunkedTags.map((values: Array<any>, index: number) =>
+                        <Carousel.Item key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index}>
                             <Row>
                                 {
                                     values.map((tag: string) =>
-                                        <Col>
+                                        <Col key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index + '-' + tag}>
                                             <Button className="btn btn-sm btn-warning"
                                                     style={{borderRadius: "10px"}}
                                                     onClick={() => props.onClick(props.tags.find(t => tag === t.id))}>{

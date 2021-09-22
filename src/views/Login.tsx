@@ -3,8 +3,13 @@ import {Alert, Button, Container, Form, FormControl, FormGroup, FormLabel} from 
 import {V1, V2} from '../common';
 import { Redirect } from 'react-router-dom';
 import {StringParam, useQueryParam} from "use-query-params";
+import {useDispatch, useSelector} from "react-redux";
+import {setAuth} from "../store/actions";
 
 function LoginPage(props: {}) {
+    const token = useSelector((state: any) => state.token);
+    const dispatch = useDispatch();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -18,10 +23,11 @@ function LoginPage(props: {}) {
             if (!response || !response.token) {
                 console.log('Empty response from POST authenticate. Please examine the API server.');
             } else {
-                localStorage.setItem('token', response.token);
-                localStorage.setItem('username', username);
+                //localStorage.setItem('token', response.token);
+                //localStorage.setItem('username', username);
+                //V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = response.token;
 
-                V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = response.token;
+                dispatch(setAuth({ token: response.token, username }));
 
                 setRedirect(nextRedirect ? nextRedirect : '/all-apps');
             }

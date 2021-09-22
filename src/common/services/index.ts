@@ -8,8 +8,9 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
+V1.OpenAPI.BASE = V2.OpenAPI.BASE = 'http://localhost:30001/api';
 
-const token = cookies.get('token');
+/*const token = cookies.get('token');
 if (token) {
     V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = token;
     V1.UserAccountService.checkToken().then(resp => {
@@ -21,7 +22,7 @@ if (token) {
         cookies.remove('username');
         cookies.remove('user');
     });
-}
+}*/
 
 // Sanity check
 /*setInterval(() => {
