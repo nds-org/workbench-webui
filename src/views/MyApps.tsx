@@ -1,28 +1,24 @@
-import React, {Component, useEffect, useState} from 'react';
-import {Accordion, Button, Card, Col, Container, Modal, Row, Table} from "react-bootstrap";
+import {useEffect, useState} from 'react';
 import '../index.css';
-
-import { V1, handleError, waitFor } from '../common';
+import {Accordion, Button, Card, Col, Container, Modal, Row, Table} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faCheckCircle, faExclamationCircle, faPowerOff, faSpinner, faTerminal} from "@fortawesome/free-solid-svg-icons";
+import {V1, handleError} from "../common";
+
+import {faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
+import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
+import {faTerminal} from "@fortawesome/free-solid-svg-icons/faTerminal";
 import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
 import {faRocket} from "@fortawesome/free-solid-svg-icons/faRocket";
-import Console from "./Console";
-import MyTerminal from "./Terminal";
 import {faStop} from "@fortawesome/free-solid-svg-icons/faStop";
 import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
-import {useSelector} from "react-redux";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
 
-
-interface MyAppsState {
-    stacks: Array<V1.Stack>;
-    selectedService: V1.StackService;
-    showSelected: boolean;
-    nextRefresh: any;
-}
-
+import Console from "./Console";
+import {useSelector} from "react-redux";
 
 
 const navigate = (stk: V1.Stack, ep: any) => {
@@ -41,23 +37,50 @@ const getStacks = (): Promise<V1.Stack[]> => {
         return [];
     });
 }
-const getSpec = async (key: string) => {
+/*const getSpec = async (key: string) => {
     return await V1.AppSpecService.getServiceById(key);
-}
+}*/
 
 function MyAppsPage(props: any) {
-    let nextRefresh: any;
-
+    // Global state
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
+    // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
+
+    // Refresh signal
+    const [autoRefresh, setAutoRefresh] = useState(false);
+    const [refreshInterval, setRefreshInterval] = useState<any>(undefined);
+
+    // User Selections
     const [activated, setActivated] = useState(0);
     const [selectedService, setSelectedService] = useState<V1.StackService>();
     const [showSelected, setShowSelected] = useState(false);
 
     useEffect(() => {
-        V1.AppSpecService.listServices().then(setSpecs).catch(reason => handleError('Failed to fetch specs: ', reason));
+         const transient = stacks.filter(stk => stk?.status?.endsWith('ing'));
+         if (transient.length && !autoRefresh) {
+              setAutoRefresh(true);
+         }
+
+        if (autoRefresh && !refreshInterval) {
+            //setInterval(() => refresh(), 3000);
+            const interval = setInterval(() => refresh(), 3000);
+            setRefreshInterval(interval);
+        } else if (autoRefresh && !transient.length) {
+            setAutoRefresh(false);
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                setRefreshInterval(undefined);
+            }
+        }
+    }, [autoRefresh, refreshInterval, stacks, stacks.length]);
+
+    useEffect(() => {
+        document.title = "Workbench: My Apps";
+        V1.AppSpecService.listServices().then(specs => setSpecs(specs)).catch(reason => handleError('Failed to fetch specs: ', reason));
+        V1.UserAppService.listStacks().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
     }, []);
 
     const deleteStack = (stack: V1.Stack) => {
@@ -75,36 +98,25 @@ function MyAppsPage(props: any) {
         });
     }
 
-    useEffect(() => {
-        const transient = stacks.filter(stk => stk?.status?.endsWith('ing'));
-        if (!stacks.length) {
-            refresh();
-        } else if (transient.length) {
-            if (!nextRefresh) {
-                nextRefresh = setTimeout(() => refresh(), 3000);
-            }
-        }
-    }, [stacks.length]);
-
     const startStack = (stack: V1.Stack) => {
-        const stackId = stack.id+"";
-        return V1.UserAppService.startStack(stackId).then(() => {
-            console.log("Stack is now starting...");
-
-            if (!nextRefresh) {
-                nextRefresh = setTimeout(() => refresh(), 3000);
-            }
-        }).catch(reason => handleError("Failed to start stack", reason));
+        const stackId = stack.id + "";
+        //setAutoRefresh(true);
+        return V1.UserAppService.startStack(stackId)
+            .catch(reason => handleError("Failed to start stack", reason))
+            .then(() => {
+                console.log("Stack is now starting...");
+                refresh();
+            });
     }
     const stopStack = (stack: V1.Stack) => {
-        const stackId = stack.id+"";
-        return V1.UserAppService.stopStack(stackId).then(() => {
-            console.log("Stack is now stopping...");
-
-            if (!nextRefresh) {
-                nextRefresh = setTimeout(() => refresh(), 3000);
-            }
-        }).catch(reason => handleError("Failed to stop stack", reason));
+        const stackId = stack.id + "";
+        //setAutoRefresh(true);
+        return V1.UserAppService.stopStack(stackId)
+            .catch(reason => handleError("Failed to stop stack", reason))
+            .then(() => {
+                console.log("Stack is now stopping...");
+                refresh();
+            });
     }
 
     const openConsole = (stack: V1.Stack, svc: V1.StackService) => {
@@ -131,8 +143,9 @@ function MyAppsPage(props: any) {
         });
     }
 
-
-
+    const openConsoleInNewTab = () => {
+        window.open(`/my-apps/${selectedService?.id}`, '_blank');
+    }
 
     return (
         <Container fluid={false}>
@@ -150,7 +163,7 @@ function MyAppsPage(props: any) {
                             }}>
                                 <Row>
                                     <Col xs={1}>
-                                        <img width="60" height="60" src="/ndslabs-badge.png" style={{
+                                        <img alt={'logo'} width="60" height="60" src={specs.find(s => s.key === stack.key)?.logo || '/ndslabs-badge.png'} style={{
                                             borderRadius: "50px",
                                             border: "solid 1px lightgrey"
                                         }} />
@@ -237,19 +250,24 @@ function MyAppsPage(props: any) {
             <Modal show={showSelected}
                    onHide={closeConsole}
                    backdrop="static"
+                   fullscreen={'true'}
                    size={'xl'}
-                   autoFocus={true}
                    keyboard={false}>
                 <Modal.Header style={{
                     backgroundColor: darkThemeEnabled ? '#212529' : 'white',
                     color: darkThemeEnabled ? 'white' : 'black',
                 }}>
                     <Modal.Title>Application Console: {selectedService?.id}</Modal.Title>
-                    <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={closeConsole}>
-                        <FontAwesomeIcon icon={faTimes} />
-                    </Button>
+                    <div>
+                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={openConsoleInNewTab}>
+                            <FontAwesomeIcon icon={faExpand} />
+                        </Button>
+                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={closeConsole}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </Button>
+                    </div>
                 </Modal.Header>
-                <Modal.Body as={Console} stackService={selectedService} />
+                <Modal.Body as={Console} stackServiceId={selectedService?.id} />
 
             </Modal>
         </Container>

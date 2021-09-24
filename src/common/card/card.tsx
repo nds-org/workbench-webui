@@ -1,26 +1,14 @@
-import React, {Component, useState} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './card.css';
-
-import {Button, Card as BootstrapCard, Col, Image, Row} from 'react-bootstrap';
-import {handleError, V1} from '..';
-import {Stack} from "../services/openapi/v1";
-import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
-import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import Taglist from "../taglist/Taglist";
+import {useState} from 'react';
 import {Redirect} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-interface CardState {
-    redirect: string;
-}
+import {Button, Card as BootstrapCard, Col, Row} from "react-bootstrap";
+import {faEllipsisV, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {handleError, V1} from '..';
+import Taglist from "../taglist/Taglist";
 
-interface CardProps {
-    spec: V1.Service;
-    specs: Array<V1.Service>;
-    stacks: Array<V1.Stack>;
-    tags: Array<any>;
-}
+import './card.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // TODO: Abstract this?
 const copy = (obj: any) => {
@@ -111,20 +99,27 @@ const newStackService = (appSpec: V1.Service, stack: V1.Stack): V1.StackService 
 
 
 
+interface CardProps {
+    spec: V1.Service;
+    specs: Array<V1.Service>;
+    stacks: Array<V1.Stack>;
+    tags: Array<any>;
+}
+
 //class Card extends Component<CardProps, CardState> {
-function Card(props: CardProps) {
+function SpecCard(props: CardProps) {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
-    const [stacks, setStacks] = useState([]);
+    //const [stacks, setStacks] = useState([]);
     const [redirect, setRedirect] = useState('');
 
     const installApplication = (): void => {
         const appSpec = props.spec;
-        const userApp: Stack = newStack(appSpec, props.specs);
+        const userApp: V1.Stack = newStack(appSpec, props.specs);
 
         // POST /stacks
         V1.UserAppService.createStack(userApp).then(stk => {
             props.stacks.push(stk);
-            setRedirect(`/my-apps/${stk.id}`);
+            setRedirect(`/my-apps`);
         }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
     }
 
@@ -140,7 +135,7 @@ function Card(props: CardProps) {
             <BootstrapCard.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px"}}>
                 <Row>
                     <Col style={{ textAlign: "left" }}>
-                        <img width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey" }}/>
+                        <img alt={props.spec.key} width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey" }}/>
                     </Col>
                     <Col>
                         <Button variant={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "25px", marginTop: "15px" }} className="btn-light" onClick={installApplication}>
@@ -165,4 +160,4 @@ function Card(props: CardProps) {
     );
 }
 
-export default Card;
+export default SpecCard;

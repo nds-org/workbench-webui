@@ -1,15 +1,15 @@
-import React, {Component, useEffect, useState} from 'react';
-import { V1, V2 } from "../services";
-import './footer.css';
+import {useEffect, useState} from 'react';
+import {V1} from '..';
 import {Container} from "react-bootstrap";
 
-function Footer(props: {}) {
+import './footer.css';
+
+function Footer() {
     const [version, setVersion] = useState('');
 
      useEffect(() => {
         V1.SystemService.getVersion().then((v: string) => {
-            console.log("Version has been fetched: ", v);
-            setVersion(v)
+            setVersion(v);
         }).catch(reason => console.error("Failed to fetch version: ", reason));
     }, [])
 

@@ -1,17 +1,12 @@
-import React, { Component } from 'react';
 import SwaggerUI  from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
+const STORAGE_KEY = 'swaggerToken';
 
 function SwaggerUiPage() {
     const injectAuthHeader = (req: any) => {
         if (req.url.indexOf('/api') !== -1 && !req.headers.Authorization) {
-            console.log("Checking cookies: ", cookies);
-            const token = cookies.get('token');
-            console.log("Including token: ", token);
+            const token = localStorage.getItem(STORAGE_KEY);
             if (token) {
                 req.headers.Authorization = 'Bearer ' + token;
             }
@@ -24,7 +19,7 @@ function SwaggerUiPage() {
         if ((response.url.indexOf('authenticate') !== -1 || response.url.indexOf('token') !== -1) && response.data) {
             const token = JSON.parse(response.data);
             console.log("Setting token: ", token.token);
-            cookies.set('token', token.token);
+            localStorage.setItem(STORAGE_KEY, token.token);
         }
         return response;
     }

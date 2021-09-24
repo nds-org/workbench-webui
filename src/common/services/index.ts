@@ -4,11 +4,7 @@
 
 import * as V1 from './openapi/v1';
 import * as V2 from './openapi/v2';
-import Cookies from "universal-cookie";
 
-const cookies = new Cookies();
-
-V1.OpenAPI.BASE = V2.OpenAPI.BASE = 'http://localhost:30001/api';
 
 /*const token = cookies.get('token');
 if (token) {

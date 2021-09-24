@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
-import {Alert, Button, Container, Form, FormControl, FormGroup, FormLabel} from 'react-bootstrap';
-import {V1, V2} from '../common';
+import {useState} from 'react';
+import {V1} from '../common';
+import {Alert, Button, Container, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import {StringParam, useQueryParam} from "use-query-params";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setAuth} from "../store/actions";
 
+import jwt from 'jwt-decode';
+
 function LoginPage(props: {}) {
-    const token = useSelector((state: any) => state.token);
     const dispatch = useDispatch();
 
     const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ function LoginPage(props: {}) {
 
     const [error, setError] = useState('');
 
-    const [nextRedirect, setNextRedirect] = useQueryParam('rd', StringParam);
+    const [nextRedirect] = useQueryParam('rd', StringParam);
     const [redirect, setRedirect] = useState('');
 
     const login = () => {
@@ -23,13 +24,14 @@ function LoginPage(props: {}) {
             if (!response || !response.token) {
                 console.log('Empty response from POST authenticate. Please examine the API server.');
             } else {
-                //localStorage.setItem('token', response.token);
-                //localStorage.setItem('username', username);
-                //V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = response.token;
-
+                const tokenStr = response.token;
+                const token: any = jwt(tokenStr);
+                const username = token.user;
                 dispatch(setAuth({ token: response.token, username }));
 
                 setRedirect(nextRedirect ? nextRedirect : '/all-apps');
+
+                setTimeout(() => { setRedirect('') }, 1000);
             }
         }).catch(reason =>{
             console.error("Login was invalid: ", reason);

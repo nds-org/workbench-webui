@@ -1,6 +1,6 @@
+import {V1} from "..";
 import {Button, Carousel, Col, Row} from "react-bootstrap";
-import React, {useEffect, useState} from "react";
-import { V1 } from "..";
+import {useEffect, useState} from "react";
 
 /**
  * Returns an array with arrays of the given size.
@@ -26,7 +26,7 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
     useEffect(() => {
         const chunks = chunkArray(props.spec?.tags, props.chunkSize || 2);
         setChunkedTags(chunks);
-    }, [props.spec]);
+    }, [props.spec, props.chunkSize]);
 
     return (
         <>

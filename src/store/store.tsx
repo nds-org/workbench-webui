@@ -2,7 +2,6 @@ import { createStore } from "redux";
 import rootReducer from "./reducers";
 import {V1, V2} from "../common";
 
-
 const authStorageKey = "auth";
 const persistedAuth = localStorage.getItem(authStorageKey);
 
@@ -10,6 +9,17 @@ const themeStorageKey = "theme";
 const persistedTheme = localStorage.getItem(themeStorageKey);
 
 const DEFAULT_VALUE = '';
+
+// TODO: Restructure env?
+export interface Env {
+    product?: {
+        name: string;
+        // ...
+    };
+
+    // TODO: Handle this with permissions instead
+    advancedFeatures?: any;
+}
 
 export interface AppState {
     preferences: {
@@ -19,11 +29,22 @@ export interface AppState {
         token: string;
         username: string;
     };
+    env: any;
+    /*serverData: {
+        stacks: Array<V1.Stack>;
+        specs: Array<V1.Service>;
+    }*/
 }
+
+// TODO: Set from env
+const host = 'http://localhost:30001';
+V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
 
 const initState: AppState = {
     preferences: persistedTheme ? JSON.parse(persistedTheme) : { darkThemeEnabled: false },
     auth: persistedAuth ? JSON.parse(persistedAuth) : { token: DEFAULT_VALUE, username: DEFAULT_VALUE },
+    //serverData: { stacks: [], specs: [] },
+    env: {}, // fetchEnv(),
 };
 
 if (initState.auth && initState.auth.token) {
@@ -41,6 +62,12 @@ store.subscribe(() => {
     if (auth) {
         localStorage.setItem(authStorageKey, JSON.stringify(auth));
         auth.token && (V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = auth.token);
+    }
+    const env = store.getState().env;
+    if (env) {
+        // TODO: Set from env
+        const host = 'http://localhost:30001';
+        V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
     }
 });
 

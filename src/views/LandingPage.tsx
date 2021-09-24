@@ -1,8 +1,9 @@
 import {Footer} from "../common";
-import React, {useState} from "react";
-import './LandingPage.css';
+import {useState} from "react";
 import {Button} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
+
+import './LandingPage.css';
 
 const LandingPage = () => {
     const [redirect, setRedirect] = useState('');
@@ -61,13 +62,13 @@ const LandingPage = () => {
                     </div>
 
                     <div id="sectionOneDiagram" className="col-6">
-                        <img className="image-content" src="/landing-diagram-1.png" width="316px" height="260x" />
+                        <img alt={'landing-diagram-1'} className="image-content" src="/landing-diagram-1.png" width="316px" height="260x" />
                     </div>
                 </div>
 
                 <div id="sectionTwo" className="row justify-content-md-center">
                     <div id="sectionTwoDiagram" className="col-6">
-                        <img className="image-content" src="/landing-diagram-2.png" width="316px" height="316px" />
+                        <img alt={'landing-diagram-2'} className="image-content" src="/landing-diagram-2.png" width="316px" height="316px" />
                     </div>
 
                     <div className="col-6">
@@ -100,7 +101,7 @@ const LandingPage = () => {
                         <div className="card text-dark bg-warning">
                             <div className="card-body" style={{ marginTop: "150px" }}>
                                 <h3 className="card-title">Have Issues With Your Service?</h3>
-                                <a href="#" className="btn btn-dark btn-lg">Contact Us</a>
+                                <a href="/swagger" className="btn btn-dark btn-lg">Contact Us</a>
                             </div>
                         </div>
                     </div>

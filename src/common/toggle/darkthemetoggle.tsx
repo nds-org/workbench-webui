@@ -1,10 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {toggleDarkTheme} from "../../store/actions";
-import {faCloudMoon} from "@fortawesome/free-solid-svg-icons/faCloudMoon";
-import {faSun} from "@fortawesome/free-regular-svg-icons/faSun";
-import {faCloudSun} from "@fortawesome/free-solid-svg-icons/faCloudSun";
+import {faCloudMoon, faCloudSun} from "@fortawesome/free-solid-svg-icons";
 
 
 const DarkThemeToggle = () => {

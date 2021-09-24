@@ -1,20 +1,14 @@
 import {handleError, V1} from "../common";
 import {Redirect, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import {Button, Col, Image, Row} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {Button, Col, Row} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCaretLeft} from "@fortawesome/free-solid-svg-icons/faCaretLeft";
-import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
+import {faEllipsisV, faChevronLeft} from "@fortawesome/free-solid-svg-icons";
 import Taglist from "../common/taglist/Taglist";
-import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {useSelector} from "react-redux";
 
 interface SpecViewParams {
     specKey: string;
-}
-
-interface SpecViewProps {
-    spec?: V1.Service;
 }
 
 function SpecView() {
@@ -54,7 +48,7 @@ function SpecView() {
                     <Col>
                         <Row>
                             <Col xs={1}>
-                                <img height="75" width="75" src={spec?.logo} style={{ borderRadius: "50px" }} />
+                                <img alt={spec?.key} height="75" width="75" src={spec?.logo} style={{ borderRadius: "50px" }} />
                             </Col>
                             <Col>
                                 <Row><Col style={{ textAlign: "left" }}><h1>{spec?.label || spec?.key}</h1></Col></Row>

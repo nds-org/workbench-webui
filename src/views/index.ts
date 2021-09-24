@@ -1,7 +1,11 @@
-export * as AllAppsPage from './AllApps';
-export * as MyAppsPage from './MyApps';
-export * as LoginPage from './Login';
-export * as SettingsPage from './Settings';
-export * as SwaggerUiPage from './SwaggerUi';
-export * as ConsolePage from './Console';
-export * as LandingPage from './LandingPage';
+import AllAppsPage from './AllApps';
+import Console from './Console';
+import ConsolePage from './ConsolePage';
+import LandingPage from './LandingPage';
+import LoginPage from './Login';
+import MyAppsPage from './MyApps';
+import SpecView from './SpecView';
+import SwaggerUiPage from './SwaggerUi';
+
+
+export { AllAppsPage, Console, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage };

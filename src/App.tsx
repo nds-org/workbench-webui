@@ -1,21 +1,17 @@
-import React from 'react';
-import {Header} from './common/layout';
-import './App.css';
-
 import {Container} from "react-bootstrap";
-import LandingPage from "./views/LandingPage";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import LoginPage from "./views/Login";
-import MyAppsPage from "./views/MyApps";
-import AllAppsPage from "./views/AllApps";
-import SettingsPage from "./views/Settings";
-import SwaggerUiPage from "./views/SwaggerUi";
-import SpecView from "./views/SpecView";
-import { QueryParamProvider } from 'use-query-params';
-import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
-
-import theme from "styled-theming";
 import styled from "styled-components";
+import theme from "styled-theming";
+import { QueryParamProvider } from 'use-query-params';
+
+import {Header} from './common/layout';
+import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
+import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
+
+import './App.css';
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
+import {setEnv} from "./store/actions";
 
 export const backgroundColor = theme("theme", {
     light: "#fff",
@@ -36,6 +32,19 @@ const MyContainer = styled.div`
 `;
 
 function App() {
+    const dispatch = useDispatch();
+
+    const fetchEnv = async (url: string) => {
+        const response = await fetch(url);
+        return await response.json();
+    };
+
+    useEffect(() => {
+        fetchEnv('/env.json').then(env => {
+            dispatch(setEnv({ env }));
+        });
+    }, [dispatch]);
+
     return (
         <>
             <DarkThemeProvider>
@@ -51,17 +60,17 @@ function App() {
                             <Route path="/login">
                                 <LoginPage />
                             </Route>
-                            <Route path="/my-apps">
+                            <Route exact path="/my-apps">
                                 <MyAppsPage />
                             </Route>
                             <Route exact path="/all-apps">
                                 <AllAppsPage />
                             </Route>
-                            <Route path="/settings">
-                                <SettingsPage />
-                            </Route>
                             <Route path="/all-apps/:specKey">
                                 <SpecView />
+                            </Route>
+                            <Route path="/my-apps/:stackServiceId">
+                                <ConsolePage />
                             </Route>
                             <Route path="/swagger">
                                 <SwaggerUiPage />
