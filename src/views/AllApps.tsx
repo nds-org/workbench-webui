@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import { V1, SpecCard, handleError } from '../common';
 
-import {Container, Row, Col, ListGroup, Jumbotron, /*Dropdown, DropdownButton*/} from "react-bootstrap";
+import {Container, Row, Col, ListGroup, Jumbotron, Badge, /*Dropdown, DropdownButton*/} from "react-bootstrap";
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
@@ -148,14 +148,17 @@ function AllAppsPage() {
                     <Col style={{ paddingTop: "40px" }}>
                         <Row>
                             <Col style={{ textAlign: "left", paddingLeft: "25px" }}>
-                                <h3>{!filter ? 'All' : filter === 'featured' ? 'Featured' : tags.find(t => filter === t.id)?.name} Apps</h3>
+                                <h3>
+                                    {!filter ? 'All' : filter === 'featured' ? 'Featured' : tags.find(t => filter === t.id)?.name} Apps
+                                    <Badge pill variant={darkThemeEnabled ? 'light' : 'dark'}>{specs.length}</Badge>
+                                </h3>
                             </Col>
                         </Row>
 
                         <Row>
                             {
                                 specs.map(spec =>
-                                    spec.display === 'stack' && <Col className='col-3' key={spec.key} style={{ padding: "20px"}}>
+                                    spec.display === 'stack' && <Col className='col-4' key={spec.key} style={{ padding: "20px"}}>
                                         <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags}  />
                                     </Col>
                                 )

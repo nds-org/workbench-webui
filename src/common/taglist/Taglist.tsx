@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
  * @param myArray {Array} Array to split
  * @param chunkSize {Integer} Size of every group
  */
-const chunkArray = (arr: Array<any>, chunkSize: number): Array<Array<any>> => {
+export const chunkArray = (arr: Array<any>, chunkSize: number): Array<Array<any>> => {
     if (!arr) return [];
 
     const results = [];
@@ -23,7 +23,7 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
     const [chunkedTags, setChunkedTags] = useState<Array<Array<any>>>([]);
 
     useEffect(() => {
-        const chunks = chunkArray(props.spec?.tags, props.chunkSize || 2);
+        const chunks = chunkArray(props.spec?.tags, props.chunkSize || 3);
         setChunkedTags(chunks);
     }, [props.spec, props.chunkSize]);
 
