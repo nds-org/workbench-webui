@@ -154,7 +154,7 @@ function SpecCard(props: CardProps) {
                     {props.spec.description}
                 </Row>
             </BootstrapCard.Body>
-            <BootstrapCard.Footer style={{ border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
+            <BootstrapCard.Footer style={{ height: "80px", border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
                 <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} />
             </BootstrapCard.Footer>
         </BootstrapCard>

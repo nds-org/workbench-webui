@@ -29,11 +29,11 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
 
     return (
         <>
-            <Carousel>
+            <Carousel controls={false}>
                 {
                     chunkedTags.map((values: Array<any>, index: number) =>
                         <Carousel.Item key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index}>
-                            <Carousel.Caption as={Row}>
+                            <Row>
                                 {
                                     values.map((tag: string) =>
                                         <Col key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index + '-' + tag}>
@@ -45,7 +45,7 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
                                         </Col>
                                     )
                                 }
-                            </Carousel.Caption>
+                            </Row>
                         </Carousel.Item>
                     )
                 }

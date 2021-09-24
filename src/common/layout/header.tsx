@@ -11,16 +11,6 @@ import {resetAuth, setAuth} from "../../store/actions";
 
 import jwt from 'jwt-decode';
 
-const css = `
-    .navbar-light {
-        box-shadow: 0 2px 3px darkgrey;
-    }
-    .nav-link.active {
-        border-bottom: white 8px solid;
-        margin-bottom: -10px;
-    }
-`
-
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
@@ -91,10 +81,21 @@ function Header() {
         }
     }, [username]);
 
+    const activeColor = darkThemeEnabled ? 'white' : '#283845';
+    const css = `
+    .navbar-light {
+        box-shadow: 0 2px 3px darkgrey;
+    }
+    .nav-link.active {
+        border-bottom: ${activeColor} 8px solid;
+        margin-bottom: -10px;
+    }
+`
+
     return (
         <>
             <style>{css}</style>
-            <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
+            <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? '#fff' : '#283845' }}>
                 <LinkContainer key="ROOT" to="/">
                     <Navbar.Brand title='Workbench'>
                         <img alt={'favicon'} src={ env?.product?.faviconPath || '/favicon.svg' } /> { env?.product?.name }
