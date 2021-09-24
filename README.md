@@ -1,10 +1,65 @@
-# Getting Started with Create React App
+# Labs Workbench WebUI 2.x
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Running instances of etcd + apiserver are required.
 
-## Available Scripts
+## Kubernetes
+
+Prerequisites:
+* Kubernetes Cluster
+* Helm
+
+### Install via Helm Chart
+
+```bash
+cd ~
+git clone https://github.com/nds-org/workbench-helm-chart && cd workbench-helm-chart
+helm upgrade --install workbench . -f values.yaml
+```
+
+## Docker Compose (Development Only)
+
+Prerequisites:
+* Docker for Mac / Docker for Windows
+* Kubernetes in Docker
+
+
+### Production Mode
+
+Start up the backend + build/start the webui in production mode:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+### Development Mode
+
+[WIP] Start up the backend + build/start the webui in development mode:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+* NOTE: File watching is currently broken in dev mode, so the code **does not** automatically recompile properly
+
+### Backend Only
+
+To use an external IDE, you can start up only the backend services:
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+
+## Local Development
+
+Prerequisites:
+* `node` + `npm` [+ `npx`]
+* `yarn`
+
+Run `yarn install` to fetch project dependencies. This is required for building the source.
 
 In the project directory, you can run:
+
+### `yarn swagger`
+
+Regenerate the swagger REST API client from the spec(s) in `public/swagger*.yml`.
 
 ### `yarn start`
 
@@ -38,9 +93,3 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
