@@ -1,0 +1,14 @@
+
+version: "3.9"
+
+services:
+  webui:
+    container_name: "ndslabs-webui"
+    image: "ndslabs/webui:prod"
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:80"
