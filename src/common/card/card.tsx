@@ -3,12 +3,13 @@ import {Redirect} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 import {Button, Card as BootstrapCard, Col, Row} from "react-bootstrap";
-import {faEllipsisV, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import {handleError, V1} from '..';
 import Taglist from "../taglist/Taglist";
 
 import './card.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 // TODO: Abstract this?
 const copy = (obj: any) => {
@@ -128,21 +129,21 @@ function SpecCard(props: CardProps) {
     }
 
     return (
-        <BootstrapCard bg={darkThemeEnabled ? 'dark' : 'light'}>
+        <BootstrapCard bg={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "16px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
             {
                 redirect && <Redirect to={redirect} />
             }
-            <BootstrapCard.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px"}}>
+            <BootstrapCard.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px",  borderRadius: "15px 15px 0 0", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
                 <Row>
                     <Col style={{ textAlign: "left" }}>
-                        <img alt={props.spec.key} width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey" }}/>
+                        <img alt={props.spec.key} width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey", backgroundColor: 'white' }}/>
                     </Col>
                     <Col>
-                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "25px", marginTop: "15px" }} className="btn-light" onClick={installApplication}>
-                            <FontAwesomeIcon icon={faPlus} />
+                        <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
+                            <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
-                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={showDropdown} style={{ marginTop: "15px" }}>
-                            <FontAwesomeIcon icon={faEllipsisV} />
+                        <Button variant={'link'} onClick={showDropdown} style={{ marginTop: "15px" }}>
+                            <FontAwesomeIcon icon={faEllipsisV} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
                     </Col>
                 </Row>
@@ -152,10 +153,10 @@ function SpecCard(props: CardProps) {
                 <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                     {props.spec.description}
                 </Row>
-                <Row>
-                    <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} />
-                </Row>
             </BootstrapCard.Body>
+            <BootstrapCard.Footer style={{ border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
+                <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} />
+            </BootstrapCard.Footer>
         </BootstrapCard>
     );
 }

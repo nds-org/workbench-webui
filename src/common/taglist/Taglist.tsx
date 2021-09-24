@@ -20,7 +20,6 @@ const chunkArray = (arr: Array<any>, chunkSize: number): Array<Array<any>> => {
 }
 
 function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any) => void, chunkSize: number }) {
-
     const [chunkedTags, setChunkedTags] = useState<Array<Array<any>>>([]);
 
     useEffect(() => {
@@ -30,11 +29,11 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
 
     return (
         <>
-            <Carousel controls={false}>
+            <Carousel>
                 {
                     chunkedTags.map((values: Array<any>, index: number) =>
                         <Carousel.Item key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index}>
-                            <Row>
+                            <Carousel.Caption as={Row}>
                                 {
                                     values.map((tag: string) =>
                                         <Col key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index + '-' + tag}>
@@ -46,7 +45,7 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
                                         </Col>
                                     )
                                 }
-                            </Row>
+                            </Carousel.Caption>
                         </Carousel.Item>
                     )
                 }

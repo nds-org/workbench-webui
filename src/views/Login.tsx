@@ -30,8 +30,6 @@ function LoginPage(props: {}) {
                 dispatch(setAuth({ token: response.token, username }));
 
                 setRedirect(nextRedirect ? nextRedirect : '/all-apps');
-
-                setTimeout(() => { setRedirect('') }, 1000);
             }
         }).catch(reason =>{
             console.error("Login was invalid: ", reason);

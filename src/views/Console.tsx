@@ -16,7 +16,7 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     const username = useSelector((state: any) => state.auth.username);
     const ssid = props.stackServiceId;
     const queryParams = `namespace=${username}&ssid=${ssid}`;
-    const socketUrl = `${WS_ENDPOINT}?${queryParams}`;
+    const socketUrl = ssid ? `${WS_ENDPOINT}?${queryParams}` : null;
 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');
@@ -44,7 +44,7 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
             foreground: darkThemeEnabled ? 'white' : 'black',
             cursor: darkThemeEnabled ? 'white' : 'black',
         });
-    }, [darkThemeEnabled]);
+    }, [darkThemeEnabled, xtermRef]);
 
     const options: ITerminalOptions = {
         rows: props.rows || 30,

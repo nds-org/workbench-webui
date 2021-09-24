@@ -1,7 +1,7 @@
 import * as actions from "./actions";
 import { combineReducers } from "redux";
-import {V1} from "../common";
-import {AuthPayload, EnvPayload, StackPayload} from "./actions";
+//import {V1} from "../common";
+import {AuthPayload, EnvPayload, /*StackPayload*/} from "./actions";
 
 interface Action<T> {
     type: string;
@@ -43,7 +43,7 @@ const env = (state: any = { }, action: Action<EnvPayload>) => {
 }
 
 /** TODO: Does this make any sense? */
-const serverData = (state = { stacks: [], specs: [] }, action: Action<StackPayload>) => {
+/*const serverData = (state = { stacks: [], specs: [] }, action: Action<StackPayload>) => {
     const stack: V1.Stack = action.payload.stack;
     const stacks: Array<V1.Stack> = state.stacks;
     const existing: V1.Stack | undefined = stacks.find(s => s.id === stack.id);
@@ -75,6 +75,6 @@ const serverData = (state = { stacks: [], specs: [] }, action: Action<StackPaylo
         default:
             return state;
     }
-};
+};*/
 
 export default combineReducers({ preferences, auth, env, /*serverData*/ });

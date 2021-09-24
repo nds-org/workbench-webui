@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import Gravatar from 'react-gravatar';
 import {useDispatch, useSelector} from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap';
@@ -10,6 +10,16 @@ import {resetAuth, setAuth} from "../../store/actions";
 
 
 import jwt from 'jwt-decode';
+
+const css = `
+    .navbar-light {
+        box-shadow: 0 2px 3px darkgrey;
+    }
+    .nav-link.active {
+        border-bottom: white 8px solid;
+        margin-bottom: -10px;
+    }
+`
 
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
@@ -24,14 +34,14 @@ function Header() {
 
     const [interval, setInterv] = useState<any>();
 
-    const onLogout = () => {
+    const onLogout = useCallback(() => {
         setUser(undefined);
         dispatch(resetAuth());
 
         if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
             window.location.href = `/login?rd=${encodeURIComponent(window.location.pathname)}`;
         }
-    }
+    }, [dispatch]);
 
     useEffect(() => {
         if (token) {
@@ -46,12 +56,17 @@ function Header() {
     useEffect(() => {
         if (!interval) {
             // Refresh token interval
-            const refreshTokenInterval = setTimeout(() => {
-                console.log("Refreshing token: ", token);
+            const refreshTokenInterval = setInterval(() => {
+                // FIXME: can't read redux state here? fallback to localStorage
+                const json = localStorage.getItem('auth') || '{"token":"","username":""}';
+                const auth = JSON.parse(json);
+                const token = auth.token;
+                const username = auth.username;
 
                 if (!token || !username) {
                     onLogout();
                 } else {
+                    console.log("Refreshing token: ", token);
                     V1.UserAccountService.refreshToken().then((token: V1.Token) => {
                         const tokenStr = token.token + "";
                         dispatch(setAuth({ username, token: tokenStr }));
@@ -78,7 +93,8 @@ function Header() {
 
     return (
         <>
-            <Navbar variant={darkThemeEnabled ? 'dark' : 'light'} expand="lg" style={{ paddingLeft: "20px", paddingRight: "20px"}}>
+            <style>{css}</style>
+            <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
                 <LinkContainer key="ROOT" to="/">
                     <Navbar.Brand title='Workbench'>
                         <img alt={'favicon'} src={ env?.product?.faviconPath || '/favicon.svg' } /> { env?.product?.name }
@@ -88,11 +104,11 @@ function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     {
                         token && <Nav className="mr-auto">
-                            <LinkContainer key='my-apps' to='/my-apps'>
-                                <Nav.Link>My Apps</Nav.Link>
-                            </LinkContainer>
                             <LinkContainer key='all-apps' to='/all-apps'>
                                 <Nav.Link>All Apps</Nav.Link>
+                            </LinkContainer>
+                            <LinkContainer key='my-apps' to='/my-apps'>
+                                <Nav.Link>My Apps</Nav.Link>
                             </LinkContainer>
                         </Nav>
                     }

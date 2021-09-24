@@ -14,8 +14,8 @@ import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 
 export const backgroundColor = theme("theme", {
-    light: "#fff",
-    dark: "#2d2d2d",
+    light: "#FBFBFB",
+    dark: "#475362",
 });
 
 export const textColor = theme("theme", {

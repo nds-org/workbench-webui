@@ -135,13 +135,13 @@ function MyAppsPage(props: any) {
         setSelectedService(undefined);
     }
 
-    const waitForStack = async (stackId: string, condition: (stack?: V1.Stack) => boolean): Promise<boolean> => {
+    /*const waitForStack = async (stackId: string, condition: (stack?: V1.Stack) => boolean): Promise<boolean> => {
         return refresh().then(stks => {
             setStacks(stks);
             const stack = stks.find(stack => stack.id === stackId);
             return condition(stack);
         });
-    }
+    }*/
 
     const openConsoleInNewTab = () => {
         window.open(`/my-apps/${selectedService?.id}`, '_blank');
@@ -152,14 +152,21 @@ function MyAppsPage(props: any) {
             <Accordion defaultActiveKey="0">
                 {
                     stacks.map((stack, index) =>
-                        <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px" }} text={darkThemeEnabled ? 'light' : 'dark'} bg={darkThemeEnabled ? 'dark' : 'light'}>
+                        <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
+                            borderColor: index !== activated && !darkThemeEnabled ? '#EBEBEB' : (stack.status === 'started' ? '#CDFFD2' :    // green / ready
+                                (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
+                                    (stack.status === 'error' ? '#EB2A52' :               // red / error
+                                        darkThemeEnabled ? '#283845': '#EBEBEB'))),
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
                             <Card.Header style={{
                                 textAlign: "left",
                                 borderRadius: activated === index ? "18px 18px 0 0" : "18px",
-                                backgroundColor: (stack.status === 'started' ? '#CDFFD2' :      // green / ready
-                                    (stack.status?.endsWith('ing') ? '#F8DB66' :                // yellow / warning
-                                        (stack.status === 'error' ? '#EB2A52' : '#FFFFFF'))),    // red / error
-                                color: 'black',
+                                borderBottomColor: activated !== index || stack.status !== 'stopped' ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
+                                color: stack.status === 'stopped' && darkThemeEnabled ? 'white' : 'black',
+                                backgroundColor: (stack.status === 'started' ? '#CDFFD2' :    // green / ready
+                                    (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
+                                        (stack.status === 'error' ? '#EB2A52' :               // red / error
+                                            darkThemeEnabled ? '#283845': '#FFFFFF'))),       // night mode bg / default bg
                             }}>
                                 <Row>
                                     <Col xs={1}>
@@ -180,22 +187,27 @@ function MyAppsPage(props: any) {
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
                                         {(!stack.status || stack.status === 'stopped') && <>
-                                            <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: "black" }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
-                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: "black" }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
+                                            <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
+                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
                                         </>}
                                         {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') &&
-                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: "black" }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
                                         }
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
-                                        <Accordion.Toggle style={{ color: "black", marginRight: "10px", marginLeft: "30px", display: activated === index ? "none" : "" }} as={Button} variant={"link"}  eventKey={index+""} onClick={() => setActivated(index)}>
+                                        <Accordion.Toggle as={Button} variant={"link"} style={{
+                                            color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black',
+                                            marginRight: "10px",
+                                            marginLeft: "30px",
+                                            display: activated === index ? "none" : ""
+                                        }}   eventKey={index+""} onClick={() => setActivated(index)}>
                                             <FontAwesomeIcon icon={faCaretDown} size={'2x'} />
                                         </Accordion.Toggle>
                                     </Col>
                                 </Row>
                             </Card.Header>
                             <Accordion.Collapse as={Card.Body} eventKey={index+""} style={{ padding: "40px 120px" }}>
-                                <Table className='compact' responsive='sm' borderless={true} variant={darkThemeEnabled ? 'dark' : 'light'}>
+                                <Table className='compact' responsive='sm' borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
                                         <th>Status</th>

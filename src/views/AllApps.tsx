@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import { V1, SpecCard, handleError } from '../common';
 
-import {Container, Row, Col, ListGroup, Jumbotron, Dropdown, DropdownButton, Badge} from "react-bootstrap";
+import {Container, Row, Col, ListGroup, Jumbotron, /*Dropdown, DropdownButton*/} from "react-bootstrap";
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
@@ -46,6 +46,18 @@ const fetchSpecs = (filter: string, searchQuery: string) => {
     }).catch(reason => handleError("Failed to fetch app specs", reason));
 }
 
+const theme = createMuiTheme({
+    palette: {
+        type: 'dark'
+    },
+});
+
+const css = `
+.list-group-item.active {
+    font-weight: 700;
+}
+`;
+
 function AllAppsPage() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
@@ -57,19 +69,13 @@ function AllAppsPage() {
 
     const [filter, setFilter] = useState('');
 
-    const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
+    const [categoryName, /*setCategoryName*/] = useQueryParam('category', StringParam);
 
     interface VocabTerm {
         id?: string;
         name?: string;
         definition?: string;
     }
-
-    const theme = createMuiTheme({
-        palette: {
-            type: darkThemeEnabled ? 'dark' : 'light'
-        },
-    });
 
     useEffect(() => {
         document.title = "Workbench: App Catalog";
@@ -103,12 +109,13 @@ function AllAppsPage() {
                     fontWeight: "bold",
                 }}>
                     <h1 style={{ paddingTop: "25px" }}>Explore Apps from NCSA</h1>
-                    <Input style={{ color: "white", width: "450px" }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                    <Input style={{ color: "white", width: "480px", fontWeight: 800 }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </Jumbotron>
-                <Row style={{ marginLeft: "20px", marginRight: "20px", marginTop: "40px", height: "100%" }}>
-                    <Col className='col-3'>
-                        <h3>Tags</h3>
-                        <Dropdown style={{ margin: "20px" }}>
+                <Row style={{ height: "100%" }}>
+                    <Col className='col-3' style={{ paddingTop: "40px", paddingLeft: "60px", paddingRight: "20px", textAlign: "left", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
+                        <h3 style={{ paddingLeft: "15px" }}>Tags</h3>
+                        {/*
+                        <Dropdown style={{ margin: "20px", width: "100%" }}>
                             <DropdownButton title={categoryName || 'Select a category...'} style={{ width: "100%", borderRadius: "20px" }}>
                                 <Dropdown.Item onClick={() => setCategoryName('')}>All Categories</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setCategoryName('Category 1')}>Category 1</Dropdown.Item>
@@ -116,19 +123,21 @@ function AllAppsPage() {
                                 <Dropdown.Item onClick={() => setCategoryName('Category 3')}>Category 3</Dropdown.Item>
                             </DropdownButton>
                         </Dropdown>
+                        */}
 
-                        <ListGroup defaultActiveKey="#all">
+                        <ListGroup defaultActiveKey="#all" style={{ marginTop: "28px", border: "none" }}>
                             {/* TODO: "Featured" Apps
                             <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={filter==='featured'} key={"tag-featured"} action href={"#Featured"} onClick={() => setFilter('featured')} title="Show all applications">
                                 Featured
                             </ListGroup.Item
                             >*/}
-                            <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#All"} onClick={() => setFilter('')} title="Show all applications">
+                            <style>{css}</style>
+                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#All"} onClick={() => setFilter('')} title="Show all applications">
                                 Show All
                             </ListGroup.Item>
                             {
                                 tags.map(tag =>
-                                    <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                    <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
                                         {tag.name}
                                     </ListGroup.Item>
                                 )
@@ -136,9 +145,9 @@ function AllAppsPage() {
                         </ListGroup>
                     </Col>
 
-                    <Col>
+                    <Col style={{ paddingTop: "40px" }}>
                         <Row>
-                            <Col>
+                            <Col style={{ textAlign: "left", paddingLeft: "25px" }}>
                                 <h3>{!filter ? 'All' : filter === 'featured' ? 'Featured' : tags.find(t => filter === t.id)?.name} Apps</h3>
                             </Col>
                         </Row>
@@ -147,7 +156,7 @@ function AllAppsPage() {
                             {
                                 specs.map(spec =>
                                     spec.display === 'stack' && <Col className='col-3' key={spec.key} style={{ padding: "20px"}}>
-                                        <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags} />
+                                        <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags}  />
                                     </Col>
                                 )
                             }
