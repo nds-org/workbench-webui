@@ -1,4 +1,4 @@
-import {createRef, useState} from 'react';
+import {createRef, useEffect, useState} from 'react';
 import {V1} from '../common';
 
 import {XTerm} from 'xterm-for-react';
@@ -9,7 +9,7 @@ import {useSelector} from "react-redux";
 
 const WS_ENDPOINT = `${V1.OpenAPI.BASE}/console`.replace('http', 'ws');
 
-const Console = (props: { stackServiceId?: string, options?: ITerminalOptions }) => {
+const Console = (props: { stackServiceId?: string, rows?: number, cols?: number }) => {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     // Build our socket URL
@@ -38,7 +38,17 @@ const Console = (props: { stackServiceId?: string, options?: ITerminalOptions })
         },
     });
 
-    const options: ITerminalOptions = { ...props?.options,
+    useEffect(() => {
+        xtermRef.current?.terminal.setOption('theme', {
+            background: darkThemeEnabled ? 'black' : 'white',
+            foreground: darkThemeEnabled ? 'white' : 'black',
+            cursor: darkThemeEnabled ? 'white' : 'black',
+        });
+    }, [darkThemeEnabled]);
+
+    const options: ITerminalOptions = {
+        rows: props.rows || 30,
+        cols: props.cols || 80,
         theme: {
             background: darkThemeEnabled ? 'black' : 'white',
             foreground: darkThemeEnabled ? 'white' : 'black',
