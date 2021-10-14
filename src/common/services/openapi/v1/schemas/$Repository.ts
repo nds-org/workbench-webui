@@ -3,6 +3,9 @@
 /* eslint-disable */
 export const $Repository = {
     properties: {
+        type: {
+            type: 'string',
+        },
         port: {
             type: 'string',
         },

@@ -10,6 +10,9 @@ export const $Stack = {
             type: 'string',
             isRequired: true,
         },
+        secure: {
+            type: 'boolean',
+        },
         name: {
             type: 'string',
         },
@@ -25,7 +28,7 @@ export const $Stack = {
         action: {
             type: 'string',
         },
-        createTime: {
+        createdTime: {
             type: 'number',
         },
         updateTime: {

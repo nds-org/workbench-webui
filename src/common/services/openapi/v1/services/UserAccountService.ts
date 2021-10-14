@@ -23,7 +23,7 @@ export class UserAccountService {
             path: `/authenticate`,
             body: auth,
             errors: {
-                401: `Not logged in`,
+                401: `Invalid credentials`,
             },
         });
         return result.body;
@@ -32,10 +32,10 @@ export class UserAccountService {
     /**
      * Logout a user
      *
-     * @returns Token OK
+     * @returns void
      * @throws ApiError
      */
-    public static async deleteAuthenticate(): Promise<Token> {
+    public static async deleteAuthenticate(): Promise<void> {
         const result = await __request({
             method: 'DELETE',
             path: `/authenticate`,

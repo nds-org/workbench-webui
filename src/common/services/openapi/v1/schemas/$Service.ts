@@ -22,6 +22,9 @@ export const $Service = {
         logo: {
             type: 'string',
         },
+        info: {
+            type: 'string',
+        },
         display: {
             type: 'string',
         },

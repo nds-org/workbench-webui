@@ -18,6 +18,7 @@ export type Service = {
     description?: string;
     maintainer?: string;
     logo?: string;
+    info?: string;
     display?: string;
     access?: string;
     developerEnvironment?: string;

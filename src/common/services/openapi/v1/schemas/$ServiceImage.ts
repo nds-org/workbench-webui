@@ -3,6 +3,9 @@
 /* eslint-disable */
 export const $ServiceImage = {
     properties: {
+        registry: {
+            type: 'string',
+        },
         name: {
             type: 'string',
         },

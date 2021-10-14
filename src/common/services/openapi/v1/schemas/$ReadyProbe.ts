@@ -3,6 +3,9 @@
 /* eslint-disable */
 export const $ReadyProbe = {
     properties: {
+        type: {
+            type: 'string',
+        },
         path: {
             type: 'string',
         },

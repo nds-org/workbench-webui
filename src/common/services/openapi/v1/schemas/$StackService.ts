@@ -10,6 +10,12 @@ export const $StackService = {
             type: 'string',
             isRequired: true,
         },
+        createdTime: {
+            type: 'number',
+        },
+        updateTime: {
+            type: 'number',
+        },
         service: {
             type: 'string',
             isRequired: true,
@@ -17,7 +23,7 @@ export const $StackService = {
         status: {
             type: 'string',
         },
-        statusMessage: {
+        statusMessages: {
             type: 'array',
             contains: {
                 type: 'string',
@@ -33,11 +39,14 @@ export const $StackService = {
             },
             isRequired: true,
         },
+        internalIP: {
+            type: 'string',
+        },
         readinessProbe: {
             type: 'ReadyProbe',
         },
-        image: {
-            type: 'ServiceImage',
+        imageTag: {
+            type: 'string',
         },
         resourceLimits: {
             type: 'ResourceLimits',
@@ -49,22 +58,34 @@ export const $StackService = {
             },
             isRequired: true,
         },
+        ports: {
+            type: 'dictionary',
+            contains: {
+                type: 'number',
+            },
+            isRequired: true,
+        },
         endpoints: {
             type: 'array',
             contains: {
                 properties: {
-                    internalIP: {
-                        type: 'string',
-                    },
                     host: {
                         type: 'string',
                     },
-                    ports: {
-                        type: 'array',
-                        contains: {
-                            properties: {
-                            },
-                        },
+                    path: {
+                        type: 'string',
+                    },
+                    url: {
+                        type: 'string',
+                    },
+                    port: {
+                        type: 'number',
+                    },
+                    nodePort: {
+                        type: 'number',
+                    },
+                    protocol: {
+                        type: 'string',
                     },
                 },
             },

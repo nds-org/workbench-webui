@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 export type ReadyProbe = {
+    type?: string;
     path?: string;
     port?: number;
     initialDelay?: number;

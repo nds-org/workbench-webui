@@ -4,23 +4,29 @@
 
 import type { ReadyProbe } from './ReadyProbe';
 import type { ResourceLimits } from './ResourceLimits';
-import type { ServiceImage } from './ServiceImage';
 
 export type StackService = {
     id?: string;
     stack: string;
+    createdTime?: number;
+    updateTime?: number;
     service: string;
     status?: string;
-    statusMessage?: Array<string>;
+    statusMessages?: Array<string>;
     developerEnvironment?: string;
     config: Record<string, string>;
+    internalIP?: string;
     readinessProbe?: ReadyProbe;
-    image?: ServiceImage;
+    imageTag?: string;
     resourceLimits?: ResourceLimits;
     volumeMounts: Record<string, string>;
+    ports: Record<string, number>;
     endpoints?: Array<{
-        internalIP?: string,
         host?: string,
-        ports?: Array<any>,
+        path?: string,
+        url?: string,
+        port?: number,
+        nodePort?: number,
+        protocol?: string,
     }>;
 }
