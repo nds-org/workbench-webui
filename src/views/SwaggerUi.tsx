@@ -13,18 +13,42 @@ function SwaggerUiPage() {
             color: ${darkThemeEnabled ? 'white' : "#283845"};
         }
         
-        .markdown > p, .model.model-title, .title.info, .title, .base-url {
+        .markdown > p, .model.model-title, .title.info, .title, .base-url, .opblock-title, .try-out__btn, th.col_header,td.col_header, .response-col_status, .parameter__name, .parameter__type, .model-toggle:after {
             color: ${darkThemeEnabled ? 'white' : "#283845"} !important;
         }
         
-        .scheme-container {
-            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
+        /* inputs */
+        input {
+            color: ${colors.textColor.light}
         }
-         
-        .model-container {
+        /* links */
+        a {
+            text-decoration: none;
+            color: ${darkThemeEnabled ? "#4488FF" : "#2222FF"};
+          
+        }
+        a:hover {
+            text-decoration: underline;
+            color: ${darkThemeEnabled ? "#44BBFF" : "#2222FF"};
+        }
+        
+        /* red */
+        .parameter__name.required:after {
+            color: ${darkThemeEnabled ? "#dd0000" : "#e33314"} !important;
+        }
+        
+        /* grey */
+        .parameter__in {
+            color: ${darkThemeEnabled ? "#BBB": "#AAAAAA"} !important;
+        }
+        
+        .opblock-section-header > h4 {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
+        }
+        
+        .model-container, .scheme-container, .opblock-section-header {
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
             background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
-       
         }
     `;
 
