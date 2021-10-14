@@ -1,9 +1,12 @@
 import {handleError, V1} from "../common";
 import {Redirect, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Button, Col, Row} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faEllipsisV, faChevronLeft} from "@fortawesome/free-solid-svg-icons";
+import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
+import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import Taglist from "../common/taglist/Taglist";
 import {useSelector} from "react-redux";
 

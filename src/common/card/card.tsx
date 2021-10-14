@@ -2,7 +2,10 @@ import {useState} from 'react';
 import {Redirect} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-import {Button, Card as BootstrapCard, Col, Row} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import {handleError, V1} from '..';
 import Taglist from "../taglist/Taglist";
@@ -129,11 +132,11 @@ function SpecCard(props: CardProps) {
     }
 
     return (
-        <BootstrapCard bg={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "16px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
+        <Card bg={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "16px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
             {
                 redirect && <Redirect to={redirect} />
             }
-            <BootstrapCard.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px",  borderRadius: "15px 15px 0 0", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
+            <Card.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px",  borderRadius: "15px 15px 0 0", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
                 <Row>
                     <Col style={{ textAlign: "left" }}>
                         <img alt={props.spec.key} width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey", backgroundColor: 'white' }}/>
@@ -153,11 +156,11 @@ function SpecCard(props: CardProps) {
                 <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                     {props.spec.description}
                 </Row>
-            </BootstrapCard.Body>
-            <BootstrapCard.Footer style={{ height: "80px", border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
+            </Card.Body>
+            <Card.Footer style={{ height: "80px", border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
                 <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} />
-            </BootstrapCard.Footer>
-        </BootstrapCard>
+            </Card.Footer>
+        </Card>
     );
 }
 

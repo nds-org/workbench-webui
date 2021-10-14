@@ -1,3 +1,12 @@
+.login.banner {
+  background-repeat: no-repeat;
+  background-size: 2200px 1200px;
+  background-position: -400px -300px;
+  padding-top: 100px;
+  height: 450px;
+  padding-bottom: 40px;
+}
+
 
 .login.icon.backdrop {
   margin: 0 20%;
@@ -17,29 +26,8 @@
   'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-.container {
-  margin-top: 100px;
-}
-
 .col {
   text-align: center;
-}
-
-.text-header {
-  width: 349px;
-  height: 43px;
-  font-family: Inter;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 30px;
-  line-height: 44px;
-  text-align: left;
-  margin-top: 45px;
-
-  /* side bar */
-
-  color: #475362;
-
 }
 
 .header-text {
@@ -52,7 +40,6 @@
 
 .text-content {
   text-align: left;
-  margin-top: 45px;
 }
 
 .numeric-header {
@@ -182,7 +169,7 @@ p {
 
 }
 #contactUs {
-  margin: 50px;
+  margin: 100px 50px;
 }
 #visitAllApps {
   margin: 50px;

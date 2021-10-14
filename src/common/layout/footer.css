@@ -1,9 +1,6 @@
-.bg-light {
-    background-color: #f8f9fa!important;
-}
-.py-3 {
-    padding-top: 1rem!important;
-    padding-bottom: 1rem!important;
+.padded {
+    padding-top: 0.5rem!important;
+    padding-bottom: 0.5rem!important;
 }
 
 .mt-auto {
@@ -18,6 +15,6 @@ footer {
    width: 100%;
    bottom: 0;
    position: fixed;
-   height: 6vh;
+   height: 10vh;
    display: block;
 }

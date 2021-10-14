@@ -1,10 +1,17 @@
 import {useEffect, useState} from 'react';
 import '../index.css';
-import {Accordion, Button, Card, Col, Container, Modal, Row, Table} from "react-bootstrap";
+import Accordion from "react-bootstrap/Accordion";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {V1, handleError} from "../common";
 
-import {faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
 import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
@@ -147,26 +154,35 @@ function MyAppsPage(props: any) {
         window.open(`/my-apps/${selectedService?.id}`, '_blank');
     }
 
+    const computeStackBorderColor = (stack: V1.Stack, index: number) => {
+        return index !== activated && !darkThemeEnabled ? '#EBEBEB' : (stack.status === 'started' ? '#CDFFD2' :    // green / ready
+            (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
+                (stack.status === 'error' ? '#EB2A52' :               // red / error
+                    darkThemeEnabled ? '#283845': '#EBEBEB')))
+    }
+
+    const computeStackBackgroundColor = (stack: V1.Stack, index: number) => {
+        return (stack.status === 'started' ? '#CDFFD2' :    // green / ready
+            (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
+                (stack.status === 'error' ? '#EB2A52' :               // red / error
+                    darkThemeEnabled ? '#283845': '#FFFFFF')))
+    }
+
     return (
         <Container fluid={false}>
+            <div style={{ height: "10vh" }}></div>
             <Accordion defaultActiveKey="0">
                 {
                     stacks.map((stack, index) =>
                         <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
-                            borderColor: index !== activated && !darkThemeEnabled ? '#EBEBEB' : (stack.status === 'started' ? '#CDFFD2' :    // green / ready
-                                (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
-                                    (stack.status === 'error' ? '#EB2A52' :               // red / error
-                                        darkThemeEnabled ? '#283845': '#EBEBEB'))),
+                            borderColor: computeStackBorderColor(stack, index),
                             backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
                             <Card.Header style={{
                                 textAlign: "left",
                                 borderRadius: activated === index ? "18px 18px 0 0" : "18px",
                                 borderBottomColor: activated !== index || stack.status !== 'stopped' ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
                                 color: stack.status === 'stopped' && darkThemeEnabled ? 'white' : 'black',
-                                backgroundColor: (stack.status === 'started' ? '#CDFFD2' :    // green / ready
-                                    (stack.status?.endsWith('ing') ? '#F8DB66' :  // yellow / warning
-                                        (stack.status === 'error' ? '#EB2A52' :               // red / error
-                                            darkThemeEnabled ? '#283845': '#FFFFFF'))),       // night mode bg / default bg
+                                backgroundColor: computeStackBackgroundColor(stack, index),       // night mode bg / default bg
                             }}>
                                 <Row>
                                     <Col xs={1}>

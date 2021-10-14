@@ -1,5 +1,8 @@
 import {V1} from "..";
-import {Button, Carousel, Col, Row} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Carousel  from "react-bootstrap/Carousel";
+import Col from "react-bootstrap/Col";
+import Row  from "react-bootstrap/Row";
 import {useEffect, useState} from "react";
 
 /**

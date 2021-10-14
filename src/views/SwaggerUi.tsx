@@ -1,9 +1,33 @@
 import SwaggerUI  from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
+import {useSelector} from "react-redux";
+import { colors } from "../App";
 
 const STORAGE_KEY = 'swaggerToken';
 
 function SwaggerUiPage() {
+    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+
+    const themeCss = `
+        * {
+            color: ${darkThemeEnabled ? 'white' : "#283845"};
+        }
+        
+        .markdown > p, .model.model-title, .title.info, .title, .base-url {
+            color: ${darkThemeEnabled ? 'white' : "#283845"} !important;
+        }
+        
+        .scheme-container {
+            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
+        }
+         
+        .model-container {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
+            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
+       
+        }
+    `;
+
     const injectAuthHeader = (req: any) => {
         if (req.url.indexOf('/api') !== -1 && !req.headers.Authorization) {
             const token = localStorage.getItem(STORAGE_KEY);
@@ -25,7 +49,10 @@ function SwaggerUiPage() {
     }
 
     return (
-        <SwaggerUI url="/swagger.yml" requestInterceptor={injectAuthHeader} responseInterceptor={slurpToken}/>
+        <>
+            <style>{themeCss}</style>
+            <SwaggerUI url="/swagger.yml" requestInterceptor={injectAuthHeader} responseInterceptor={slurpToken}/>
+        </>
     );
 }
 

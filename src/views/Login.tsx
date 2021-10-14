@@ -1,6 +1,12 @@
 import {useState} from 'react';
 import {V1} from '../common';
-import {Alert, Button, Container, Form, FormControl, FormGroup, FormLabel} from "react-bootstrap";
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import FormControl from "react-bootstrap/FormControl";
+import FormGroup from "react-bootstrap/FormGroup";
+import FormLabel from "react-bootstrap/FormLabel";
 import { Redirect } from 'react-router-dom';
 import {StringParam, useQueryParam} from "use-query-params";
 import {useDispatch} from "react-redux";
@@ -37,11 +43,18 @@ function LoginPage(props: {}) {
         });
     }
 
+    const css = `
+        #loginContainer {
+            margin-top: 10vh;
+        }
+    `;
+
     return (
-        <Container fluid={false}>
+        <Container fluid={false} id={'loginContainer'}>
             {
                 redirect && <Redirect to={redirect} />
             }
+            <style>{css}</style>
             <Alert className='alert-danger' show={error ? true : false}>{error}</Alert>
                 <Form onSubmit={login}>
                     <FormGroup>

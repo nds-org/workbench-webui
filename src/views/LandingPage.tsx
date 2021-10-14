@@ -1,12 +1,47 @@
 import {Footer} from "../common";
 import {useState} from "react";
-import {Button} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
 
 import './LandingPage.css';
+import styled from "styled-components";
+import {textColor} from "../App";
+import {useSelector} from "react-redux";
+
+
+const NumericHeader = styled.span`
+    bottom: 10px;
+    width: 291px;
+    height: 116px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 80pt;
+    line-height: 116px;
+
+    /* mid */
+
+    color: #EB2A52;
+
+    opacity: 0.6;
+`;
 
 const LandingPage = () => {
     const [redirect, setRedirect] = useState('');
+    const env = useSelector((state: any) => state.env);
+
+    const SectionHeader = styled.h3`
+        color: ${textColor};
+        
+        width: 349px;
+        height: 43px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 44px;
+        text-align: left;
+    `;
 
     return (
         redirect ?
@@ -14,22 +49,18 @@ const LandingPage = () => {
             :
         <>
             <div className="login area row">
-                <div className="login banner" style={{
-                    backgroundImage: 'url("/login-banner.jpg")',
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "2200px 1200px",
-                    backgroundPosition: "-400px -300px",
-                    paddingTop: "100px",
-                    height: "450px",
-                    paddingBottom: "40px",
-                }}>
+                <div className="login banner" style={{backgroundImage: 'url("/login-banner.jpg")',minHeight: '20vh'}}>
                     <h1 className="ui white header">
-                        <p className="nomargin">Labs Workbench allows developers to</p>
-                        <p className="nomargin">prototype tools that help build out the</p>
-                        <p className="nomargin">NDS framework and services.</p>
+                        {
+                            (env?.product?.landingHtml && <span dangerouslySetInnerHTML={{__html: env?.product?.landingHtml+""}}></span>) || <>
+                                <p className="nomargin">Labs Workbench allows developers to</p>
+                                <p className="nomargin">prototype tools that help build out the</p>
+                                <p className="nomargin">NDS framework and services.</p>
+                            </>
+                        }
                     </h1>
 
-                    <Button style={{ marginTop: "100px", padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => setRedirect("/login")}>Log In</Button>
+                    <Button style={{ padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => setRedirect("/login")}>Log In</Button>
                 </div>
             </div>
 
@@ -46,45 +77,54 @@ const LandingPage = () => {
                     <div className="col-6">
                         <div className="row">
                             <div className="col">
-                                <h3 className="text-header">
-                                    <div className="row">
-                                        <div className="col-4"><span className="numeric-header">01</span></div>
-                                        <div className="col"><span className="header-text">Find the tools you need</span></div>
-                                    </div>
-                                </h3>
+                                <div className="row">
+                                    <div className="col-4"><NumericHeader>01</NumericHeader></div>
+                                    <div className="col"><SectionHeader>Find the tools you need</SectionHeader></div>
+                                </div>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col">
-                                <p className="text-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
+                                <p className="text-content">
+                                    Search our catalog of web-based research and software tools.
+                                    We offer over 30 different software tools that fit many common scenarios
+                                    encountered in research software development.
+                                    Find a set of tools to help you build out a new software product or
+                                    extend an existing one.
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div id="sectionOneDiagram" className="col-6">
-                        <img alt={'landing-diagram-1'} className="image-content" src="/landing-diagram-1.png" width="316px" height="260x" />
+                        <img alt={'landing-diagram-1'} className="image-content" src="/landing-diagram-1.svg" width="316px" height="260x" />
                     </div>
                 </div>
 
                 <div id="sectionTwo" className="row justify-content-md-center">
                     <div id="sectionTwoDiagram" className="col-6">
-                        <img alt={'landing-diagram-2'} className="image-content" src="/landing-diagram-2.png" width="316px" height="316px" />
+                        <img alt={'landing-diagram-2'} className="image-content" src="/landing-diagram-2.svg" width="316px" height="316px" />
                     </div>
 
                     <div className="col-6">
                         <div className="row">
                             <div className="col">
-                                <h3 className="text-header">
                                     <div className="row">
-                                        <div className="col-4"><span className="numeric-header">02</span></div>
-                                        <div className="col"><span className="header-text">Run the tools on our cloud service</span></div>
+                                        <div className="col-4"><NumericHeader>02</NumericHeader></div>
+                                        <div className="col">
+                                            <SectionHeader>Run the tools on our cloud service</SectionHeader>
+                                        </div>
                                     </div>
-                                </h3>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col">
-                                <p className="text-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
+                                <p className="text-content">
+                                    Once you've narrowed down your choices, launch your desired tool set on our
+                                    cloud resources.
+                                    Access your running applications using our web interface, and start integrating
+                                    the tools and shaping your software product.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -107,6 +147,8 @@ const LandingPage = () => {
                     </div>
                 </div>
             </div>
+
+            <div style={{ height: "50px" }}></div>
 
             <Footer></Footer>
         </>

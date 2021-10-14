@@ -1,7 +1,13 @@
 import {useEffect, useState} from 'react';
 import { V1, SpecCard, handleError } from '../common';
 
-import {Container, Row, Col, ListGroup, Jumbotron, Badge, /*Dropdown, DropdownButton*/} from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ListGroup from "react-bootstrap/ListGroup";
+import Jumbotron from "react-bootstrap/Jumbotron";
+import Badge from "react-bootstrap/Badge";
+/*Dropdown, DropdownButton*/
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";

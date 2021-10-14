@@ -1,10 +1,13 @@
 import {useEffect, useState} from 'react';
 import {V1} from '..';
-import {Container} from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 
 import './footer.css';
+import {useSelector} from "react-redux";
 
 function Footer() {
+    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+
     const [version, setVersion] = useState('');
 
      useEffect(() => {
@@ -14,9 +17,11 @@ function Footer() {
     }, [])
 
     return (
-        <footer className="footer mt-auto py-3 bg-light text-center">
+        <footer className="footer mt-auto padded text-center" style={{
+            backgroundColor: darkThemeEnabled ? '#283845' : '#fff'
+        }}>
             <Container fluid={true}>
-                <span className="text-muted">
+                <span style={{ color: darkThemeEnabled ? '#bbb' : '#475362' }}>
                     {version || 'No version data'}
                 </span>
             </Container>

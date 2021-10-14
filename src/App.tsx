@@ -1,4 +1,4 @@
-import {Container} from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import styled from "styled-components";
 import theme from "styled-theming";
@@ -9,18 +9,30 @@ import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
 import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
 
 import './App.css';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 
+export const colors = {
+    backgroundColor: { light: "#FBFBFB", dark: "#475362" },
+    foregroundColor: { light: "#FFF", dark: "#283845" },
+    textColor:{ light: "#283845", dark: "#FFF" }
+}
+
+// TODO: how to reuse these?
+export const foregroundColor = theme("theme", {
+    light: colors.foregroundColor.light,
+    dark: colors.foregroundColor.dark,
+});
+
 export const backgroundColor = theme("theme", {
-    light: "#FBFBFB",
-    dark: "#475362",
+    light: colors.backgroundColor.light,
+    dark: colors.backgroundColor.dark,
 });
 
 export const textColor = theme("theme", {
-    light: "#000",
-    dark: "#fff",
+    light: colors.textColor.light,
+    dark: colors.textColor.dark,
 });
 
 const MyContainer = styled.div`
@@ -33,11 +45,16 @@ const MyContainer = styled.div`
 
 function App() {
     const dispatch = useDispatch();
+    const env = useSelector((state: any) => state.env);
 
     const fetchEnv = async (url: string) => {
         const response = await fetch(url);
         return await response.json();
     };
+
+    useEffect(() => {
+        env?.product?.name && (document.title = env?.product?.name);
+    }, [env]);
 
     useEffect(() => {
         fetchEnv('/env.json').then(env => {
@@ -72,15 +89,13 @@ function App() {
                             <Route path="/my-apps/:stackServiceId">
                                 <ConsolePage />
                             </Route>
-                            <Route path="/swagger">
+                            <Route exact path="/swagger">
                                 <SwaggerUiPage />
                             </Route>
                         </Switch>
                         </QueryParamProvider>
                     </Router>
                 </Container>
-
-
             </DarkThemeProvider>
         </>
   );

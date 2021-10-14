@@ -4,7 +4,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap';
 
 import {handleError, V1, V2} from '..';
-import {Navbar, Nav, NavDropdown} from "react-bootstrap";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import DarkThemeToggle from "../toggle/darkthemetoggle";
 import {resetAuth, setAuth} from "../../store/actions";
 
@@ -43,7 +45,7 @@ function Header() {
         }
     }, [token]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!interval) {
             // Refresh token interval
             const refreshTokenInterval = setInterval(() => {
@@ -71,7 +73,7 @@ function Header() {
 
             setInterv(refreshTokenInterval);
         }
-    }, [username, token, interval, dispatch, onLogout]);
+    }, [username, token, interval, dispatch, onLogout]);*/
 
     useEffect(() => {
         if (username) {
@@ -104,7 +106,7 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     {
-                        token && <Nav className="mr-auto">
+                        token && <Nav activeKey="">
                             <LinkContainer key='all-apps' to='/all-apps'>
                                 <Nav.Link>All Apps</Nav.Link>
                             </LinkContainer>
@@ -113,7 +115,7 @@ function Header() {
                             </LinkContainer>
                         </Nav>
                     }
-                    <Nav className="ms-auto">
+                    <Nav className="ms-auto" activeKey="">
                         <Navbar.Text>
                             <DarkThemeToggle />
                         </Navbar.Text>

@@ -2,14 +2,6 @@ import { createStore } from "redux";
 import rootReducer from "./reducers";
 import {V1, V2} from "../common";
 
-const authStorageKey = "auth";
-const persistedAuth = localStorage.getItem(authStorageKey);
-
-const themeStorageKey = "theme";
-const persistedTheme = localStorage.getItem(themeStorageKey);
-
-const DEFAULT_VALUE = '';
-
 // TODO: Restructure env?
 export interface Env {
     product?: {
@@ -40,9 +32,14 @@ export interface AppState {
 const host = 'http://localhost:30001';
 V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
 
+// Populate initial state from localStorage
+const authStorageKey = "auth";
+const persistedAuth = localStorage.getItem(authStorageKey);
+const themeStorageKey = "theme";
+const persistedTheme = localStorage.getItem(themeStorageKey);
 const initState: AppState = {
     preferences: persistedTheme ? JSON.parse(persistedTheme) : { darkThemeEnabled: false },
-    auth: persistedAuth ? JSON.parse(persistedAuth) : { token: DEFAULT_VALUE, username: DEFAULT_VALUE },
+    auth: persistedAuth ? JSON.parse(persistedAuth) : { token: '', username: '' },
     //serverData: { stacks: [], specs: [] },
     env: {}, // fetchEnv(),
 };
