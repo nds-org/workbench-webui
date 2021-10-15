@@ -21,6 +21,15 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');
 
+    const theme = {
+        background: darkThemeEnabled ? 'black' : 'white',
+        foreground: darkThemeEnabled ? 'white' : 'black',
+        cursor: darkThemeEnabled ? 'white' : 'black',
+        cursorAccent:  darkThemeEnabled ? 'black' : 'white',
+        // NOTE: selection supports RGBA
+        selection: darkThemeEnabled ? '#FFFFFFAA' : '#00000055',
+    }
+
     const {
         sendMessage,
         //readyState,
@@ -39,21 +48,15 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     });
 
     useEffect(() => {
-        xtermRef.current?.terminal.setOption('theme', {
-            background: darkThemeEnabled ? 'black' : 'white',
-            foreground: darkThemeEnabled ? 'white' : 'black',
-            cursor: darkThemeEnabled ? 'white' : 'black',
-        });
+        xtermRef.current?.terminal.setOption('minimumContrastRatio', 21)
+        xtermRef.current?.terminal.setOption('theme', theme);
     }, [darkThemeEnabled, xtermRef]);
 
     const options: ITerminalOptions = {
         rows: props.rows || 30,
         cols: props.cols || 80,
-        theme: {
-            background: darkThemeEnabled ? 'black' : 'white',
-            foreground: darkThemeEnabled ? 'white' : 'black',
-            cursor: darkThemeEnabled ? 'white' : 'black',
-        },
+        minimumContrastRatio: 21,
+        theme: theme,
         rendererType: 'canvas',
     }
 
