@@ -48,7 +48,7 @@ function SwaggerUiPage() {
         }
         
         /* grey */
-        .parameter__in {
+        .parameter__in, .primitive.property {
             color: ${darkThemeEnabled ? "#BBB": "#AAAAAA"} !important;
         }
         
