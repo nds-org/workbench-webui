@@ -7,7 +7,8 @@ import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Badge from "react-bootstrap/Badge";
-/*Dropdown, DropdownButton*/
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
 import Input from "@material-ui/core/Input";
@@ -70,7 +71,7 @@ function AllAppsPage() {
 
     const [filter, setFilter] = useState('');
 
-    const [categoryName, /*setCategoryName*/] = useQueryParam('category', StringParam);
+    const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
 
     interface VocabTerm {
         id?: string;
@@ -81,6 +82,15 @@ function AllAppsPage() {
     useEffect(() => {
         document.title = "Workbench: App Catalog";
     }, []);
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        const tagName = decodeURIComponent(hash.slice(1));
+        const tag = tags?.find(t => tagName === t.name);
+        if (tag) {
+            setFilter(tag.id+"");
+        }
+    }, [tags]);
 
     useEffect(() => {
         V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
@@ -108,6 +118,14 @@ function AllAppsPage() {
             background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light};
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
         }
+        
+        /* Intentionally invert the colors on the category dropdown */
+        .dropdown-toggle.btn, .dropdown-toggle.btn:active {
+            width: 100%;
+            border-radius: 25px;
+            background-color: ${darkThemeEnabled ? colors.foregroundColor.light : colors.foregroundColor.dark};
+            color: ${darkThemeEnabled ? colors.textColor.light : colors.textColor.dark};
+        }
     `;
 
     return (
@@ -129,33 +147,70 @@ function AllAppsPage() {
                 <Row style={{ height: "100%" }}>
                     <Col className='col-3' style={{ paddingTop: "40px", paddingLeft: "60px", paddingRight: "20px", textAlign: "left", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
                         <h3 style={{ paddingLeft: "15px" }}>Tags</h3>
-                        {/*
-                        <Dropdown style={{ margin: "20px", width: "100%" }}>
-                            <DropdownButton title={categoryName || 'Select a category...'} style={{ width: "100%", borderRadius: "20px" }}>
-                                <Dropdown.Item onClick={() => setCategoryName('')}>All Categories</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setCategoryName('Category 1')}>Category 1</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setCategoryName('Category 2')}>Category 2</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setCategoryName('Category 3')}>Category 3</Dropdown.Item>
-                            </DropdownButton>
-                        </Dropdown>
-                        */}
+                        {
+                            <Dropdown style={{
+                                margin: "20px",
+                                width: "100%", marginLeft: "-15px" }}>
+                                <DropdownButton title={categoryName || 'Select a category...'} style={{ width: "100%", borderRadius: "25px",
+                                    backgroundColor: darkThemeEnabled ? colors.foregroundColor.light : colors.foregroundColor.dark,
+                                    color: darkThemeEnabled ? colors.textColor.light : colors.textColor.dark
+                                }}>
+                                    <Dropdown.Item onClick={() => setCategoryName(undefined)}>All Categories</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setCategoryName('Functionality')}>Functionality</Dropdown.Item>
+                                    {/*<Dropdown.Item onClick={() => setCategoryName('Technology')}>Technology</Dropdown.Item>*/}
+                                    <Dropdown.Item onClick={() => setCategoryName('Language')}>Language</Dropdown.Item>
+                                </DropdownButton>
+                            </Dropdown>
+                        }
 
-                        <ListGroup defaultActiveKey="#all" style={{ marginTop: "28px", border: "none" }}>
+                        <ListGroup defaultActiveKey="#" style={{ marginTop: "28px", border: "none", minHeight: "49vh" }}>
                             {/* TODO: "Featured" Apps
                             <ListGroup.Item variant={darkThemeEnabled ? 'dark' : 'light'} active={filter==='featured'} key={"tag-featured"} action href={"#Featured"} onClick={() => setFilter('featured')} title="Show all applications">
                                 Featured
                             </ListGroup.Item
                             >*/}
                             <style>{css}</style>
-                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#All"} onClick={() => setFilter('')} title="Show all applications">
+                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#"} onClick={() => { setCategoryName(undefined); setFilter(''); }} title="Show all applications">
                                 Show All
                             </ListGroup.Item>
                             {
-                                tags.map(tag =>
-                                    <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
-                                        {tag.name}
-                                    </ListGroup.Item>
-                                )
+                                (!categoryName || categoryName === 'Functionality') && tags?.filter((t: VocabTerm) => t.id && +t.id < 100)?.length > 0 && <>
+                                    <strong style={{ marginTop: "2vh" }}>Functionality</strong>
+                                    {
+                                        // First set: Functionality
+                                        tags?.filter((t: VocabTerm) => t.id && +t.id < 100).map(tag =>
+                                            <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                                {tag.name}
+                                            </ListGroup.Item>
+                                        )
+                                    }
+                                </>
+                            }
+                            {
+                                (!categoryName || categoryName === 'Technology') && tags?.filter((t: VocabTerm) => t.id && +t.id < 1000 && +t.id >= 100)?.length > 0 && <>
+                                    <strong style={{ marginTop: "2vh" }}>Technology</strong>
+                                    {
+                                        // Second set: Language
+                                        tags.filter((t: VocabTerm) => t.id && +t.id < 1000 && +t.id >= 100).map(tag =>
+                                        <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                    {tag.name}
+                                        </ListGroup.Item>
+                                        )
+                                    }
+                                </>
+                            }
+                            {
+                                (!categoryName || categoryName === 'Language') &&  tags.filter((t: VocabTerm) => t.id && +t.id < 10000 && +t.id >= 1000).length > 0 && <>
+                                    <strong style={{ marginTop: "2vh" }}>Language</strong>
+                                    {
+                                        // Final set: Language
+                                        tags.filter((t: VocabTerm) => t.id && +t.id < 10000 && +t.id >= 1000).map(tag =>
+                                            <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                                {tag.name}
+                                            </ListGroup.Item>
+                                        )
+                                    }
+                                </>
                             }
                         </ListGroup>
                     </Col>
