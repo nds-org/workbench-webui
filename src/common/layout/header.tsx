@@ -100,7 +100,7 @@ function Header() {
             <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? '#fff' : '#283845' }}>
                 <LinkContainer key="ROOT" to="/">
                     <Navbar.Brand title='Workbench'>
-                        <img alt={'favicon'} src={ env?.product?.faviconPath || '/favicon.svg' } /> { env?.product?.name }
+                        <img alt={'favicon'} width="32" height="32" src={ env?.product?.faviconPath || '/favicon.svg' } /> { env?.product?.name }
                     </Navbar.Brand>
                 </LinkContainer>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>

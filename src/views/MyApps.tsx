@@ -26,6 +26,8 @@ import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
 
 import Console from "./Console";
 import {useSelector} from "react-redux";
+import {Redirect} from "react-router-dom";
+import {colors} from "../App";
 
 
 const navigate = (stk: V1.Stack, ep: any) => {
@@ -55,6 +57,9 @@ function MyAppsPage(props: any) {
     // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
+
+    // Redirect signal
+    const [redirect, setRedirect] = useState('');
 
     // Refresh signal
     const [autoRefresh, setAutoRefresh] = useState(false);
@@ -170,9 +175,30 @@ function MyAppsPage(props: any) {
 
     return (
         <Container fluid={false}>
+            {
+                redirect && <Redirect to={redirect} />
+            }
             <div style={{ height: "10vh" }}></div>
             <Accordion defaultActiveKey="0">
                 {
+                    // Placeholder for when no applications have been added
+                    (!stacks || !stacks.length) && <>
+                        <div style={{
+                            minHeight: '60vh',
+                            border: darkThemeEnabled ? colors.textColor.dark + ' 3px dashed' : colors.textColor.light + ' 3px dashed',
+                            borderRadius: '15px',
+                            textAlign:'center',
+                            backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light
+                        }}>
+                            <h3 style={{ marginTop: '25vh' }}>
+                                Your applications from the catalog will appear here.
+                            </h3>
+                            <strong>View the list of <a href="#" onClick={() => setRedirect('/all-apps')}>Applications</a> to add and launch a new App.</strong>
+                        </div>
+                    </>
+                }
+                {
+                    // Show the list of all applications added by the user
                     stacks.map((stack, index) =>
                         <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: computeStackBorderColor(stack, index),

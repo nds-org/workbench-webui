@@ -14,6 +14,7 @@ import Input from "@material-ui/core/Input";
 
 import {StringParam, useQueryParam} from "use-query-params";
 import {useSelector} from "react-redux";
+import {colors} from "../App";
 
 const fetchStacks = () => {
     return V1.UserAppService.listStacks().then(stacks => {
@@ -57,15 +58,9 @@ const theme = createMuiTheme({
         type: 'dark'
     },
 });
-
-const css = `
-.list-group-item.active {
-    font-weight: 700;
-}
-`;
-
 function AllAppsPage() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const env = useSelector((state: any) => state.env);
 
     const [tags, setTags] = useState<Array<VocabTerm>>([]);
 
@@ -101,6 +96,20 @@ function AllAppsPage() {
         fetchStacks().then(stacks => setStacks(stacks || []));
     }, [stacks.length]);
 
+
+    const css = `
+        .list-group-item.active {
+            font-weight: 700;
+        }
+        
+        .badge {
+            border-radius: 20px;
+            margin-left: 15px;
+            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light};
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
+        }
+    `;
+
     return (
         <MuiThemeProvider theme={theme}>
             <Container fluid={true} style={{ paddingLeft: "0", paddingRight: "0", height: "100%" }}>
@@ -114,7 +123,7 @@ function AllAppsPage() {
                     padding: "80px",
                     fontWeight: "bold",
                 }}>
-                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from NCSA</h1>
+                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from { env?.product?.orgName || 'NCSA' }</h1>
                     <Input style={{ color: "white", width: "480px", fontWeight: 800 }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </Jumbotron>
                 <Row style={{ height: "100%" }}>
@@ -156,7 +165,7 @@ function AllAppsPage() {
                             <Col style={{ textAlign: "left", paddingLeft: "25px" }}>
                                 <h3>
                                     {!filter ? 'All' : filter === 'featured' ? 'Featured' : tags.find(t => filter === t.id)?.name} Apps
-                                    <Badge pill variant={darkThemeEnabled ? 'light' : 'dark'}>{specs.length}</Badge>
+                                    <Badge pill variant={darkThemeEnabled ? 'light' : 'dark'}>{specs.filter(s => s.display === 'stack').length}</Badge>
                                 </h3>
                             </Col>
                         </Row>

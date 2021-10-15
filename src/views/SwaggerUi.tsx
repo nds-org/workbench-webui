@@ -9,26 +9,36 @@ function SwaggerUiPage() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     const themeCss = `
+        /* Shared colors */
         * {
-            color: ${darkThemeEnabled ? 'white' : "#283845"};
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
         }
         
-        .markdown > p, .model.model-title, .title.info, .title, .base-url, .opblock-title, .try-out__btn, th.col_header,td.col_header, .response-col_status, .parameter__name, .parameter__type, .model-toggle:after {
-            color: ${darkThemeEnabled ? 'white' : "#283845"} !important;
+        .markdown > p, .model.model-title, .title.info, .title, .base-url, .opblock-title, .try-out__btn, th.col_header,td.col_header, .response-col_status, .parameter__name, .parameter__type, .opblock-section-header > h4 {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
         }
         
-        /* inputs */
+        .model-container, .scheme-container, .opblock-section-header {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
+            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
+        }
+        /* inputs: always dark on light */
         input {
             color: ${colors.textColor.light}
         }
-        /* links */
+        .parameters-container .opblock-description-wrapper > p {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
+        }
+        
+        
+        /* Unique colors */
+        /* blues */
         a {
             text-decoration: none;
             color: ${darkThemeEnabled ? "#4488FF" : "#2222FF"};
           
         }
-        a:hover {
-            text-decoration: underline;
+        a:hover, td .model .prop .prop-type {
             color: ${darkThemeEnabled ? "#44BBFF" : "#2222FF"};
         }
         
@@ -42,13 +52,9 @@ function SwaggerUiPage() {
             color: ${darkThemeEnabled ? "#BBB": "#AAAAAA"} !important;
         }
         
-        .opblock-section-header > h4 {
-            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
-        }
-        
-        .model-container, .scheme-container, .opblock-section-header {
-            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
-            background-color: ${darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light} !important;
+        /* extra overrides to invert icon colors */
+        use, .btn.authorize.unlocked > svg, .model-toggle:after {
+            filter: ${darkThemeEnabled ? "invert(100%)" : "invert(0%)"};
         }
     `;
 

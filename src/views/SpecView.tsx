@@ -22,8 +22,15 @@ function SpecView() {
     const { specKey } = useParams<SpecViewParams>();
     const [ tags, setTags ] = useState<Array<any>>([]);
     const [ spec, setSpec ] = useState<V1.Service>();
+    const [ specs, setSpecs ] = useState<Array<V1.Service>>([]);
 
     const [ redirect, setRedirect ] = useState('');
+
+    useEffect(() => {
+        V1.AppSpecService.listServices("all").then((specs: Array<V1.Service>) => {
+            setSpecs(specs || []);
+        }).catch(reason => handleError('Failed to fetch specs: ', reason));
+    }, []);
 
     useEffect(() => {
         V1.VocabularyService.getVocabularyByName("tags").then((tags: V1.Vocabulary) => {
@@ -59,25 +66,52 @@ function SpecView() {
                             </Col>
                             <Col xs={2}>
                                 <Button variant={ darkThemeEnabled ? 'light' : 'dark' }>Add</Button>
-                                <Button variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
+                                {
+                                    // TODO: "More Actions" Dropdown...
+                                }
+                                <Button hidden={true} variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
                             </Col>
                         </Row>
 
                         <Row style={{ marginTop: "50px",minHeight:"200px"}}>{spec?.description}</Row>
                         <hr style={{ marginTop: "100px" }} />
-                        <Row>
+                        <Row hidden={true}>
                             <Col xs={6}>
                                 <h4>Information</h4>
                             </Col>
                             <Col xs={6}>
                                 <h4>Help & Support</h4>
+                                {spec?.maintainer}
                             </Col>
                         </Row>
 
                     </Col>
                     <Col xs={3}>
                         <h4>Related Apps</h4>
-
+                        {
+                            // TODO: Render something for apps that are dependencies
+                            (spec.depends || []).forEach(dep => <p>
+                                Dependency: {(specs || []).find(s => s.key === dep.key)?.label}
+                                dep.required && <small>(required)</small>
+                            </p>)
+                        }
+                        {
+                            // TODO: Render something for apps that depend on this app
+                            (specs || []).forEach(s => (s?.depends || []).forEach(dep => dep.key === spec.key && <p>
+                                Dependency Of:
+                                <a href="#" onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                    {s.label || s.key}
+                                </a>
+                            </p>))
+                        }
+                        {
+                            // TODO: Render something for other apps with same tags
+                            (spec.tags || []).forEach(tagId => (tags || []).filter((t: {id: number, name: string, description: string}) => t.id+"" === tagId).forEach(tag => <p>
+                                <a href="#" onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag.name))}>
+                                    {tag.name || tag.id}
+                                </a>
+                            </p>))
+                        }
                     </Col>
                 </Row>
             }

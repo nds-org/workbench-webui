@@ -145,7 +145,10 @@ function SpecCard(props: CardProps) {
                         <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
                             <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
-                        <Button variant={'link'} onClick={showDropdown} style={{ marginTop: "15px" }}>
+                        {
+                            // TODO: "More Actions" Dropdown...
+                        }
+                        <Button variant={'link'} onClick={showDropdown} style={{ marginTop: "15px" }} hidden={true}>
                             <FontAwesomeIcon icon={faEllipsisV} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
                     </Col>
