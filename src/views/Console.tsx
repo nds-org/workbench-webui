@@ -1,4 +1,4 @@
-import {createRef, useEffect, useState} from 'react';
+import {createRef, useEffect, useMemo, useState} from 'react';
 import {V1} from '../common';
 
 import {XTerm} from 'xterm-for-react';
@@ -21,14 +21,16 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');
 
-    const theme = {
-        background: darkThemeEnabled ? 'black' : 'white',
-        foreground: darkThemeEnabled ? 'white' : 'black',
-        cursor: darkThemeEnabled ? 'white' : 'black',
-        cursorAccent:  darkThemeEnabled ? 'black' : 'white',
-        // NOTE: selection supports RGBA
-        selection: darkThemeEnabled ? '#FFFFFFAA' : '#00000055',
-    }
+    const theme = useMemo(() => {
+        return {
+            background: darkThemeEnabled ? 'black' : 'white',
+            foreground: darkThemeEnabled ? 'white' : 'black',
+            cursor: darkThemeEnabled ? 'white' : 'black',
+            cursorAccent:  darkThemeEnabled ? 'black' : 'white',
+            // NOTE: selection supports RGBA
+            selection: darkThemeEnabled ? '#FFFFFFAA' : '#00000055'
+        }
+    }, [darkThemeEnabled]);
 
     const {
         sendMessage,
@@ -50,7 +52,7 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     useEffect(() => {
         xtermRef.current?.terminal.setOption('minimumContrastRatio', 21)
         xtermRef.current?.terminal.setOption('theme', theme);
-    }, [darkThemeEnabled, xtermRef]);
+    }, [darkThemeEnabled, xtermRef, theme]);
 
     const options: ITerminalOptions = {
         rows: props.rows || 30,

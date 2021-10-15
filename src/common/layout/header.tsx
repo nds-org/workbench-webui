@@ -3,12 +3,12 @@ import Gravatar from 'react-gravatar';
 import {useDispatch, useSelector} from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap';
 
-import {handleError, V1, V2} from '..';
+import {handleError, V1} from '..';
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import DarkThemeToggle from "../toggle/darkthemetoggle";
-import {resetAuth, setAuth} from "../../store/actions";
+import {resetAuth} from "../../store/actions";
 
 
 import jwt from 'jwt-decode';
@@ -24,7 +24,7 @@ function Header() {
 
     const [user, setUser] = useState<V1.Account | undefined>(undefined);
 
-    const [interval, setInterv] = useState<any>();
+    //const [interval, setInterv] = useState<any>();
 
     const onLogout = useCallback(() => {
         setUser(undefined);

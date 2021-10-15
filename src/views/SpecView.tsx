@@ -9,6 +9,7 @@ import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import Taglist from "../common/taglist/Taglist";
 import {useSelector} from "react-redux";
+import Badge from "react-bootstrap/Badge";
 
 interface SpecViewParams {
     specKey: string;
@@ -87,29 +88,53 @@ function SpecView() {
 
                     </Col>
                     <Col xs={3}>
-                        <h4>Related Apps</h4>
+                        {
+                            spec?.depends?.length > 0 && <h4>Dependencies <Badge>{spec?.depends?.length}</Badge></h4>
+                        }
                         {
                             // TODO: Render something for apps that are dependencies
-                            (spec.depends || []).forEach(dep => <p>
-                                Dependency: {(specs || []).find(s => s.key === dep.key)?.label}
+                            spec.depends.forEach(dep => <p>
+                                <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps/' + dep.key)}>
+                                    {(specs || []).find(s => s.key === dep.key)?.label}
+                                </Button>
                                 dep.required && <small>(required)</small>
                             </p>)
                         }
                         {
+                            (specs || [])
+                                .filter(s => (s?.depends || [])
+                                    .find(d => d.key === spec.key))?.length > 0 && <h4>Dependency Of
+                                <Badge>
+                                    {(specs || [])
+                                        .filter(s => (s?.depends || [])
+                                            .find(d => d.key === spec.key))?.length}
+                                </Badge>
+                            </h4>
+                        }
+                        {
                             // TODO: Render something for apps that depend on this app
-                            (specs || []).forEach(s => (s?.depends || []).forEach(dep => dep.key === spec.key && <p>
-                                Dependency Of:
-                                <a href="#" onClick={() => setRedirect('/all-apps/' + s.key)}>
+                            (specs || []).filter(s => (s?.depends || []).find(d => d.key === spec.key)).forEach(s => <p>
+                                <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps/' + s.key)}>
                                     {s.label || s.key}
-                                </a>
-                            </p>))
+                                </Button>
+                            </p>)
+                        }
+                        {
+                            (spec.tags || [])
+                                .forEach(tagId => (tags || [])
+                                        .filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+""))?.length > 0 && <h4>
+                                Related Apps
+                                <Badge>
+                                    {(tags || []).filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+""))}
+                                </Badge>
+                            </h4>)
                         }
                         {
                             // TODO: Render something for other apps with same tags
-                            (spec.tags || []).forEach(tagId => (tags || []).filter((t: {id: number, name: string, description: string}) => t.id+"" === tagId).forEach(tag => <p>
-                                <a href="#" onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag.name))}>
+                            (spec.tags || []).forEach(tagId => (tags || []).filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+"")).forEach(tag => <p>
+                                <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag.name))}>
                                     {tag.name || tag.id}
-                                </a>
+                                </Button>
                             </p>))
                         }
                     </Col>

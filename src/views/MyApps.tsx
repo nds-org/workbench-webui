@@ -193,7 +193,7 @@ function MyAppsPage(props: any) {
                             <h3 style={{ marginTop: '25vh' }}>
                                 Your applications from the catalog will appear here.
                             </h3>
-                            <strong>View the list of <a href="#" onClick={() => setRedirect('/all-apps')}>Applications</a> to add and launch a new App.</strong>
+                            <strong>View the list of <Button variant={'link'} size={'sm'} style={{ padding: 0, textDecoration: "none", marginTop: "-4px" }} onClick={() => setRedirect('/all-apps')}>All Apps</Button> to add and launch a new App.</strong>
                         </div>
                     </>
                 }
