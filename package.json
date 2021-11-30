@@ -36,12 +36,15 @@
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jwt-decode": "^3.1.2",
+    "openapi-typescript": "^4.0.1",
+    "openapi-typescript-codegen": "^0.9.3",
     "prettier": "^2.3.1",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.1",
     "react-console-emulator": "^5.0.1",
     "react-dom": "^17.0.2",
+    "react-ga": "^3.3.0",
     "react-gravatar": "^2.6.3",
     "react-redux": "^7.2.5",
     "react-router-bootstrap": "^0.25.0",
@@ -86,7 +89,5 @@
     ]
   },
   "devDependencies": {
-    "openapi-typescript": "^4.0.1",
-    "openapi-typescript-codegen": "^0.9.3"
   }
 }

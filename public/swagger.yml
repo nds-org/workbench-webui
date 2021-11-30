@@ -7,7 +7,6 @@ info:
     name:  NDS Labs Support
     url: http://www.nationaldataservice.org/projects/labs.html
   version: 1.2.0
-host: localhost:30001
 basePath: /api
 securityDefinitions:
   Bearer:
@@ -535,7 +534,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Token'
+            type: string
         '401':
           description: Not logged in
   /register:
