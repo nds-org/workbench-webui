@@ -8,11 +8,8 @@ import 'bootstrap/dist/css/bootstrap-reboot.min.css';
 import 'bootstrap/dist/css/bootstrap-utilities.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { V1, V2 } from './common/services/';
 import {Provider as ReduxProvider} from "react-redux";
 import store from "./store/store";
-
-V1.OpenAPI.BASE = V2.OpenAPI.BASE = 'http://localhost:30001/api';
 
 ReactDOM.render(
     <ReduxProvider store={store}>

@@ -175,10 +175,10 @@ export class UserAccountService {
     /**
      * Check if the user has an active/valid OAuth session
      *
-     * @returns Token OK
+     * @returns string OK
      * @throws ApiError
      */
-    public static async validateOAuthToken(): Promise<Token> {
+    public static async validateOAuthToken(): Promise<string> {
         const result = await __request({
             method: 'GET',
             path: `/validate`,

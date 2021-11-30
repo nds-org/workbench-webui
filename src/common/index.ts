@@ -49,12 +49,14 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";*/
 //export { Container, Alert, Carousel, Button, Form, FormControl, FormGroup, FormLabel, Accordion, Card, Col, Row, Modal, Table, ListGroup, Jumbotron, Dropdown, DropdownButton, Navbar, Nav, NavDropdown };
 //export {FontAwesomeIcon, faPlus, faCloudMoon, faCloudSun, faCheckCircle, faExclamationCircle, faPowerOff, faSpinner, faTerminal, faTrash, faRocket, faStop, faCaretDown, faLink, faTimes, faExpand, faEllipsisV, faChevronLeft}
 
-const AUTH_ERR = (reason: any) => reason.message.includes('Unauthorized');
+const AUTH_ERR = (reason: Error) => {console.log("Full reason", reason);return reason.message.includes('Unauthorized');}
 
 const handleError = (message: string, reason: Error, onUnath?: () => void) => {
     console.error(`${message}: `, reason);
+    console.error("Should redirect to login view...");
+    const isAuthErr = AUTH_ERR(reason);
 
-    if (AUTH_ERR(reason)) {
+    if (isAuthErr) {
         // Clear any stale auth info
         localStorage.removeItem('auth');
 

@@ -1,5 +1,5 @@
 import {Footer} from "../common";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
 
@@ -7,7 +7,7 @@ import './LandingPage.css';
 import styled from "styled-components";
 import {textColor} from "../App";
 import {useSelector} from "react-redux";
-
+import ReactGA from "react-ga";
 
 const NumericHeader = styled.span`
     bottom: 10px;
@@ -29,6 +29,12 @@ const NumericHeader = styled.span`
 const LandingPage = () => {
     const [redirect, setRedirect] = useState('');
     const env = useSelector((state: any) => state.env);
+
+    useEffect(() => {
+        if (env?.analytics_tracking_id) {
+            ReactGA.pageview('/');
+        }
+    }, [env?.analytics_tracking_id]);
 
     const SectionHeader = styled.h3`
         color: ${textColor};
@@ -52,7 +58,7 @@ const LandingPage = () => {
                 <div className="login banner" style={{backgroundImage: 'url("/login-banner.jpg")',minHeight: '20vh'}}>
                     <h1 className="ui white header">
                         {
-                            (env?.product?.landingHtml && <span dangerouslySetInnerHTML={{__html: env?.product?.landingHtml+""}}></span>) || <>
+                            (env?.customization?.landing_html && <span dangerouslySetInnerHTML={{__html: env?.customization?.landing_html+""}}></span>) || <>
                                 <p className="nomargin">Labs Workbench allows developers to</p>
                                 <p className="nomargin">prototype tools that help build out the</p>
                                 <p className="nomargin">NDS framework and services.</p>
@@ -136,16 +142,20 @@ const LandingPage = () => {
                     </div>
                 </div>
 
-                <div id="contactUs" className="row justify-content-md-center">
-                    <div className="col-9">
-                        <div className="card text-dark bg-warning">
-                            <div className="card-body" style={{ marginTop: "150px" }}>
-                                <h3 className="card-title">Have Issues With Your Service?</h3>
-                                <a href="/swagger" className="btn btn-dark btn-lg">Contact Us</a>
+                {
+                    env?.support_email && <>
+                        <div id="contactUs" className="row justify-content-md-center">
+                            <div className="col-9">
+                                <div className="card text-dark bg-warning">
+                                    <div className="card-body" style={{ marginTop: "150px" }}>
+                                        <h3 className="card-title">Have Issues With Your Service?</h3>
+                                        <a href={ 'mailto:' + env?.support_email } className="btn btn-dark btn-lg">Contact Us</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                }
             </div>
 
             <div style={{ height: "50px" }}></div>

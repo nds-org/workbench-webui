@@ -29,8 +29,6 @@ export interface AppState {
 }
 
 // TODO: Set from env
-const host = 'http://localhost:30001';
-V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
 
 // Populate initial state from localStorage
 const authStorageKey = "auth";
@@ -61,9 +59,9 @@ store.subscribe(() => {
         auth.token && (V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = auth.token);
     }
     const env = store.getState().env;
-    if (env) {
+    if (env?.auth?.baseUrl) {
         // TODO: Set from env
-        const host = 'http://localhost:30001';
+        const host = env?.auth?.baseUrl;
         V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
     }
 });

@@ -16,6 +16,7 @@ import Input from "@material-ui/core/Input";
 import {StringParam, useQueryParam} from "use-query-params";
 import {useSelector} from "react-redux";
 import {colors} from "../App";
+import ReactGA from "react-ga";
 
 const fetchStacks = () => {
     return V1.UserAppService.listStacks().then(stacks => {
@@ -25,7 +26,7 @@ const fetchStacks = () => {
             const lc2 = s2.name?.toLowerCase() || s2.key;
             return lc1.localeCompare(lc2);
         });
-    }).catch(reason => handleError("Failed to fetch user apps", reason));
+    }).catch(reason => handleError("Failed to fetch user apps tho", reason));
 }
 
 const fetchSpecs = (filter: string, searchQuery: string) => {
@@ -51,7 +52,7 @@ const fetchSpecs = (filter: string, searchQuery: string) => {
             if (spec?.maintainer?.includes(searchQuery)) return true;
             return false;
         });
-    }).catch(reason => handleError("Failed to fetch app specs", reason));
+    });
 }
 
 const theme = createMuiTheme({
@@ -73,6 +74,20 @@ function AllAppsPage() {
 
     const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
 
+    useEffect(() => {
+        if (env?.analytics_tracking_id) {
+            if (filter && categoryName) {
+                ReactGA.pageview(`/all-apps#${filter}?category=${categoryName}`);
+            } else if (filter) {
+                ReactGA.pageview(`/all-apps#${filter}`);
+            } else if (categoryName) {
+                ReactGA.pageview(`/all-apps?category=${categoryName}`);
+            } else {
+                ReactGA.pageview(`/all-apps`);
+            }
+        }
+    }, [filter, categoryName, env?.analytics_tracking_id]);
+
     interface VocabTerm {
         id?: string;
         name?: string;
@@ -80,7 +95,7 @@ function AllAppsPage() {
     }
 
     useEffect(() => {
-        document.title = "Workbench: App Catalog";
+        document.title = "App Catalog";
     }, []);
 
     useEffect(() => {
@@ -99,11 +114,11 @@ function AllAppsPage() {
     }, [categoryName]);
 
     useEffect(() => {
-        fetchSpecs(filter, searchQuery).then(specs => setSpecs(specs || []));
+        fetchSpecs(filter, searchQuery).then(specs => setSpecs(specs || [])).catch(reason => handleError("Failed to fetch app specs: ", reason));
     }, [filter, searchQuery]);
 
     useEffect(() => {
-        fetchStacks().then(stacks => setStacks(stacks || []));
+        fetchStacks().then(stacks => setStacks(stacks || [])).catch(reason => handleError("Failed to fetch user apps: ", reason));
     }, [stacks.length]);
 
 
@@ -141,7 +156,7 @@ function AllAppsPage() {
                     padding: "80px",
                     fontWeight: "bold",
                 }}>
-                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from { env?.product?.orgName || 'NCSA' }</h1>
+                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from { env?.customization?.org_name || 'NCSA' }</h1>
                     <Input style={{ color: "white", width: "480px", fontWeight: 800 }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </Jumbotron>
                 <Row style={{ height: "100%" }}>
@@ -170,7 +185,7 @@ function AllAppsPage() {
                             </ListGroup.Item
                             >*/}
                             <style>{css}</style>
-                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'} active={!filter} key={"tag-all"} action href={"#"} onClick={() => { setCategoryName(undefined); setFilter(''); }} title="Show all applications">
+                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'} active={filter === ''} key={"tag-all"} action onClick={() => { setCategoryName(undefined); setFilter(''); }} title="Show all applications">
                                 Show All
                             </ListGroup.Item>
                             {
@@ -179,7 +194,7 @@ function AllAppsPage() {
                                     {
                                         // First set: Functionality
                                         tags?.filter((t: VocabTerm) => t.id && +t.id < 100).map(tag =>
-                                            <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action onClick={() => setFilter(tag.id+"")} title={tag.definition}>
                                                 {tag.name}
                                             </ListGroup.Item>
                                         )
@@ -192,7 +207,7 @@ function AllAppsPage() {
                                     {
                                         // Second set: Language
                                         tags.filter((t: VocabTerm) => t.id && +t.id < 1000 && +t.id >= 100).map(tag =>
-                                        <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                        <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action onClick={() => setFilter(tag.id+"")} title={tag.definition}>
                                     {tag.name}
                                         </ListGroup.Item>
                                         )
@@ -205,7 +220,7 @@ function AllAppsPage() {
                                     {
                                         // Final set: Language
                                         tags.filter((t: VocabTerm) => t.id && +t.id < 10000 && +t.id >= 1000).map(tag =>
-                                            <ListGroup.Item  style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action href={"#"+tag.name} onClick={() => setFilter(tag.id+"")} title={tag.definition}>
+                                            <ListGroup.Item style={{ border: "none", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black', paddingTop: 0, paddingBottom: 0 }} variant={darkThemeEnabled ? 'dark' : 'light'}  active={filter === tag.id} key={"tag-"+tag.id} action onClick={() => setFilter(tag.id+"")} title={tag.definition}>
                                                 {tag.name}
                                             </ListGroup.Item>
                                         )
@@ -229,7 +244,7 @@ function AllAppsPage() {
                             {
                                 specs.map(spec =>
                                     spec.display === 'stack' && <Col className='col-4' key={spec.key} style={{ padding: "20px"}}>
-                                        <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags}  />
+                                        <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags} setFilter={setFilter}  />
                                     </Col>
                                 )
                             }

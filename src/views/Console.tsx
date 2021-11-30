@@ -6,17 +6,22 @@ import {ITerminalOptions} from 'xterm';
 
 import useWebSocket from "react-use-websocket";
 import {useSelector} from "react-redux";
-
-const WS_ENDPOINT = `${V1.OpenAPI.BASE}/console`.replace('http', 'ws');
+import jwt from "jwt-decode";
 
 const Console = (props: { stackServiceId?: string, rows?: number, cols?: number }) => {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const env = useSelector((state: any) => state.env);
+
+    const WS_ENDPOINT = `${env?.domain}/api/console`.replace('http', 'ws');
 
     // Build our socket URL
-    const username = useSelector((state: any) => state.auth.username);
+    const token = useSelector((state: any) => state.auth.token);
+    const tokenJson: any = jwt(token);
+    console.debug("Token decoded: ", tokenJson);
+    const username = tokenJson?.name || tokenJson?.username || tokenJson?.id || tokenJson?.namespace;
     const ssid = props.stackServiceId;
     const queryParams = `namespace=${username}&ssid=${ssid}`;
-    const socketUrl = ssid ? `${WS_ENDPOINT}?${queryParams}` : null;
+    const socketUrl = (username && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');

@@ -28,24 +28,25 @@ import Console from "./Console";
 import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {colors} from "../App";
+import ReactGA from "react-ga";
 
 
 const navigate = (stk: V1.Stack, ep: any) => {
     window.open(`${ep.protocol}://${ep.host}`, '_blank');
 }
 
-const getStacks = (): Promise<V1.Stack[]> => {
-    return V1.UserAppService.listStacks().then(stacks => {
-        return stacks.sort((s1, s2) => {
-            const lc1 = s1.name?.toLowerCase() || s1.id || s1.key;
-            const lc2 = s2.name?.toLowerCase() || s2.id || s2.key;
-            return lc1.localeCompare(lc2);
-        });
-    }).catch(reason => {
-        handleError("Failed to fetch stacks", reason);
-        return [];
-    });
+const sortBy = (s1: V1.Stack, s2: V1.Stack) => {
+    const sid1 = s1.name+"";
+    const sid2 = s2.name+""
+    if (sid1 > sid2) {
+        return 1;
+    } else if (sid1 < sid2) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
+
 /*const getSpec = async (key: string) => {
     return await V1.AppSpecService.getServiceById(key);
 }*/
@@ -53,6 +54,7 @@ const getStacks = (): Promise<V1.Stack[]> => {
 function MyAppsPage(props: any) {
     // Global state
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const env = useSelector((state: any) => state.env);
 
     // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -69,6 +71,12 @@ function MyAppsPage(props: any) {
     const [activated, setActivated] = useState(0);
     const [selectedService, setSelectedService] = useState<V1.StackService>();
     const [showSelected, setShowSelected] = useState(false);
+
+    useEffect(() => {
+        if (env?.analytics_tracking_id) {
+            ReactGA.pageview('/my-apps');
+        }
+    }, [env?.analytics_tracking_id]);
 
     useEffect(() => {
          const transient = stacks.filter(stk => stk?.status?.endsWith('ing'));
@@ -98,13 +106,25 @@ function MyAppsPage(props: any) {
     const deleteStack = (stack: V1.Stack) => {
         const stackId = stack.id+"";
         return V1.UserAppService.deleteStack(stackId).then(() => {
+            if (env?.auth?.gaTrackingId) {
+                ReactGA.event({
+                    category: 'application',
+                    action: 'delete',
+                    label: stack.key
+                });
+            }
             console.log("Stack has been deleted: ", stackId);
             refresh();
         }).catch(reason => handleError("Failed to delete stack", reason));
     }
 
     const refresh = (): Promise<V1.Stack[]> => {
-        return getStacks().then(stks => {
+        return V1.UserAppService.listStacks().then(stacks => {
+            return stacks.sort(sortBy);
+        }).catch(reason => {
+            handleError("Failed to fetch stacks", reason);
+            return [];
+        }).then(stks => {
             setStacks(stks);
             return stks;
         });
@@ -116,6 +136,13 @@ function MyAppsPage(props: any) {
         return V1.UserAppService.startStack(stackId)
             .catch(reason => handleError("Failed to start stack", reason))
             .then(() => {
+                if (env?.auth?.gaTrackingId) {
+                    ReactGA.event({
+                        category: 'application',
+                        action: 'start',
+                        label: stack.key
+                    });
+                }
                 console.log("Stack is now starting...");
                 refresh();
             });
@@ -126,6 +153,13 @@ function MyAppsPage(props: any) {
         return V1.UserAppService.stopStack(stackId)
             .catch(reason => handleError("Failed to stop stack", reason))
             .then(() => {
+                if (env?.auth?.gaTrackingId) {
+                    ReactGA.event({
+                        category: 'application',
+                        action: 'stop',
+                        label: stack.key
+                    });
+                }
                 console.log("Stack is now stopping...");
                 refresh();
             });
@@ -138,6 +172,9 @@ function MyAppsPage(props: any) {
         //setState({ selectedService: svc, showSelected: true });
         setSelectedService(svc);
         setShowSelected(true);
+        if (env?.auth?.gaTrackingId) {
+            ReactGA.modalview('/my-apps/console');
+        }
     }
 
     const closeConsole = () => {
@@ -199,7 +236,7 @@ function MyAppsPage(props: any) {
                 }
                 {
                     // Show the list of all applications added by the user
-                    stacks.map((stack, index) =>
+                    stacks.sort(sortBy).map((stack, index) =>
                         <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: computeStackBorderColor(stack, index),
                             backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>

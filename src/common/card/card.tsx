@@ -13,6 +13,7 @@ import Taglist from "../taglist/Taglist";
 import './card.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
+import ReactGA from "react-ga";
 
 // TODO: Abstract this?
 const copy = (obj: any) => {
@@ -108,6 +109,7 @@ interface CardProps {
     specs: Array<V1.Service>;
     stacks: Array<V1.Stack>;
     tags: Array<any>;
+    setFilter: (f: string) => void;
 }
 
 //class Card extends Component<CardProps, CardState> {
@@ -122,6 +124,11 @@ function SpecCard(props: CardProps) {
 
         // POST /stacks
         V1.UserAppService.createStack(userApp).then(stk => {
+            ReactGA.event({
+                category: 'application',
+                action: 'add',
+                label: stk.key
+            });
             props.stacks.push(stk);
             setRedirect(`/my-apps`);
         }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
@@ -161,7 +168,13 @@ function SpecCard(props: CardProps) {
                 </Row>
             </Card.Body>
             <Card.Footer style={{ height: "80px", border: "none", borderRadius: "0 0 15px 15px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
-                <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} />
+                <Taglist tags={props.tags} spec={props.spec} chunkSize={2} onClick={(tag) => {
+                    if (props.setFilter) {
+                        props.setFilter(tag.id + "");
+                    } else {
+                        window.location.hash = '#' + encodeURIComponent(tag.name + "")
+                    }
+                }} />
             </Card.Footer>
         </Card>
     );

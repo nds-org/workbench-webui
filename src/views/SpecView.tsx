@@ -10,6 +10,7 @@ import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import Taglist from "../common/taglist/Taglist";
 import {useSelector} from "react-redux";
 import Badge from "react-bootstrap/Badge";
+import ReactGA from "react-ga";
 
 interface SpecViewParams {
     specKey: string;
@@ -17,6 +18,7 @@ interface SpecViewParams {
 
 function SpecView() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const env = useSelector((state: any) => state.env);
 
     // We can use the `useParams` hook here to access
     // the dynamic pieces of the URL.
@@ -26,6 +28,12 @@ function SpecView() {
     const [ specs, setSpecs ] = useState<Array<V1.Service>>([]);
 
     const [ redirect, setRedirect ] = useState('');
+
+    useEffect(() => {
+        if (env?.analytics_tracking_id) {
+            ReactGA.pageview('/all-apps/' + specKey);
+        }
+    }, [specKey, env?.analytics_tracking_id]);
 
     useEffect(() => {
         V1.AppSpecService.listServices("all").then((specs: Array<V1.Service>) => {

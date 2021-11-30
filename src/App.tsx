@@ -1,5 +1,6 @@
 import Container from "react-bootstrap/Container";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
+import { createBrowserHistory } from 'history';
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
@@ -12,6 +13,8 @@ import './App.css';
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {setEnv} from "./store/actions";
+import ReactGA from "react-ga";
+import {V1, V2} from "./common";
 
 export const colors = {
     backgroundColor: { light: "#FBFBFB", dark: "#475362" },
@@ -43,6 +46,8 @@ const MyContainer = styled.div`
   height: 100%;
 `;
 
+const history = createBrowserHistory();
+
 function App() {
     const dispatch = useDispatch();
     const env = useSelector((state: any) => state.env);
@@ -53,11 +58,20 @@ function App() {
     };
 
     useEffect(() => {
-        env?.product?.name && (document.title = env?.product?.name);
+        if (env?.domain) {
+            V1.OpenAPI.BASE = V2.OpenAPI.BASE = env?.domain + '/api';
+        } else {
+            V1.OpenAPI.BASE = V2.OpenAPI.BASE = '/api';
+        }
+
+        env?.customization?.product_name && (document.title = env?.customization?.product_name);
+        if (env?.analytics_tracking_id) {
+            ReactGA.initialize(env?.analytics_tracking_id);
+        }
     }, [env]);
 
     useEffect(() => {
-        fetchEnv('/env.json').then(env => {
+        fetchEnv('/frontend.json').then(env => {
             dispatch(setEnv({ env }));
         });
     }, [dispatch]);
@@ -66,7 +80,7 @@ function App() {
         <>
             <DarkThemeProvider>
                 <Container as={MyContainer} fluid={true}>
-                    <Router>
+                    <Router history={history}>
                         <QueryParamProvider ReactRouterRoute={Route}>
                         <Header />
                         <Switch>

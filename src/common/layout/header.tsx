@@ -12,6 +12,9 @@ import {resetAuth} from "../../store/actions";
 
 
 import jwt from 'jwt-decode';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+
 
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
@@ -31,7 +34,7 @@ function Header() {
         dispatch(resetAuth());
 
         if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
-            window.location.href = `/login?rd=${encodeURIComponent(window.location.pathname)}`;
+            window.location.href = `/`;
         }
     }, [dispatch]);
 
@@ -44,6 +47,16 @@ function Header() {
             setUsername('')
         }
     }, [token]);
+
+    useEffect(() => {
+        let link: HTMLLinkElement | null = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = env?.customization?.favicon_path || '/favicon.svg';
+    }, [env]);
 
     /*useEffect(() => {
         if (!interval) {
@@ -92,6 +105,10 @@ function Header() {
         border-bottom: ${activeColor} 8px solid;
         margin-bottom: -10px;
     }
+    #navbar-user-dropdown .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
 `
 
     return (
@@ -100,7 +117,7 @@ function Header() {
             <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? '#fff' : '#283845' }}>
                 <LinkContainer key="ROOT" to="/">
                     <Navbar.Brand title='Workbench'>
-                        <img alt={'favicon'} width="32" height="32" src={ env?.product?.faviconPath || '/favicon.svg' } /> { env?.product?.name }
+                        <img alt={'favicon'} width="32" height="32" src={ env?.customization?.favicon_path || '/favicon.svg' } /> { env?.customization?.product_name }
                     </Navbar.Brand>
                 </LinkContainer>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
@@ -119,11 +136,25 @@ function Header() {
                         <Navbar.Text>
                             <DarkThemeToggle />
                         </Navbar.Text>
+                        {
+                            (env?.customization?.help_links?.length > 0) && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
+                                    <FontAwesomeIcon icon={faQuestionCircle} />
+                            } id='navbar-help-dropdown'>
+                                {
+                                    env?.customization?.help_links?.map((link: any, index: number) =>
+                                        <NavDropdown.Item key={'helplink-' + index} href={link?.url} target="_blank">
+                                            {/* FIXME: icons currently won't load from string icon name */}
+                                            <FontAwesomeIcon fixedWidth icon={link?.icon} /> {link?.name}
+                                        </NavDropdown.Item>
+                                    )
+                                }
+                            </NavDropdown>
+                        }
                         <LinkContainer key='swagger' to='/swagger'>
                             <Nav.Link>API Reference</Nav.Link>
                         </LinkContainer>
                         {
-                            token && <NavDropdown className={'dropdown-menu-end'} color={darkThemeEnabled ? 'dark':'light'} title={
+                            token && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
                                 user?.email && <>
                                     <Gravatar style={{borderRadius:"25px"}} width={28} height={28} email={user?.email} /> {user?.email}
                                 </>

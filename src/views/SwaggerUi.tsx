@@ -2,11 +2,20 @@ import SwaggerUI  from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 import {useSelector} from "react-redux";
 import { colors } from "../App";
+import {useEffect} from "react";
+import ReactGA from "react-ga";
 
 const STORAGE_KEY = 'swaggerToken';
 
 function SwaggerUiPage() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const env = useSelector((state: any) => state.env);
+
+    useEffect(() => {
+        if (env?.analytics_tracking_id) {
+            ReactGA.pageview('/swagger');
+        }
+    }, [env?.analytics_tracking_id]);
 
     const themeCss = `
         /* Shared colors */
