@@ -22,6 +22,9 @@ export class AppSpecService {
             query: {
                 'catalog': catalog,
             },
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+            },
         });
         return result.body;
     }
@@ -30,16 +33,22 @@ export class AppSpecService {
      * Adds a new service to the service library
      *
      * @param service Service definition
-     * @returns any Created
+     * @returns Service Created
      * @throws ApiError
      */
     public static async createService(
         service: Service,
-    ): Promise<any> {
+    ): Promise<Service> {
         const result = await __request({
             method: 'POST',
             path: `/services`,
             body: service,
+            errors: {
+                400: `Validation failed - spec is invalid`,
+                401: `Unauthorized - missing or invalid login token`,
+                403: `Forbidden - missing required scope`,
+                409: `Conflict - spec key already exists`,
+            },
         });
         return result.body;
     }
@@ -48,7 +57,7 @@ export class AppSpecService {
      * Retrieves the service definition.
      *
      * @param serviceId The unique service identifier
-     * @returns Service The service object
+     * @returns Service OK
      * @throws ApiError
      */
     public static async getServiceById(
@@ -57,26 +66,35 @@ export class AppSpecService {
         const result = await __request({
             method: 'GET',
             path: `/services/${serviceId}`,
+            errors: {
+                404: `Not found - spec key not found`,
+            },
         });
         return result.body;
     }
 
     /**
-     * Updates a service definition in the service library
+     * Updates a service definition in the app catalog
      *
      * @param serviceId The unique service identifier
      * @param service Service definition
-     * @returns any Updated
+     * @returns Service Update saved successfully
      * @throws ApiError
      */
     public static async updateService(
         serviceId: string,
         service: Service,
-    ): Promise<any> {
+    ): Promise<Service> {
         const result = await __request({
             method: 'PUT',
             path: `/services/${serviceId}`,
             body: service,
+            errors: {
+                304: `Not modified - spec has not changed`,
+                400: `Validation failed - spec is invalid`,
+                403: `Authorization failed - user is forbidden`,
+                409: `Conflict - spec key already exists`,
+            },
         });
         return result.body;
     }
@@ -85,15 +103,18 @@ export class AppSpecService {
      * Delete a service
      *
      * @param serviceId The unique service identifier
-     * @returns any OK
+     * @returns void
      * @throws ApiError
      */
     public static async deleteService(
         serviceId: string,
-    ): Promise<any> {
+    ): Promise<void> {
         const result = await __request({
             method: 'DELETE',
             path: `/services/${serviceId}`,
+            errors: {
+                403: `Authorization failed - user is forbidden`,
+            },
         });
         return result.body;
     }

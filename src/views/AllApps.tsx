@@ -19,7 +19,7 @@ import {colors} from "../App";
 import ReactGA from "react-ga";
 
 const fetchStacks = () => {
-    return V1.UserAppService.listStacks().then(stacks => {
+    return V1.UserAppService.listUserapps().then(stacks => {
         // Sort by label or key
         return stacks.sort((s1, s2) => {
             const lc1 = s1.name?.toLowerCase() || s1.key;
@@ -40,8 +40,7 @@ const fetchSpecs = (filter: string, searchQuery: string) => {
     }).then(specs => {
         return specs.filter((spec) => {
             if (!filter) return true;
-            if (spec?.tags?.includes(filter)) return true;
-            return false;
+            return spec?.tags?.includes(filter);
         });
     }).then(specs => {
         return specs.filter((spec) => {
@@ -108,18 +107,21 @@ function AllAppsPage() {
     }, [tags]);
 
     useEffect(() => {
-        V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
-            setTags(vocab.terms || []);
-        }).catch(reason => handleError("Failed to fetch tags", reason));
-    }, [categoryName]);
+        if (!Object.keys(env).length) return;
+        //V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
+        //    setTags(vocab.terms || []);
+        //}).catch(reason => handleError("Failed to fetch tags", reason));
+    }, [categoryName, env]);
 
     useEffect(() => {
+        if (!Object.keys(env).length) return;
         fetchSpecs(filter, searchQuery).then(specs => setSpecs(specs || [])).catch(reason => handleError("Failed to fetch app specs: ", reason));
-    }, [filter, searchQuery]);
+    }, [filter, searchQuery, env]);
 
     useEffect(() => {
+        if (!Object.keys(env).length) return;
         fetchStacks().then(stacks => setStacks(stacks || [])).catch(reason => handleError("Failed to fetch user apps: ", reason));
-    }, [stacks.length]);
+    }, [stacks.length, env]);
 
 
     const css = `

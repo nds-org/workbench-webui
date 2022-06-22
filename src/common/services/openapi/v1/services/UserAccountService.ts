@@ -23,7 +23,7 @@ export class UserAccountService {
             path: `/authenticate`,
             body: auth,
             errors: {
-                401: `Invalid credentials`,
+                401: `Unauthorized - invalid credentials`,
             },
         });
         return result.body;
@@ -54,7 +54,7 @@ export class UserAccountService {
             method: 'GET',
             path: `/refresh_token`,
             errors: {
-                401: `Not logged in`,
+                401: `Unauthorized - missing or invalid login token`,
             },
         });
         return result.body;
@@ -77,7 +77,7 @@ export class UserAccountService {
                 'host': host,
             },
             errors: {
-                401: `Not logged in`,
+                401: `Unauthorized - missing or invalid login token`,
             },
         });
         return result.body;
@@ -94,6 +94,7 @@ export class UserAccountService {
             method: 'GET',
             path: `/accounts`,
             errors: {
+                403: `Forbidden - user needs permissions to view other accounts`,
                 404: `Not found`,
             },
         });
@@ -104,12 +105,12 @@ export class UserAccountService {
      * Adds a new accounts
      *
      * @param accounts Account definition
-     * @returns any Created
+     * @returns Account Created
      * @throws ApiError
      */
     public static async createAccount(
         accounts: Account,
-    ): Promise<any> {
+    ): Promise<Account> {
         const result = await __request({
             method: 'POST',
             path: `/accounts`,
@@ -131,6 +132,9 @@ export class UserAccountService {
         const result = await __request({
             method: 'GET',
             path: `/accounts/${accountId}`,
+            errors: {
+                404: `Not found`,
+            },
         });
         return result.body;
     }
@@ -140,34 +144,41 @@ export class UserAccountService {
      *
      * @param accountId The unique account identifier
      * @param account Account definition
-     * @returns any Updated
+     * @returns Account Update successful
      * @throws ApiError
      */
     public static async updateAccount(
         accountId: string,
         account: Account,
-    ): Promise<any> {
+    ): Promise<Account> {
         const result = await __request({
             method: 'PUT',
             path: `/accounts/${accountId}`,
             body: account,
+            errors: {
+                304: `Not modified - account has not changed`,
+                403: `Forbidden - user needs permissions to edit other accounts`,
+            },
         });
         return result.body;
     }
 
     /**
-     * Delete a account
+     * Delete an account
      *
      * @param accountId The unique account identifier
-     * @returns any OK
+     * @returns void
      * @throws ApiError
      */
     public static async deleteAccount(
         accountId: string,
-    ): Promise<any> {
+    ): Promise<void> {
         const result = await __request({
             method: 'DELETE',
             path: `/accounts/${accountId}`,
+            errors: {
+                403: `Forbidden - user needs permissions to edit other accounts`,
+            },
         });
         return result.body;
     }
@@ -183,7 +194,7 @@ export class UserAccountService {
             method: 'GET',
             path: `/validate`,
             errors: {
-                401: `Not logged in`,
+                401: `Unauthorized - missing or invalid login token`,
             },
         });
         return result.body;
@@ -226,6 +237,7 @@ export class UserAccountService {
     }
 
     /**
+     * @deprecated
      * Verify registered email address
      *
      * @param verify Verification object
@@ -247,6 +259,7 @@ export class UserAccountService {
     }
 
     /**
+     * @deprecated
      * Request password reset email.
      *
      * @param userId Username or email of the account to reset

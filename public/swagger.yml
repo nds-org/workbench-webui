@@ -7,7 +7,7 @@ info:
     name:  NDS Labs Support
     url: http://www.nationaldataservice.org/projects/labs.html
   version: 1.2.0
-basePath: /api
+basePath: /api/v1
 securityDefinitions:
   Bearer:
     x-apikeyInfoFunc: 'pkg.keycloak.apikey_auth'

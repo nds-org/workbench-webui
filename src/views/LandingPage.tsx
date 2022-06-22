@@ -55,7 +55,7 @@ const LandingPage = () => {
             :
         <>
             <div className="login area row">
-                <div className="login banner" style={{backgroundImage: 'url("/login-banner.jpg")',minHeight: '20vh'}}>
+                <div className="login banner" style={{backgroundImage: 'url("/login-banner.jpg")',minHeight: '20vh',width: '100vw'}}>
                     <h1 className="ui white header">
                         {
                             (env?.customization?.landing_html && <span dangerouslySetInnerHTML={{__html: env?.customization?.landing_html+""}}></span>) || <>
@@ -85,19 +85,32 @@ const LandingPage = () => {
                             <div className="col">
                                 <div className="row">
                                     <div className="col-4"><NumericHeader>01</NumericHeader></div>
-                                    <div className="col"><SectionHeader>Find the tools you need</SectionHeader></div>
+                                    <div className="col"><SectionHeader>
+                                        {
+                                            env?.customization?.landing_header_1 && <span className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_header_1+""}}></span>
+                                        }
+                                        {
+                                            !env?.customization?.landing_header_1 && <>Find the tools you need</>
+                                        }
+                                    </SectionHeader></div>
                                 </div>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col">
-                                <p className="text-content">
-                                    Search our catalog of web-based research and software tools.
-                                    We offer over 30 different software tools that fit many common scenarios
-                                    encountered in research software development.
-                                    Find a set of tools to help you build out a new software product or
-                                    extend an existing one.
-                                </p>
+                                {
+                                    env?.customization?.landing_section_1 && <p className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_section_1+""}}></p>
+                                }
+                                {
+                                    !env?.customization?.landing_section_1 &&
+                                        <p className="text-content">
+                                            Search our catalog of web-based research and software tools.
+                                            We offer over 30 different software tools that fit many common scenarios
+                                            encountered in research software development.
+                                            Find a set of tools to help you build out a new software product or
+                                            extend an existing one.
+                                        </p>
+                                }
                             </div>
                         </div>
                     </div>
@@ -118,19 +131,33 @@ const LandingPage = () => {
                                     <div className="row">
                                         <div className="col-4"><NumericHeader>02</NumericHeader></div>
                                         <div className="col">
-                                            <SectionHeader>Run the tools on our cloud service</SectionHeader>
+                                            <SectionHeader>
+                                                {
+                                                    env?.customization?.landing_header_2 && <span className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_header_2+""}}></span>
+                                                }
+                                                {
+                                                    !env?.customization?.landing_header_2 && <>Run the tools on our cloud service</>
+                                                }
+
+                                                </SectionHeader>
                                         </div>
                                     </div>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col">
-                                <p className="text-content">
-                                    Once you've narrowed down your choices, launch your desired tool set on our
-                                    cloud resources.
-                                    Access your running applications using our web interface, and start integrating
-                                    the tools and shaping your software product.
-                                </p>
+                                {
+                                    env?.customization?.landing_section_2 && <p className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_section_2+""}}></p>
+                                }
+                                {
+                                    !env?.customization?.landing_section_2 &&
+                                        <p className="text-content">
+                                            Once you've narrowed down your choices, launch your desired tool set on our
+                                            cloud resources.
+                                            Access your running applications using our web interface, and start integrating
+                                            the tools and shaping your software product.
+                                        </p>
+                                }
                             </div>
                         </div>
                     </div>

@@ -16,11 +16,11 @@ export type StackService = {
     developerEnvironment?: string;
     config: Record<string, string>;
     internalIP?: string;
+    singlePod?: boolean;
     readinessProbe?: ReadyProbe;
     imageTag?: string;
     resourceLimits?: ResourceLimits;
     volumeMounts: Record<string, string>;
-    ports: Record<string, number>;
     endpoints?: Array<{
         host?: string,
         path?: string,

@@ -36,6 +36,6 @@
     "product_name": "Workbench"
   },
   "signin_url": "",
-  "domain": "https://www.workbench.ndslabs.org",
+  "domain": "http://localhost:5000",
   "support_email": ""
 }

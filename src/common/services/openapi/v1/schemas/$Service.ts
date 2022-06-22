@@ -13,6 +13,10 @@ export const $Service = {
         label: {
             type: 'string',
         },
+        catalog: {
+            type: 'Enum',
+            isRequired: true,
+        },
         description: {
             type: 'string',
         },
@@ -46,6 +50,7 @@ export const $Service = {
         },
         image: {
             type: 'ServiceImage',
+            isRequired: true,
         },
         resourceLimits: {
             type: 'ResourceLimits',

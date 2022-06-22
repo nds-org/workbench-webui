@@ -58,20 +58,19 @@ function App() {
     };
 
     useEffect(() => {
-        if (env?.domain) {
-            V1.OpenAPI.BASE = V2.OpenAPI.BASE = env?.domain + '/api';
-        } else {
-            V1.OpenAPI.BASE = V2.OpenAPI.BASE = '/api';
-        }
-
-        env?.customization?.product_name && (document.title = env?.customization?.product_name);
-        if (env?.analytics_tracking_id) {
-            ReactGA.initialize(env?.analytics_tracking_id);
-        }
-    }, [env]);
-
-    useEffect(() => {
         fetchEnv('/frontend.json').then(env => {
+            if (env?.domain) {
+                V1.OpenAPI.BASE = env?.domain + '/api/v1';
+                V2.OpenAPI.BASE = env?.domain + '/api/v2';
+            } else {
+                V1.OpenAPI.BASE = '/api/v1';
+                V2.OpenAPI.BASE = '/api/v2';
+            }
+
+            env?.customization?.product_name && (document.title = env?.customization?.product_name);
+            if (env?.analytics_tracking_id) {
+                ReactGA.initialize(env?.analytics_tracking_id);
+            }
             dispatch(setEnv({ env }));
         });
     }, [dispatch]);

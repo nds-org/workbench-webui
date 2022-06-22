@@ -8,12 +8,14 @@ export const $ServiceImage = {
         },
         name: {
             type: 'string',
+            isRequired: true,
         },
         tags: {
             type: 'array',
             contains: {
                 type: 'string',
             },
+            isRequired: true,
         },
     },
 };

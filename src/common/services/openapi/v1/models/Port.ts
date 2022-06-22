@@ -5,4 +5,5 @@
 export type Port = {
     port?: number;
     protocol?: string;
+    contextPath?: string;
 }

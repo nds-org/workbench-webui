@@ -123,7 +123,7 @@ function SpecCard(props: CardProps) {
         const userApp: V1.Stack = newStack(appSpec, props.specs);
 
         // POST /stacks
-        V1.UserAppService.createStack(userApp).then(stk => {
+        V1.UserAppService.createUserapp(userApp).then(stk => {
             ReactGA.event({
                 category: 'application',
                 action: 'add',

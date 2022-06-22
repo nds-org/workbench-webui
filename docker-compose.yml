@@ -1,35 +1,62 @@
+
 version: "3.9"
 
 services:
-  etcd:
-    container_name: "ndslabs-etcd"
-    image: "quay.io/coreos/etcd:v3.3"
-    ports:
-      - "4001:4001"
-    volumes:
-      - "~/dev-data/etcd:/var/etcd/data"
-    restart: always
-    command: "/usr/local/bin/etcd --listen-client-urls=http://0.0.0.0:4001 --advertise-client-urls=http://127.0.0.1:4001 --data-dir=/var/etcd/data"
 
+  keycloak:
+    container_name: "wb_keycloak"
+    image: "quay.io/keycloak/keycloak:17.0.1"
+    user: "root"
+    volumes:
+      - ./imports:/opt/jboss/keycloak/imports
+      - keycloak:/opt/keycloak/data/h2/
+    networks:
+      - workbench
+    ports:
+      - "8080:8080"
+    command: ["start-dev", "-Dkeycloak.import=/opt/jboss/keycloak/imports/realm-export.json"]
+    restart: always
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+  mongo:
+    container_name: "wb_mongo"
+    image: "mongo:5.0.3"
+    #environment:
+    #  MONGO_INITDB_ROOT_USERNAME: username
+    #  MONGO_INITDB_ROOT_PASSWORD: password
+    #  MONGO_INITDB_DATABASE: ndslabs
+    networks:
+      - workbench
+    volumes:
+      - "mongo:/data/db"
+    #ports:
+    #  - "27017:27017"
+    restart: always
 
   apiserver:
-    container_name: "ndslabs-apiserver"
+    container_name: "wb_apiserver"
+    image: "ndslabs/apiserver:python"
+    networks:
+      - workbench
     depends_on:
-      - etcd
-    image: "ndslabs/apiserver:cddr"
-
-    volumes:
-
-      # kubectl get secret -n workbench workbench-token-xxxxx -o yaml | base64decode
-      - "~/go/src/github.com/workbench-apiserver-golang/token:/var/run/secrets/kubernetes.io/serviceaccount/token"
-      - "~/go/src/github.com/workbench-apiserver-golang/ca.crt:/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-
-      # kubectl config use-context docker-desktop && cp ~/.kube/config ~/.kube/config.DOCKERMACOSX
-      - "~/.kube/config.DOCKERMACOSX:/root/.kube/config"
-    ports:
-      - "30001:30001"
+      - keycloak
+      - mongo
+    build:
+      context: ../workbench-apiserver-python
     env_file:
       - apiserver.env
+    volumes:
+      - "/Users/lambert8/.kube/config:/root/.kube/config"
+    ports:
+      - "5000:5000"
     restart: always
 
 
+volumes:
+  keycloak:
+  mongo:
+
+networks:
+  workbench:

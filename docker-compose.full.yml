@@ -1,0 +1,17 @@
+
+version: "3.9"
+
+services:
+
+  webui:
+    container_name: "wb_webui"
+    image: "ndslabs/webui:react"
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "3000:80"
+
+
+

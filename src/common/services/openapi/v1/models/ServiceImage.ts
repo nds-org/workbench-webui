@@ -4,6 +4,6 @@
 
 export type ServiceImage = {
     registry?: string;
-    name?: string;
-    tags?: Array<string>;
+    name: string;
+    tags: Array<string>;
 }

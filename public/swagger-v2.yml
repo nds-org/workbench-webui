@@ -10,8 +10,9 @@ info:
   version: 2.0.0
 
 servers:
+  - url: 'http://localhost:5000/api/v1'
   - url: 'https://www.workbench.ndslabs.org/api'
-  - url: 'https://hub.cheesehub.org/api'
+  - url: 'https://www.hub.cheesehub.org/api'
 
 
 components:

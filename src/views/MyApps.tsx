@@ -98,14 +98,16 @@ function MyAppsPage(props: any) {
     }, [autoRefresh, refreshInterval, stacks, stacks.length]);
 
     useEffect(() => {
+        if (!Object.keys(env).length) return;
+
         document.title = "Workbench: My Apps";
         V1.AppSpecService.listServices().then(specs => setSpecs(specs)).catch(reason => handleError('Failed to fetch specs: ', reason));
-        V1.UserAppService.listStacks().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
-    }, []);
+        V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
+    }, [env]);
 
     const deleteStack = (stack: V1.Stack) => {
         const stackId = stack.id+"";
-        return V1.UserAppService.deleteStack(stackId).then(() => {
+        return V1.UserAppService.deleteUserapp(stackId).then(() => {
             if (env?.auth?.gaTrackingId) {
                 ReactGA.event({
                     category: 'application',
@@ -119,7 +121,7 @@ function MyAppsPage(props: any) {
     }
 
     const refresh = (): Promise<V1.Stack[]> => {
-        return V1.UserAppService.listStacks().then(stacks => {
+        return V1.UserAppService.listUserapps().then(stacks => {
             return stacks.sort(sortBy);
         }).catch(reason => {
             handleError("Failed to fetch stacks", reason);

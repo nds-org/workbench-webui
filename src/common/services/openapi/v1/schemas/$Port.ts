@@ -9,5 +9,8 @@ export const $Port = {
         protocol: {
             type: 'string',
         },
+        contextPath: {
+            type: 'string',
+        },
     },
 };

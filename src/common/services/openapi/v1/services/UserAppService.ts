@@ -14,7 +14,7 @@ export class UserAppService {
      * @returns Stack OK
      * @throws ApiError
      */
-    public static async listStacks(): Promise<Array<Stack>> {
+    public static async listUserapps(): Promise<Array<Stack>> {
         const result = await __request({
             method: 'GET',
             path: `/stacks`,
@@ -29,12 +29,12 @@ export class UserAppService {
      * Adds a new stack to this account
      *
      * @param stack Stack definition
-     * @returns any Created
+     * @returns Stack Created
      * @throws ApiError
      */
-    public static async createStack(
+    public static async createUserapp(
         stack: Stack,
-    ): Promise<any> {
+    ): Promise<Stack> {
         const result = await __request({
             method: 'POST',
             path: `/stacks`,
@@ -50,7 +50,7 @@ export class UserAppService {
      * @returns Stack OK
      * @throws ApiError
      */
-    public static async getStackById(
+    public static async getUserappById(
         stackId: string,
     ): Promise<Stack> {
         const result = await __request({
@@ -65,17 +65,20 @@ export class UserAppService {
      *
      * @param stackId The unique stack identifier
      * @param stack Stack definition
-     * @returns any Updated
+     * @returns Stack OK
      * @throws ApiError
      */
-    public static async updateStack(
+    public static async updateUserapp(
         stackId: string,
         stack: Stack,
-    ): Promise<any> {
+    ): Promise<Stack> {
         const result = await __request({
             method: 'PUT',
             path: `/stacks/${stackId}`,
             body: stack,
+            errors: {
+                304: `Not modified - userapp has not changed`,
+            },
         });
         return result.body;
     }
@@ -84,12 +87,12 @@ export class UserAppService {
      * Delete a stack
      *
      * @param stackId The unique stack identifier
-     * @returns any OK
+     * @returns void
      * @throws ApiError
      */
-    public static async deleteStack(
+    public static async deleteUserapp(
         stackId: string,
-    ): Promise<any> {
+    ): Promise<void> {
         const result = await __request({
             method: 'DELETE',
             path: `/stacks/${stackId}`,
@@ -98,14 +101,15 @@ export class UserAppService {
     }
 
     /**
+     * @deprecated
      * Rename the stack
      *
      * @param stackId The unique stack identifier
      * @param name Stack name
-     * @returns any Updated
+     * @returns any OK
      * @throws ApiError
      */
-    public static async renameStack(
+    public static async renameUserapp(
         stackId: string,
         name: string,
     ): Promise<any> {
@@ -135,15 +139,15 @@ export class UserAppService {
     }
 
     /**
-     * Adds, starts, and navigates to the specified application
+     * Quickstarts (adds, starts, and navigates to) the specified application
      *
      * @param key The key of the service spec to start and navigate to
-     * @returns any OK
+     * @returns Stack OK
      * @throws ApiError
      */
     public static async quickstartStack(
         key: string,
-    ): Promise<any> {
+    ): Promise<Stack> {
         const result = await __request({
             method: 'GET',
             path: `/start`,
@@ -162,15 +166,20 @@ export class UserAppService {
      * Starts the specified stack
      *
      * @param stackId The unique stack identifier
-     * @returns any OK
+     * @returns Stack OK
      * @throws ApiError
      */
     public static async startStack(
         stackId: string,
-    ): Promise<any> {
+    ): Promise<Stack> {
         const result = await __request({
             method: 'GET',
             path: `/start/${stackId}`,
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+                403: `Forbidden - missing required scope`,
+                404: `Not found`,
+            },
         });
         return result.body;
     }
@@ -179,15 +188,20 @@ export class UserAppService {
      * Stops the specified stack
      *
      * @param stackId The unique stack identifier
-     * @returns any OK
+     * @returns Stack OK
      * @throws ApiError
      */
     public static async stopStack(
         stackId: string,
-    ): Promise<any> {
+    ): Promise<Stack> {
         const result = await __request({
             method: 'GET',
             path: `/stop/${stackId}`,
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+                403: `Forbidden - missing required scope`,
+                404: `Not found`,
+            },
         });
         return result.body;
     }

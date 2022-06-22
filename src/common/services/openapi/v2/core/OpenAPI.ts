@@ -17,7 +17,7 @@ type Config = {
 }
 
 export const OpenAPI: Config = {
-    BASE: 'https://www.workbench.ndslabs.org/api',
+    BASE: '/api/v2',
     VERSION: '2.0.0',
     WITH_CREDENTIALS: false,
     TOKEN: undefined,

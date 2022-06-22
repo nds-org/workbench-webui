@@ -19,6 +19,9 @@ export class VocabularyService {
         const result = await __request({
             method: 'GET',
             path: `/vocabulary/${vocabName}`,
+            errors: {
+                404: `Not found`,
+            },
         });
         return result.body;
     }

@@ -42,6 +42,9 @@ export const $StackService = {
         internalIP: {
             type: 'string',
         },
+        singlePod: {
+            type: 'boolean',
+        },
         readinessProbe: {
             type: 'ReadyProbe',
         },
@@ -55,13 +58,6 @@ export const $StackService = {
             type: 'dictionary',
             contains: {
                 type: 'string',
-            },
-            isRequired: true,
-        },
-        ports: {
-            type: 'dictionary',
-            contains: {
-                type: 'number',
             },
             isRequired: true,
         },

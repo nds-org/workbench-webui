@@ -15,6 +15,7 @@ export type Service = {
     id?: string;
     key: string;
     label?: string;
+    catalog: 'system' | 'user' | 'all';
     description?: string;
     maintainer?: string;
     logo?: string;
@@ -24,7 +25,7 @@ export type Service = {
     developerEnvironment?: string;
     config: Array<Config>;
     readinessProbe?: ReadyProbe;
-    image?: ServiceImage;
+    image: ServiceImage;
     resourceLimits?: ResourceLimits;
     depends: Array<ServiceDependency>;
     ports: Array<Port>;
