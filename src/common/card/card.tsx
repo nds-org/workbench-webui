@@ -138,6 +138,7 @@ function SpecCard(props: CardProps) {
 
     }
 
+    // TODO: onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)}
     return (
         <Card bg={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "16px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
             {
@@ -160,7 +161,7 @@ function SpecCard(props: CardProps) {
                         </Button>
                     </Col>
                 </Row>
-                <Row title={props.spec.key} onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)} style={{ cursor: "pointer", marginTop: "10px" }}>
+                <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }}>
                     <h5>{props.spec.label || props.spec.key}</h5>
                 </Row>
                 <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>
