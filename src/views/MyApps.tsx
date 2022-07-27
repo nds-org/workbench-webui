@@ -324,7 +324,9 @@ function MyAppsPage(props: any) {
                                                         borderColor: darkThemeEnabled ? 'white' : 'black',
                                                         width: "35px", height: "30px",
                                                         borderWidth: "2px", borderRadius: "0",
-                                                        padding: "3px" }} hidden={svc.status !== 'ready'} onClick={() => openConsole(stack, svc)}>
+                                                        padding: "3px" }}
+                                                            hidden={svc?.status?.toLowerCase() !== 'started'}
+                                                            onClick={() => openConsole(stack, svc)}>
                                                         <FontAwesomeIcon icon={faTerminal} />
                                                     </Button>
                                                 </td>

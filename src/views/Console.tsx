@@ -17,8 +17,8 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     // Build our socket URL
     const token = useSelector((state: any) => state.auth.token);
     const tokenJson: any = jwt(token);
-    console.debug("Token decoded: ", tokenJson);
-    const username = tokenJson?.name || tokenJson?.username || tokenJson?.id || tokenJson?.namespace;
+    console.log("Token decoded: ", tokenJson);
+    const username = tokenJson?.preferred_username || tokenJson?.username || tokenJson?.id || tokenJson?.namespace || tokenJson?.name;
     const ssid = props.stackServiceId;
     const queryParams = `namespace=${username}&ssid=${ssid}`;
     const socketUrl = (username && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
