@@ -16,8 +16,6 @@ import jwt from 'jwt-decode';
 import Cookies from "universal-cookie";
 import ReactGA from "react-ga";
 
-const cookies = new Cookies();
-
 const getUsername = (token: string) => {
     const tokenJson: any = jwt(token);
     return tokenJson?.name;

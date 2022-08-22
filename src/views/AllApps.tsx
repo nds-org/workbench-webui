@@ -108,9 +108,9 @@ function AllAppsPage() {
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
-        //V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
-        //    setTags(vocab.terms || []);
-        //}).catch(reason => handleError("Failed to fetch tags", reason));
+        V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
+            setTags(vocab.terms || []);
+        }).catch(reason => handleError("Failed to fetch tags", reason));
     }, [categoryName, env]);
 
     useEffect(() => {

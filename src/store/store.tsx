@@ -1,6 +1,10 @@
 import { createStore } from "redux";
 import rootReducer from "./reducers";
 import {V1, V2} from "../common";
+import jwt_decode from 'jwt-decode';
+
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 // TODO: Restructure env?
 export interface Env {
@@ -35,9 +39,15 @@ const authStorageKey = "auth";
 const persistedAuth = localStorage.getItem(authStorageKey);
 const themeStorageKey = "theme";
 const persistedTheme = localStorage.getItem(themeStorageKey);
+
+// If no localStorage auth set, try to scrape from cookies
+const token = cookies.get('_oauth2_proxy') || '';
+const claims: any = token ? jwt_decode(token) : {}
+const username = claims.preferredUsername || '';
+
 const initState: AppState = {
     preferences: persistedTheme ? JSON.parse(persistedTheme) : { darkThemeEnabled: false },
-    auth: persistedAuth ? JSON.parse(persistedAuth) : { token: '', username: '' },
+    auth: persistedAuth ? JSON.parse(persistedAuth) : { token, username },
     //serverData: { stacks: [], specs: [] },
     env: {}, // fetchEnv(),
 };
