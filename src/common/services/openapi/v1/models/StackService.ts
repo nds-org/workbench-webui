@@ -17,6 +17,7 @@ export type StackService = {
     config: Record<string, string>;
     internalIP?: string;
     singlePod?: boolean;
+    collocate?: boolean;
     readinessProbe?: ReadyProbe;
     imageTag?: string;
     resourceLimits?: ResourceLimits;

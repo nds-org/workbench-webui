@@ -120,6 +120,23 @@ export class UserAccountService {
     }
 
     /**
+     * Retrieves basic userinfo about the currently logged-in user.
+     *
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static async getUserMe(): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/me`,
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
      * Retrieves basic information about a account.
      *
      * @param accountId The unique account identifier

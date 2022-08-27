@@ -17,7 +17,7 @@ type Config = {
 }
 
 export const OpenAPI: Config = {
-    BASE: '/api/v1',
+    BASE: 'https://kubernetes.docker.internal/api/v1',
     VERSION: '1.3.1',
     WITH_CREDENTIALS: false,
     TOKEN: undefined,
