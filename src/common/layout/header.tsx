@@ -146,7 +146,7 @@ function Header() {
                         {
                             user && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
                                 <>
-                                    <Gravatar style={{borderRadius: "25px", borderColor: darkThemeEnabled ? '#fff' : '#283845' }} width={28} height={28} email={user?.email} />
+                                    <Gravatar style={{borderRadius: "25px"}} width={28} height={28} email={user?.email} />
                                     <span style={{marginLeft: "6px", paddingRight: "2px"}}>{user?.email}</span>
                                 </>
                                 } id='navbar-user-dropdown'>
