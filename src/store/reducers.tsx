@@ -1,7 +1,6 @@
 import * as actions from "./actions";
 import { combineReducers } from "redux";
-//import {V1} from "../common";
-import {AuthPayload, EnvPayload, /*StackPayload*/} from "./actions";
+import {AuthPayload, EnvPayload} from "./actions";
 
 interface Action<T> {
     type: string;
@@ -13,21 +12,26 @@ const preferences = (state = { darkThemeEnabled: false }, action: Action<any>) =
     switch (action.type) {
         case actions.TOGGLE_DARKTHEME:
             return { ...state, darkThemeEnabled: !state.darkThemeEnabled };
-
         default:
             return state;
     }
 };
 
-const auth = (state = { token: '', username: '' }, action: Action<AuthPayload>) => {
+const auth = (state: any = { user: undefined, token: undefined }, action: Action<AuthPayload>) => {
     switch (action.type) {
-        case actions.SET_AUTH:
-            return { ...state, token: action.payload.token, username: action.payload.username };
+        case actions.SET_USER:
+            const { user } = action.payload;
+            return { ...state, user };
+        case actions.RESET_USER:
+            return { ...state, user: undefined };
 
-        case actions.RESET_AUTH:
-            return { ...state, token: '', username: ''};
-
-
+        // DEPRECATED: OAuth2 Proxy ignores these actions and uses cookies, but
+        // standalone Keycloak requires us to pass our own token
+        case actions.SET_TOKEN:
+            const { token } = action.payload;
+            return { ...state, token };
+        case actions.RESET_TOKEN:
+            return { ...state, token: undefined };
         default:
             return state;
     }

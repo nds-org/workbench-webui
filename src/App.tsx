@@ -10,7 +10,7 @@ import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
 import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
 
 import './App.css';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 import ReactGA from "react-ga";
@@ -50,7 +50,7 @@ const history = createBrowserHistory();
 
 function App() {
     const dispatch = useDispatch();
-    const env = useSelector((state: any) => state.env);
+    // const env = useSelector((state: any) => state.env);
 
     const fetchEnv = async (url: string) => {
         const response = await fetch(url);
@@ -62,9 +62,6 @@ function App() {
             if (env?.domain) {
                 V1.OpenAPI.BASE = env?.domain + '/api/v1';
                 V2.OpenAPI.BASE = env?.domain + '/api/v2';
-            } else {
-                V1.OpenAPI.BASE = '/api/v1';
-                V2.OpenAPI.BASE = '/api/v2';
             }
 
             env?.customization?.product_name && (document.title = env?.customization?.product_name);

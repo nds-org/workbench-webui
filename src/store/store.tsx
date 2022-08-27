@@ -1,10 +1,9 @@
 import { createStore } from "redux";
 import rootReducer from "./reducers";
 import {V1, V2} from "../common";
-import jwt_decode from 'jwt-decode';
+import {AuthPayload} from "./actions";
 
-import Cookies from "universal-cookie";
-const cookies = new Cookies();
+export interface UserState { email: string; username: string; groups: Array<string> }
 
 // TODO: Restructure env?
 export interface Env {
@@ -12,7 +11,7 @@ export interface Env {
         name: string;
         // ...
     };
-
+    domain?: string;
     // TODO: Handle this with permissions instead
     advancedFeatures?: any;
 }
@@ -21,11 +20,8 @@ export interface AppState {
     preferences: {
         darkThemeEnabled : boolean;
     };
-    auth: {
-        token: string;
-        username: string;
-    };
-    env: any;
+    auth: AuthPayload;
+    env: Env;
     /*serverData: {
         stacks: Array<V1.Stack>;
         specs: Array<V1.Service>;
@@ -35,44 +31,33 @@ export interface AppState {
 // TODO: Set from env
 
 // Populate initial state from localStorage
-const authStorageKey = "auth";
-const persistedAuth = localStorage.getItem(authStorageKey);
 const themeStorageKey = "theme";
 const persistedTheme = localStorage.getItem(themeStorageKey);
 
-// If no localStorage auth set, try to scrape from cookies
-const token = cookies.get('_oauth2_proxy') || '';
-const claims: any = token ? jwt_decode(token) : {}
-const username = claims.preferredUsername || '';
-
 const initState: AppState = {
     preferences: persistedTheme ? JSON.parse(persistedTheme) : { darkThemeEnabled: false },
-    auth: persistedAuth ? JSON.parse(persistedAuth) : { token, username },
+    auth: { token: undefined, user: undefined },
     //serverData: { stacks: [], specs: [] },
-    env: {}, // fetchEnv(),
+    env: { domain: 'https://kubernetes.docker.internal' }, // fetchEnv(),
 };
-
-if (initState.auth && initState.auth.token) {
-    V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = initState.auth.token;
-}
 
 const store = createStore(rootReducer, initState);
 
 store.subscribe(() => {
-    const preferences = store.getState().preferences;
+    const state = store.getState();
+    console.log('New Store State: ', state);
+
+    const preferences = state.preferences;
     if (preferences) {
         localStorage.setItem(themeStorageKey, JSON.stringify(preferences));
     }
-    const auth = store.getState().auth;
-    if (auth) {
-        localStorage.setItem(authStorageKey, JSON.stringify(auth));
-        auth.token && (V1.OpenAPI.TOKEN = V2.OpenAPI.TOKEN = auth.token);
-    }
-    const env = store.getState().env;
-    if (env?.auth?.baseUrl) {
+    console.log("Auth changed? ", state.auth);
+    const env = state.env;
+    if (env?.domain) {
         // TODO: Set from env
-        const host = env?.auth?.baseUrl;
-        V1.OpenAPI.BASE = V2.OpenAPI.BASE = `${host}/api`;
+        const host = env?.domain;
+        V1.OpenAPI.BASE = `${host}/api/v1`;
+        V2.OpenAPI.BASE = `${host}/api/v2`;
     }
 });
 

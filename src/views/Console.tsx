@@ -1,5 +1,4 @@
 import {createRef, useEffect, useMemo, useState} from 'react';
-import {V1} from '../common';
 
 import {XTerm} from 'xterm-for-react';
 import {ITerminalOptions} from 'xterm';
@@ -7,21 +6,18 @@ import {ITerminalOptions} from 'xterm';
 import useWebSocket from "react-use-websocket";
 import {useSelector} from "react-redux";
 import jwt from "jwt-decode";
+import {AppState} from "../store/store";
 
 const Console = (props: { stackServiceId?: string, rows?: number, cols?: number }) => {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
     const env = useSelector((state: any) => state.env);
+    const user = useSelector((state: AppState) => state.auth.user);
 
     const WS_ENDPOINT = `${env?.domain}/api/console`.replace('http', 'ws');
 
-    // Build our socket URL
-    const token = useSelector((state: any) => state.auth.token);
-    const tokenJson: any = jwt(token);
-    console.log("Token decoded: ", tokenJson);
-    const username = tokenJson?.preferred_username || tokenJson?.username || tokenJson?.id || tokenJson?.namespace || tokenJson?.name;
     const ssid = props.stackServiceId;
-    const queryParams = `namespace=${username}&ssid=${ssid}`;
-    const socketUrl = (username && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
+    const queryParams = `namespace=${user?.username}&ssid=${ssid}`;
+    const socketUrl = (user?.username && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');

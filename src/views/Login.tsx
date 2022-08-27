@@ -10,16 +10,9 @@ import FormLabel from "react-bootstrap/FormLabel";
 import { Redirect } from 'react-router-dom';
 import {StringParam, useQueryParam} from "use-query-params";
 import {useDispatch, useSelector} from "react-redux";
-import {setAuth} from "../store/actions";
+import {setToken,setUser} from "../store/actions";
 
-import jwt from 'jwt-decode';
-import Cookies from "universal-cookie";
 import ReactGA from "react-ga";
-
-const getUsername = (token: string) => {
-    const tokenJson: any = jwt(token);
-    return tokenJson?.name;
-}
 
 function LoginPage(props: {}) {
     const dispatch = useDispatch();
@@ -50,8 +43,10 @@ function LoginPage(props: {}) {
                 console.log('Empty response from POST authenticate. Please examine the API server.');
             } else {
                 const token = response.token;
-                const username = getUsername(token);
-                dispatch(setAuth({ token, username }));
+                V1.UserAccountService.getUserMe().then(user => {
+                    dispatch(setToken({ token }));
+                    dispatch(setUser({ user }));
+                });
                 handleNextRedirect();
             }
         }).catch(reason =>{
@@ -68,8 +63,10 @@ function LoginPage(props: {}) {
 
     // Check for JWT
     if (token) {
-        const uname = getUsername(token);
-        dispatch(setAuth({ token, username: uname }));
+        V1.UserAccountService.getUserMe().then(user => {
+            dispatch(setToken({ token }));
+            dispatch(setUser({ user }));
+        });
         handleNextRedirect()
         return <Container id={'loginContainer'} style={{textAlign: "center"}}>
             <style>{css}</style>
@@ -80,25 +77,10 @@ function LoginPage(props: {}) {
 
     // Check for OAuth cookie
     if (env?.signin_url) {
-        V1.UserAccountService.validateOAuthToken().then(resp => {
-            console.log("Successfully verified OAuth token. ", resp);
-            setRedirect('');
-            if (resp) {
-                const token = resp;
-                const uname = getUsername(token);
-                dispatch(setAuth({token, username: uname}));
-                handleNextRedirect();
-            } else {
-                console.warn("Empty token encountered...")
-            }
-        }, reason => {
-            console.warn("Failed validating OAuth token... Redirecting to login: ", reason)
-
-            // Redirect to signin
-            setTimeout(() => {
-                window.location.href = env?.signin_url;
-            }, 2500);
-        });
+        // Redirect to signin
+        setTimeout(() => {
+            window.location.href = env?.signin_url;
+        }, 2500);
 
         return <Container id={'loginContainer'} style={{textAlign: "center"}}>
             {

@@ -49,6 +49,14 @@ const LandingPage = () => {
         text-align: left;
     `;
 
+    const gotoLogin = () => {
+        if (env?.signin_url) {
+            window.location.href = env?.signin_url;
+        } else {
+            setRedirect("/login")
+        }
+    }
+
     return (
         redirect ?
             <Redirect to={redirect} />
@@ -66,7 +74,7 @@ const LandingPage = () => {
                         }
                     </h1>
 
-                    <Button style={{ padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => setRedirect("/login")}>Log In</Button>
+                    <Button style={{ padding: "10px 30px" }} variant="light" size={'lg'} onClick={() => gotoLogin()}>Log In</Button>
                 </div>
             </div>
 
