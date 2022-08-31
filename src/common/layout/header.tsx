@@ -113,7 +113,7 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     {
-                        token && <Nav activeKey="">
+                        user && <Nav activeKey="">
                             <LinkContainer key='all-apps' to='/all-apps'>
                                 <Nav.Link>All Apps</Nav.Link>
                             </LinkContainer>
