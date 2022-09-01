@@ -13,7 +13,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async listAppSpecs(): Promise<Array<AppSpec>> {
+    public static async listSystemSpecs(): Promise<Array<AppSpec>> {
         const result = await __request({
             method: 'GET',
             path: `/specs`,
@@ -29,7 +29,7 @@ export class AppSpecService {
      * @returns AppSpec Created
      * @throws ApiError
      */
-    public static async createAppSpec(
+    public static async createSystemSpec(
         requestBody?: AppSpec,
     ): Promise<AppSpec> {
         const result = await __request({
@@ -52,7 +52,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async updateAppSpec(
+    public static async getSystemSpecById(
         specId: string,
     ): Promise<AppSpec> {
         const result = await __request({
@@ -74,7 +74,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async putAppSpecService(
+    public static async updateSystemSpec(
         specId: string,
         requestBody?: AppSpec,
     ): Promise<AppSpec> {
@@ -101,7 +101,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async deleteAppSpecService(
+    public static async deleteSystemSpec(
         specId: string,
     ): Promise<AppSpec> {
         const result = await __request({
@@ -124,7 +124,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async getAppSpecService(
+    public static async listUserSpecs(
         username: string,
     ): Promise<Array<AppSpec>> {
         const result = await __request({
@@ -148,7 +148,7 @@ export class AppSpecService {
      * @returns AppSpec Created
      * @throws ApiError
      */
-    public static async postAppSpecService(
+    public static async createUserSpec(
         username: string,
         requestBody?: AppSpec,
     ): Promise<AppSpec> {
@@ -173,7 +173,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async getAppSpecService1(
+    public static async getUserSpecById(
         username: string,
         specId: string,
     ): Promise<AppSpec> {
@@ -199,7 +199,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async putAppSpecService1(
+    public static async updateUserSpec(
         username: string,
         specId: string,
         requestBody?: AppSpec,
@@ -228,7 +228,7 @@ export class AppSpecService {
      * @returns AppSpec OK
      * @throws ApiError
      */
-    public static async deleteAppSpecService1(
+    public static async deleteUserSpec(
         username: string,
         specId: string,
     ): Promise<AppSpec> {

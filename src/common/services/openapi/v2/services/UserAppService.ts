@@ -16,7 +16,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async getUserAppService(
+    public static async listUserApps(
         username: string,
     ): Promise<Array<UserApp>> {
         const result = await __request({
@@ -35,7 +35,7 @@ export class UserAppService {
      * @returns UserApp Created
      * @throws ApiError
      */
-    public static async postUserAppService(
+    public static async createUserApp(
         username: string,
         requestBody?: UserApp,
     ): Promise<UserApp> {
@@ -60,7 +60,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async getUserAppService1(
+    public static async getUserAppById(
         username: string,
         userAppId: string,
     ): Promise<UserApp> {
@@ -81,7 +81,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async putUserAppService(
+    public static async updateUserApp(
         username: string,
         userAppId: string,
         requestBody?: UserApp,
@@ -110,7 +110,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async deleteUserAppService(
+    public static async deleteUserApp(
         username: string,
         userAppId: string,
     ): Promise<UserApp> {
@@ -135,7 +135,7 @@ export class UserAppService {
      * @returns UserAppComponent OK
      * @throws ApiError
      */
-    public static async getUserAppService2(
+    public static async listUserAppComponents(
         username: string,
         userAppId: string,
     ): Promise<Array<UserAppComponent>> {
@@ -161,7 +161,7 @@ export class UserAppService {
      * @returns UserApp Created
      * @throws ApiError
      */
-    public static async postUserAppService1(
+    public static async addUserAppComponent(
         username: string,
         userAppId: string,
         requestBody?: UserAppComponent,
@@ -189,7 +189,7 @@ export class UserAppService {
      * @returns UserAppComponent OK
      * @throws ApiError
      */
-    public static async getUserAppService3(
+    public static async getUserAppComponentById(
         username: string,
         userAppId: string,
         appComponentId: string,
@@ -217,7 +217,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async putUserAppService1(
+    public static async updateUserAppComponent(
         username: string,
         userAppId: string,
         appComponentId: string,
@@ -248,7 +248,7 @@ export class UserAppService {
      * @returns UserApp OK
      * @throws ApiError
      */
-    public static async deleteUserAppService1(
+    public static async removeUserAppComponent(
         username: string,
         userAppId: string,
         appComponentId: string,
@@ -275,7 +275,7 @@ export class UserAppService {
      * @returns UserApp Accepted
      * @throws ApiError
      */
-    public static async getUserAppService4(
+    public static async launchUserApp(
         username: string,
         userAppId: string,
         appComponentId: string,
@@ -302,7 +302,7 @@ export class UserAppService {
      * @returns UserApp Accepted
      * @throws ApiError
      */
-    public static async getUserAppService5(
+    public static async shutdownUserApp(
         username: string,
         userAppId: string,
         appComponentId: string,
@@ -329,7 +329,7 @@ export class UserAppService {
      * @returns UserAppComponentLogs OK
      * @throws ApiError
      */
-    public static async getUserAppService6(
+    public static async getUserAppLogsById(
         username: string,
         userAppId: string,
         appComponentId: string,
