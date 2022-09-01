@@ -16,8 +16,8 @@ const Console = (props: { stackServiceId?: string, rows?: number, cols?: number 
     const WS_ENDPOINT = `${env?.domain}/api/console`.replace('http', 'ws');
 
     const ssid = props.stackServiceId;
-    const queryParams = `namespace=${user?.username}&ssid=${ssid}`;
-    const socketUrl = (user?.username && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
+    const queryParams = `namespace=${user?.sub}&ssid=${ssid}`;
+    const socketUrl = (user?.sub && ssid) ? `${WS_ENDPOINT}?${queryParams}` : null;
 
     const xtermRef = createRef<XTerm>();
     const [stage, setStage] = useState('init');

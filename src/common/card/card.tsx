@@ -58,19 +58,28 @@ const newStack = (appSpec: V1.Service, allSpecs: Array<V1.Service>): V1.Stack =>
 }
 
 const newStackService = (appSpec: V1.Service, stack: V1.Stack): V1.StackService => {
-    const service = {
+    const service: V1.StackService = {
         id: "",
         stack: stack.key,
         service: appSpec.key,
         status: "",
 
         // Copy default values from spec
-        resourceLimits: copy(appSpec.resourceLimits),
-        ports: copy(appSpec.ports),
+        // ports: copy(appSpec.ports),
+
 
         // Different format means we need to build this up manually
         volumeMounts: {},
         config: {},
+    }
+
+    if (appSpec?.resourceLimits?.cpuMax) {
+        service.resourceLimits = {
+            cpuMax: appSpec.resourceLimits.cpuMax + "",
+            cpuDefault: appSpec.resourceLimits.cpuDefault + "",
+            memMax: appSpec.resourceLimits.memMax + "",
+            memDefault: appSpec.resourceLimits.memDefault + ""
+        };
     }
 
     // Build up key-value pairs for volumeMounts

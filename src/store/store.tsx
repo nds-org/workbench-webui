@@ -3,7 +3,7 @@ import rootReducer from "./reducers";
 import {V1, V2} from "../common";
 import {AuthPayload} from "./actions";
 
-export interface UserState { email: string; username: string; groups: Array<string> }
+export interface UserState { email: string; sub: string; groups: Array<string> }
 
 // TODO: Restructure env?
 export interface Env {

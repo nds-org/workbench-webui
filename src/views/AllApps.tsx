@@ -30,15 +30,15 @@ const fetchStacks = () => {
 }
 
 const fetchSpecs = (filter: string, searchQuery: string) => {
-    return V1.AppSpecService.listServices('all').then(specs => {
+    return V1.AppSpecService.listServicesAll().then(specs => {
         // Sort by label or key
         return specs.sort((s1, s2) => {
             const lc1 = s1.label?.toLowerCase() || s1.key;
             const lc2 = s2.label?.toLowerCase() || s2.key;
             return lc1.localeCompare(lc2);
         });
-    }).then(specs => {
-        return specs.filter((spec) => {
+    }).then(allSpecs => {
+        return allSpecs.filter((spec) => {
             if (!filter) return true;
             return spec?.tags?.includes(filter);
         });

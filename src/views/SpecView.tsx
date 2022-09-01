@@ -36,7 +36,7 @@ function SpecView() {
     }, [specKey, env?.analytics_tracking_id]);
 
     useEffect(() => {
-        V1.AppSpecService.listServices("all").then((specs: Array<V1.Service>) => {
+        V1.AppSpecService.listServicesAll().then((specs: Array<V1.Service>) => {
             setSpecs(specs || []);
         }).catch(reason => handleError('Failed to fetch specs: ', reason));
     }, []);
