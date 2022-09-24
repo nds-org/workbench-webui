@@ -23,13 +23,13 @@ import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
+import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import Console from "./Console";
 import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {colors} from "../App";
 import ReactGA from "react-ga";
-import {faEdit} from "@fortawesome/free-solid-svg-icons";
 
 
 const navigate = (stk: V1.Stack, ep: any) => {
@@ -73,10 +73,6 @@ function MyAppsPage(props: any) {
     const [activated, setActivated] = useState(0);
     const [selectedService, setSelectedService] = useState<V1.StackService>();
     const [showSelected, setShowSelected] = useState(false);
-
-    useEffect(() => {
-        console.log(user);
-    }, [user]);
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
@@ -140,10 +136,11 @@ function MyAppsPage(props: any) {
 
     const startStack = (stack: V1.Stack) => {
         const stackId = stack.id + "";
-        //setAutoRefresh(true);
         return V1.UserAppService.startStack(stackId)
             .catch(reason => handleError("Failed to start stack", reason))
-            .then(() => {
+            .then((resp) => {
+                if (!resp) return;
+
                 if (env?.auth?.gaTrackingId) {
                     ReactGA.event({
                         category: 'application',
@@ -155,12 +152,14 @@ function MyAppsPage(props: any) {
                 refresh();
             });
     }
+
     const stopStack = (stack: V1.Stack) => {
         const stackId = stack.id + "";
-        //setAutoRefresh(true);
         return V1.UserAppService.stopStack(stackId)
             .catch(reason => handleError("Failed to stop stack", reason))
-            .then(() => {
+            .then((resp) => {
+                if (!resp) return;
+
                 if (env?.auth?.gaTrackingId) {
                     ReactGA.event({
                         category: 'application',
@@ -195,14 +194,6 @@ function MyAppsPage(props: any) {
         setShowSelected(false);
         setSelectedService(undefined);
     }
-
-    /*const waitForStack = async (stackId: string, condition: (stack?: V1.Stack) => boolean): Promise<boolean> => {
-        return refresh().then(stks => {
-            setStacks(stks);
-            const stack = stks.find(stack => stack.id === stackId);
-            return condition(stack);
-        });
-    }*/
 
     const openConsoleInNewTab = () => {
         window.open(`/my-apps/${selectedService?.id}/console`, '_blank');
@@ -285,11 +276,11 @@ function MyAppsPage(props: any) {
                                                 icon={faEdit}/></Button>
                                         }
                                         {(!stack.status || stack.status === 'stopped') && <>
-                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
+                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
                                         </>}
-                                        {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') &&
-                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
-                                        }
+                                        {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') && <>
+                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                        </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
                                         <Accordion.Toggle as={Button} variant={"link"} style={{
