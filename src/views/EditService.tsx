@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 import {Button, Col, Form, FormControl, Nav, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
+import {faCaretLeft, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
 import {V1} from "../common";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 
@@ -65,6 +65,9 @@ function EditServicePage(props: {}) {
         }
         .marginTop {
             margin-top: 2vh;
+        }
+        .marginRight {
+            margin-right: 2vh;
         }
         .nav.nav-pills {
             border-bottom: 0;
@@ -149,7 +152,11 @@ function EditServicePage(props: {}) {
         {
             redirect && <Redirect to={redirect}></Redirect>
         }
-        <h2>Edit UserApp: {stackId}</h2>
+        <Button variant="link" onClick={() => window.location.href = '/my-apps'}>
+            <FontAwesomeIcon icon={faCaretLeft} className={'marginRight'} />
+            My Apps
+        </Button>
+        <h2 className={'marginTop'}>Edit UserApp: {stackId}</h2>
         <Tabs id={'outerTabBar'} activeKey={key} onSelect={(e) => e && setKey(e)} fill>
             {
                 userApp?.services?.map((svc, index) => <Tab title={svc.service} key={svc.service+"-svc-"+index} eventKey={svc.service}>
