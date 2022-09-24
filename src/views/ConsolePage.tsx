@@ -21,7 +21,7 @@ function ConsolePage() {
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
-            ReactGA.pageview('/');
+            ReactGA.pageview('/console');
         }
     }, [env?.analytics_tracking_id]);
 

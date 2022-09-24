@@ -29,6 +29,7 @@ import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
 import {colors} from "../App";
 import ReactGA from "react-ga";
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
 
 
 const navigate = (stk: V1.Stack, ep: any) => {
@@ -85,8 +86,8 @@ function MyAppsPage(props: any) {
          }
 
         if (autoRefresh && !refreshInterval) {
-            //setInterval(() => refresh(), 3000);
-            const interval = setInterval(() => refresh(), 3000);
+            //setInterval(() => refresh(), 1500);
+            const interval = setInterval(() => refresh(), 1500);
             setRefreshInterval(interval);
         } else if (autoRefresh && !transient.length) {
             setAutoRefresh(false);
@@ -167,6 +168,10 @@ function MyAppsPage(props: any) {
             });
     }
 
+    const editStack = (stack: V1.Stack) => {
+        window.location.href = `/my-apps/${stack?.id}/edit`;
+    }
+
     const openConsole = (stack: V1.Stack, svc: V1.StackService) => {
         // TODO: open a console
         // TODO: , backdrop: 'static', keyboard: false
@@ -195,7 +200,7 @@ function MyAppsPage(props: any) {
     }*/
 
     const openConsoleInNewTab = () => {
-        window.open(`/my-apps/${selectedService?.id}`, '_blank');
+        window.open(`/my-apps/${selectedService?.id}/console`, '_blank');
     }
 
     const computeStackBorderColor = (stack: V1.Stack, index: number) => {
@@ -267,6 +272,7 @@ function MyAppsPage(props: any) {
                                         </h4>
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
+                                        <Button variant="link" onClick={() => editStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon icon={faEdit} /></Button>
                                         {(!stack.status || stack.status === 'stopped') && <>
                                             <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
                                             <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
@@ -294,7 +300,7 @@ function MyAppsPage(props: any) {
                                         <th>Status</th>
                                         <th>Name</th>
                                         <th>ID</th>
-                                        <th hidden={stack.status !== 'started'}>Console</th>
+                                        <th hidden={stack.status !== 'started'}></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -304,11 +310,11 @@ function MyAppsPage(props: any) {
                                                 <td key={svc.id+"-status"} width='10%'>{svc.status || 'Stopped'}</td>
                                                 <td key={svc.id+"-endpoints"} width='40%'>{svc.service}
                                                     {
-                                                        (svc.endpoints || []).map(ep => ep.host &&
+                                                        svc?.endpoints?.map(ep => ep.host &&
                                                             <Button variant="link"
                                                                     key={svc.id+"-endpoint-link-"+ep.host}
                                                                     size={'sm'}
-                                                                    hidden={svc.status !== 'ready'}
+                                                                    hidden={svc.status !== 'started'}
                                                                     title={'Open ' + svc.service + ' in a new tab'}
                                                                     onClick={() => navigate(stack, ep)}
                                                                     style={{ marginLeft: "20px" }}>
@@ -318,7 +324,7 @@ function MyAppsPage(props: any) {
                                                     }
                                                 </td>
                                                 <td key={svc.id+"-id"}>{svc.id}</td>
-                                                <td key={svc.id+"-console"} width='5%' style={{ textAlign: "center"}}>
+                                                <td key={svc.id+"-buttons"} width='10%' style={{ textAlign: "center"}}>
                                                     <Button variant="link" size={'sm'} style={{
                                                         color: darkThemeEnabled ? 'white' : 'black',
                                                         borderColor: darkThemeEnabled ? 'white' : 'black',
