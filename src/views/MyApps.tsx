@@ -56,6 +56,7 @@ function MyAppsPage(props: any) {
     // Global state
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
     const env = useSelector((state: any) => state.env);
+    const user = useSelector((state: any) => state.auth.user);
 
     // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -72,6 +73,10 @@ function MyAppsPage(props: any) {
     const [activated, setActivated] = useState(0);
     const [selectedService, setSelectedService] = useState<V1.StackService>();
     const [showSelected, setShowSelected] = useState(false);
+
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
@@ -272,9 +277,14 @@ function MyAppsPage(props: any) {
                                         </h4>
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
-                                        <Button variant="link" onClick={() => editStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon icon={faEdit} /></Button>
+                                        <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
+                                        {
+                                            user?.groups?.includes('/workbench-developers') && <Button variant="link" onClick={() => editStack(stack)}
+                                                    style={{color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black'}}
+                                                    title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon
+                                                icon={faEdit}/></Button>
+                                        }
                                         {(!stack.status || stack.status === 'stopped') && <>
-                                            <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
                                             <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
                                         </>}
                                         {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') &&
