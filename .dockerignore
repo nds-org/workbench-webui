@@ -1,6 +1,12 @@
+.git/
+.gitignore
+.idea/
 node_modules
 npm-debug.log
-Dockerfile
+Dockerfile*
+.github/workflows/
 .dockerignore
-build
+README.md
+docker-compose*.yml
+build/
 public/env.json
