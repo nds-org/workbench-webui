@@ -13,7 +13,11 @@ import {resetUser, setUser} from "../../store/actions";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+import {faGavel} from "@fortawesome/free-solid-svg-icons/faGavel";
 import {UserState} from "../../store/store";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);

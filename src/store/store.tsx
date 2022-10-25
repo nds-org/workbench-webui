@@ -38,7 +38,7 @@ const initState: AppState = {
     preferences: persistedTheme ? JSON.parse(persistedTheme) : { darkThemeEnabled: false },
     auth: { token: undefined, user: undefined },
     //serverData: { stacks: [], specs: [] },
-    env: { domain: 'https://kubernetes.docker.internal' }, // fetchEnv(),
+    env: { domain: '/' }, // fetchEnv(),
 };
 
 const store = createStore(rootReducer, initState);

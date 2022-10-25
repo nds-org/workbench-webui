@@ -279,7 +279,7 @@ function MyAppsPage(props: any) {
                                             <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
                                         </>}
                                         {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') && <>
-                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
                                         </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>

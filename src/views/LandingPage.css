@@ -7,6 +7,13 @@
   padding-bottom: 40px;
 }
 
+.login.banner > .ui.white.header {
+  font-size: 3vh;
+}
+
+#sectionOneBody p, #sectionTwoBody p {
+  font-size: 1em;
+}
 
 .login.icon.backdrop {
   margin: 0 20%;
@@ -15,6 +22,9 @@
   margin-top: 10vh;
 }
 
+.container.sections {
+  margin-top: 25vh;
+}
 
 .login.area {
   text-align: center;
@@ -132,12 +142,6 @@ i.icon.criss.cross {
   font-family: 'Open Sans', 'Helvetica Neue', sans-serif !important;
 }
 
-.description,
-.item,
-p {
-  font-size: 1em;
-}
-
 .ui.white.header {
   font-weight: bold;
 }
@@ -146,7 +150,7 @@ p {
 
 }
 #sectionOneHeader {
-  margin: 50px;
+
 }
 
 #sectionOneBody {

@@ -111,17 +111,17 @@ function AllAppsPage() {
         V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
             setTags(vocab.terms || []);
         }).catch(reason => handleError("Failed to fetch tags", reason));
-    }, [categoryName, env]);
+    }, [categoryName, env, env?.domain]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
         fetchSpecs(filter, searchQuery).then(specs => setSpecs(specs || [])).catch(reason => handleError("Failed to fetch app specs: ", reason));
-    }, [filter, searchQuery, env]);
+    }, [filter, searchQuery, env, env?.domain]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
         fetchStacks().then(stacks => setStacks(stacks || [])).catch(reason => handleError("Failed to fetch user apps: ", reason));
-    }, [stacks.length, env]);
+    }, [stacks.length, env, env?.domain]);
 
 
     const css = `

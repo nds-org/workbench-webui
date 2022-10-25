@@ -23,6 +23,10 @@ function SwaggerUiPage() {
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
         }
         
+        code.language-json, code.language-json > span {
+            color: white;
+        }
+        
         .markdown > p, .model.model-title, .title.info, .title, .base-url, .opblock-title, .try-out__btn, th.col_header,td.col_header, .response-col_status, .parameter__name, .parameter__type, .opblock-section-header > h4 {
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
         }

@@ -78,22 +78,20 @@ const LandingPage = () => {
                 </div>
             </div>
 
-            <div className="container" style={{ marginTop: "200px" }}>
-                <div id="sectionOneHeader" className="row justify-content-md-center">
-                    <div className="row">
-                        <div className="col">
-                            <h2>How It Works...</h2>
-                        </div>
+            <div className="container sections">
+                <div id="sectionListHeader" className="row">
+                    <div className="col">
+                        <h2>How It Works...</h2>
                     </div>
                 </div>
 
-                <div id="sectionOneBody" className="row justify-content-md-center">
+                <div id="sectionOne" className="row">
                     <div className="col-6">
                         <div className="row">
                             <div className="col">
                                 <div className="row">
-                                    <div className="col-4"><NumericHeader>01</NumericHeader></div>
-                                    <div className="col"><SectionHeader>
+                                    <div className="col-4" id="sectionOneHeader"><NumericHeader>01</NumericHeader></div>
+                                    <div className="col" id="sectionOneBody"><SectionHeader>
                                         {
                                             env?.customization?.landing_header_1 && <span className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_header_1+""}}></span>
                                         }
@@ -128,7 +126,7 @@ const LandingPage = () => {
                     </div>
                 </div>
 
-                <div id="sectionTwo" className="row justify-content-md-center">
+                <div id="sectionTwo" className="row">
                     <div id="sectionTwoDiagram" className="col-6">
                         <img alt={'landing-diagram-2'} className="image-content" src="/landing-diagram-2.svg" width="316px" height="316px" />
                     </div>
@@ -137,8 +135,8 @@ const LandingPage = () => {
                         <div className="row">
                             <div className="col">
                                     <div className="row">
-                                        <div className="col-4"><NumericHeader>02</NumericHeader></div>
-                                        <div className="col">
+                                        <div className="col-4" id="sectionTwoHeader"><NumericHeader>02</NumericHeader></div>
+                                        <div className="col" id="sectionTwoBody">
                                             <SectionHeader>
                                                 {
                                                     env?.customization?.landing_header_2 && <span className="text-content" dangerouslySetInnerHTML={{__html: env?.customization?.landing_header_2+""}}></span>
