@@ -63,7 +63,11 @@ const LandingPage = () => {
             :
         <>
             <div className="login area row">
-                <div className="login banner" style={{backgroundImage: 'url("/login-banner.jpg")',minHeight: '20vh',width: '100vw'}}>
+                <div className="login banner" style={{
+                    position: 'relative',
+                    background: 'url("/login-banner.jpg") 0 -900px/auto auto no-repeat fixed',
+                    minHeight: '20vh',
+                    width: '100vw'}}>
                     <h1 className="ui white header">
                         {
                             (env?.customization?.landing_html && <span dangerouslySetInnerHTML={{__html: env?.customization?.landing_html+""}}></span>) || <>

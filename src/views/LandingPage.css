@@ -1,7 +1,8 @@
 .login.banner {
-  background-repeat: no-repeat;
-  background-size: 2200px 1200px;
-  background-position: -400px -300px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   padding-top: 100px;
   height: 450px;
   padding-bottom: 40px;
