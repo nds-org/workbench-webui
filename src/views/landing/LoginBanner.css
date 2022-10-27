@@ -1,0 +1,36 @@
+
+.login.banner {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding: 0;
+}
+
+.login.banner > .ui.white.header {
+    font-size: 3vh;
+}
+
+img.img-fluid {
+    width: 100vw;
+    height: 700px;
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    padding: 0;
+}
+
+.thumbnail {
+    position: relative;
+    padding: 0 !important;
+}
+
+.caption {
+    position: absolute;
+    top: 18%;
+    left: 0;
+    padding: 0;
+    width: 100%;
+}
