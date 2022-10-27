@@ -48,6 +48,8 @@ const newStack = (appSpec: V1.Service, allSpecs: Array<V1.Service>): V1.Stack =>
             const depSpec = allSpecs.find(spec => spec.key === reqDep.key);
             if (depSpec) {
                 services.push(newStackService(depSpec, stack));
+            } else {
+                console.error("Spec not found: " + reqDep.key);
             }
         }
     });
