@@ -1,10 +1,10 @@
-import AllAppsPage from './AllApps';
-import Console from './Console';
-import ConsolePage from './ConsolePage';
+import AllAppsPage from './all-apps/AllApps';
+import Console from './my-apps/Console';
+import ConsolePage from './my-apps/ConsolePage';
 import LandingPage from './landing/LandingPage';
 import LoginPage from './Login';
-import MyAppsPage from './MyApps';
-import SpecView from './SpecView';
+import MyAppsPage from './my-apps/MyApps';
+import SpecView from './all-apps/SpecView';
 import SwaggerUiPage from './SwaggerUi';
 
 

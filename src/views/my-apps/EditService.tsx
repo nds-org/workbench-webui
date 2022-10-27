@@ -7,7 +7,7 @@ import ReactGA from "react-ga";
 import {Button, Col, Form, FormControl, Nav, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretLeft, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
-import {V1} from "../common";
+import {V1} from "../../common";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 
 interface EnvVar {

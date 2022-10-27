@@ -1,4 +1,4 @@
-import {handleError, V1} from "../common";
+import {handleError, V1} from "../../common";
 import {Redirect, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
-import Taglist from "../common/taglist/Taglist";
+import Taglist from "./Taglist";
 import {useSelector} from "react-redux";
 import Badge from "react-bootstrap/Badge";
 import ReactGA from "react-ga";
@@ -83,6 +83,11 @@ function SpecView() {
                         </Row>
 
                         <Row style={{ marginTop: "50px",minHeight:"200px"}}>{spec?.description}</Row>
+                        {
+                            spec?.additionalResources?.map(r => <>
+                                <Row style={{ marginTop: "50px",minHeight:"200px"}}>{r}</Row>
+                            </>)
+                        }
                         <hr style={{ marginTop: "100px" }} />
                         <Row hidden={true}>
                             <Col xs={6}>
@@ -101,12 +106,14 @@ function SpecView() {
                         }
                         {
                             // TODO: Render something for apps that are dependencies
-                            spec.depends.forEach(dep => <p>
+                            spec?.depends?.map(dep => <div>
                                 <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps/' + dep.key)}>
                                     {(specs || []).find(s => s.key === dep.key)?.label}
                                 </Button>
-                                dep.required && <small>(required)</small>
-                            </p>)
+                                {
+                                    dep.required && <small>(required)</small>
+                                }
+                            </div>)
                         }
                         {
                             (specs || [])
@@ -120,30 +127,29 @@ function SpecView() {
                             </h4>
                         }
                         {
-                            // TODO: Render something for apps that depend on this app
-                            (specs || []).filter(s => (s?.depends || []).find(d => d.key === spec.key)).forEach(s => <p>
+                            // Render something for apps that depend on this app
+                            (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <p>
                                 <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps/' + s.key)}>
-                                    {s.label || s.key}
+                                    {s.key}
                                 </Button>
                             </p>)
                         }
                         {
                             (spec.tags || [])
-                                .forEach(tagId => (tags || [])
-                                        .filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+""))?.length > 0 && <h4>
+                                        .filter((t: any) => spec.tags?.includes(t.id+""))?.length > 0 && <h4>
                                 Related Apps
                                 <Badge>
                                     {(tags || []).filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+""))}
                                 </Badge>
-                            </h4>)
+                            </h4>
                         }
                         {
                             // TODO: Render something for other apps with same tags
-                            (spec.tags || []).forEach(tagId => (tags || []).filter((t: {id: number, name: string, description: string}) => spec.tags?.includes(t.id+"")).forEach(tag => <p>
-                                <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag.name))}>
-                                    {tag.name || tag.id}
+                            (spec.tags || []).filter((t: any) => spec.tags?.includes(t.id+"")).map(tag => <p>
+                                <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag))}>
+                                    {tag}
                                 </Button>
-                            </p>))
+                            </p>)
                         }
                     </Col>
                 </Row>

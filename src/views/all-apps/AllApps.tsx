@@ -1,22 +1,22 @@
 import {useEffect, useState} from 'react';
-import { V1, SpecCard, handleError } from '../common';
+import { V1, handleError } from '../../common';
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import Badge from "react-bootstrap/Badge";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
 
 import {StringParam, useQueryParam} from "use-query-params";
 import {useSelector} from "react-redux";
-import {colors} from "../App";
+import {colors} from "../../App";
 import ReactGA from "react-ga";
+import SearchCatalogHeader from "./SearchCatalogHeader";
+import SpecCard from "./SpecCard";
 
 const fetchStacks = () => {
     return V1.UserAppService.listUserapps().then(stacks => {
@@ -150,19 +150,8 @@ function AllAppsPage() {
     return (
         <MuiThemeProvider theme={theme}>
             <Container fluid={true} style={{ paddingLeft: "0", paddingRight: "0", height: "100%" }}>
-                <Jumbotron className='bg-banner' style={{
-                    width: "100%",
-                    color: "white",
-                    backgroundImage: darkThemeEnabled ? "linear-gradient(rgba(100, 100, 0, 0.35),rgba(100, 100, 0, 0.35)),url('/catalog-banner.jpg')" : "linear-gradient(rgba(200, 0, 0, 0.35),rgba(200, 0, 0, 0.35)),url('/catalog-banner.jpg')",
-                    backgroundSize: "1800px 500px",
-                    backgroundPosition: "-120px -100px",
-                    backgroundRepeat: "no-repeat",
-                    padding: "80px",
-                    fontWeight: "bold",
-                }}>
-                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from { env?.customization?.org_name || 'NCSA' }</h1>
-                    <Input style={{ color: "white", width: "480px", fontWeight: 800 }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                </Jumbotron>
+                <SearchCatalogHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery}></SearchCatalogHeader>
+
                 <Row style={{ height: "100%" }}>
                     <Col className='col-3' style={{ paddingTop: "40px", paddingLeft: "60px", paddingRight: "20px", textAlign: "left", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
                         <h3 style={{ paddingLeft: "15px" }}>Tags</h3>

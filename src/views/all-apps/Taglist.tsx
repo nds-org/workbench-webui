@@ -1,4 +1,4 @@
-import {V1} from "..";
+import {V1} from "../../common";
 import Button from "react-bootstrap/Button";
 import Carousel  from "react-bootstrap/Carousel";
 import Col from "react-bootstrap/Col";

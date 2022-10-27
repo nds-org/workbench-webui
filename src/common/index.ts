@@ -84,6 +84,5 @@ const waitFor = (condition: () => Promise<boolean>, period: number = 2000) => {
 
 export { handleError, waitFor };
 
-export * from './card';
 export * from './services';
 export * from './layout';

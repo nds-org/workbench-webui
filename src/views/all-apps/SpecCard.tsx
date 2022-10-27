@@ -7,10 +7,10 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
-import {handleError, V1} from '..';
-import Taglist from "../taglist/Taglist";
+import {handleError, V1} from '../../common';
+import Taglist from "./Taglist";
 
-import './card.css';
+import './SpecCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import ReactGA from "react-ga";
@@ -172,7 +172,7 @@ function SpecCard(props: CardProps) {
                         </Button>
                     </Col>
                 </Row>
-                <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }}>
+                <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }} onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)}>
                     <h5>{props.spec.label || props.spec.key}</h5>
                 </Row>
                 <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>

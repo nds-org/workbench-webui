@@ -6,7 +6,7 @@ import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
 
 import {Header} from './common/layout';
-import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
+import DarkThemeProvider from "./common/layout/toggle/DarkThemeProvider";
 import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
 
 import './App.css';
@@ -15,7 +15,7 @@ import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 import ReactGA from "react-ga";
 import {V1, V2} from "./common";
-import EditServicePage from "./views/EditService";
+import EditServicePage from "./views/my-apps/EditService";
 
 export const colors = {
     backgroundColor: { light: "#FBFBFB", dark: "#475362" },

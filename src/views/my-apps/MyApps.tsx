@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import '../index.css';
+import '../../index.css';
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -9,7 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {V1, handleError} from "../common";
+import {V1, handleError} from "../../common";
 
 import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
@@ -28,7 +28,7 @@ import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 import Console from "./Console";
 import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {colors} from "../App";
+import {colors} from "../../App";
 import ReactGA from "react-ga";
 
 

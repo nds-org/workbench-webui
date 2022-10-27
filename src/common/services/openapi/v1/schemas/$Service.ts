@@ -55,6 +55,14 @@ export const $Service = {
         resourceLimits: {
             type: 'ResourceLimits',
         },
+        additionalResources: {
+            type: 'array',
+            contains: {
+                properties: {
+                },
+            },
+            isRequired: true,
+        },
         depends: {
             type: 'array',
             contains: {

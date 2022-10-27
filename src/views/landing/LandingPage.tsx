@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
 
 import './LandingPage.css';
-import styled from "styled-components";
 import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 import LoginBanner from "./LoginBanner";

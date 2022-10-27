@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
-import {toggleDarkTheme} from "../../store/actions";
+import {toggleDarkTheme} from "../../../store/actions";
 import {faSun} from "@fortawesome/free-solid-svg-icons/faSun";
 import {faMoon} from "@fortawesome/free-solid-svg-icons/faMoon";
 

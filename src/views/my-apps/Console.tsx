@@ -6,7 +6,7 @@ import {ITerminalOptions} from 'xterm';
 import useWebSocket from "react-use-websocket";
 import {useSelector} from "react-redux";
 import jwt from "jwt-decode";
-import {AppState} from "../store/store";
+import {AppState} from "../../store/store";
 
 const Console = (props: { stackServiceId?: string, rows?: number, cols?: number }) => {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);

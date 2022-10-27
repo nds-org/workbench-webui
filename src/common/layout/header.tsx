@@ -7,7 +7,7 @@ import {V1} from '..';
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import DarkThemeToggle from "../toggle/darkthemetoggle";
+import DarkThemeToggle from "./toggle/darkthemetoggle";
 import {resetUser, setUser} from "../../store/actions";
 
 
