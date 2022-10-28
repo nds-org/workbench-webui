@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
-import Taglist from "./Taglist";
 import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 
@@ -105,95 +104,159 @@ function SpecView() {
                                     </Row>
                                     <Row>
                                         <Col sm={4}>
-                                            <Taglist tags={tags} spec={spec} chunkSize={4} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)}></Taglist>
-
-                                            <p className={'description-text'}>{spec?.description}</p>
+                                           <p className={'description-text'}>{spec?.description}</p>
                                         </Col>
                                     </Row>
                                 </Col>
                             </Row>
 
+                            <Col style={{ textAlign: "left" }} sm={11}>
+                                <hr/>
+                                <Row>
+                                    <Col sm={3}>
+                                        <h4>
+                                            Tags
+                                            <span className="badge rounded-pill" style={{
+                                                backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
+                                                color: darkThemeEnabled ? 'white' : '#283845'
+                                            }}>
+                                                    {(spec?.tags || []).length}
+                                                </span>
+                                        </h4>
+                                    </Col>
+                                    <Col>
+                                        {
+                                            spec?.tags?.map(tag => <>
+                                                    {
+                                                        tags.find(t => tag === t.id) && <>
+                                                            <Button className="btn btn-sm btn-warning"
+                                                                    style={{borderRadius: "10px"}}
+                                                                    onClick={() => setRedirect('/all-apps#' + tag)}>{
+                                                                tags.find(t => tag === t.id)?.name}
+                                                            </Button>
+                                                        </>
+                                                    }
+                                                </>
+                                            )
+                                        }
+                                    </Col>
+                                </Row>
+                                    {
+                                        (specs || [])
+                                            .filter(s => (s?.depends || [])
+                                                .find(d => d.key === spec.key))?.length > 0 && <>
+                                        <hr/>
+                                        <Row>
+                                            <Col sm={3}>
+                                                <h4>Dependency Of
+                                                    <span className="badge rounded-pill" style={{
+                                                        backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
+                                                        color: darkThemeEnabled ? 'white' : '#283845'
+                                                    }}>
+                                                {(specs || [])
+                                                    .filter(s => (s?.depends || [])
+                                                        .find(d => d.key === spec.key))?.length}
+                                            </span>
+                                                </h4>
+                                            </Col>
 
-                            {
-                                spec?.additionalResources?.map(r => <>
-                                    <Row key={'addl-resrc-'+r} style={{ marginTop: "50px",minHeight:"200px"}}>{r}</Row>
-                                </>)
-                            }
-                            <hr />
-                            <Row hidden={true}>
-                                <Col xs={6}>
-                                    <h4>Information</h4>
-                                </Col>
+                                            <Col>
+                                                {
+                                                    // Render something for apps that depend on this app
+                                                    (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <>
+                                                        <Button key={spec.key+'-dep-of-'+s.key}
+                                                                style={{ borderRadius: "10px", backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }}
+                                                                className="btn btn-sm btn-warning"
+                                                                onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                                            {specs.find(spec => spec.key === s.key)?.label || s.key}
+                                                        </Button>
+                                                    </>)
+                                                }
+                                            </Col>
+                                        </Row>
+                                        </>
+                                    }
+                                <hr/>
+                                <Row>
+                                    <Col sm={3}>
+                                        <h4>Dependencies
+                                            <span className={"badge rounded-pill"} style={{
+                                                backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
+                                                color: darkThemeEnabled ? 'white' : '#283845'
+                                            }}>{(spec?.depends || []).length}</span>
+                                        </h4>
+                                    </Col>
+
+                                    <Col>
+                                        {
+                                            // TODO: Render something for apps that are dependencies
+                                            spec?.depends?.map(dep => <>
+                                                <Button key={spec.key+'-dep-'+dep.key}
+                                                        style={{ borderRadius: "10px", backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }}
+                                                        className="btn btn-sm btn-warning"
+                                                        onClick={() => setRedirect('/all-apps/' + dep.key)}>
+                                                    {(specs || []).find(s => s.key === dep.key)?.label}
+                                                    {
+                                                        dep.required && <div><small>(required)</small></div>
+                                                    }
+                                                </Button>
+                                            </>)
+                                        }
+                                    </Col>
+                                </Row>
+                                <hr/>
+                                <Row>
+                                    <Col sm={3}>
+
+                                        <h4>
+                                            Related Apps
+                                            <span className="badge rounded-pill" style={{
+                                                backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
+                                                color: darkThemeEnabled ? 'white' : '#283845'
+                                            }}>
+                                                {(specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.length}
+                                            </span>
+                                        </h4>
+                                    </Col>
+                                    <Col>
+
+                                        {
+                                            // TODO: Render something for other apps with same tags
+                                            (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <>
+                                                <Button key={spec.key+'-tag-'+s.key}
+                                                        style={{borderRadius: "10px", backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }}
+                                                        className="btn btn-sm btn-warning"
+                                                        onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                                    {s.label || s.key}
+                                                </Button>
+                                            </>)
+                                        }
+                                    </Col>
+                                </Row>
+                                <hr />
+
+                            </Col>
+                            <Row>
                                 <Col xs={6}>
                                     <h4>Help & Support</h4>
-                                    {spec?.maintainer}
+                                    Maintainer: {spec?.maintainer || 'Anonymous'}
                                 </Col>
+                                {
+                                    spec?.additionalResources?.length > 0 && <>
+                                        <Col xs={6}>
+                                            <h4>Additional Resources</h4>
+                                            <ul>
+                                                {
+                                                    spec?.additionalResources?.map(r => <>
+                                                        <li key={'addl-resrc-'+r} style={{ marginTop: "50px",minHeight:"200px"}}>{r}</li>
+                                                    </>)
+                                                }
+                                            </ul>
+                                        </Col>
+                                    </>
+                                }
                             </Row>
 
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <h4>Dependency Of
-                                <span className="badge rounded-pill" style={{
-                                    backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
-                                    color: darkThemeEnabled ? 'white' : '#283845'
-                                }}>
-                                    {(specs || [])
-                                        .filter(s => (s?.depends || [])
-                                            .find(d => d.key === spec.key))?.length}
-                                </span>
-                            </h4>
-                            {
-                                // Render something for apps that depend on this app
-                                (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <div key={spec.key+'-dep-of-'+s.key}>
-                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }} className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + s.key)}>
-                                        {specs.find(spec => spec.key === s.key)?.label || s.key}
-                                    </button>
-                                    {
-                                        s.depends.find(d => d.key === spec.key && d.required) && <small>(required)</small>
-                                    }
-                                </div>)
-                            }
-                        </Col>
-                        <Col>
-                            <h4>Dependencies
-                                <span className={"badge rounded-pill"} style={{
-                                    backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
-                                    color: darkThemeEnabled ? 'white' : '#283845'
-                                }}>{(spec?.depends || []).length}</span>
-                            </h4>
-                            {
-                                // TODO: Render something for apps that are dependencies
-                                spec?.depends?.map(dep => <div key={spec.key+'-dep-'+dep.key}>
-                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }} type="button" className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + dep.key)}>
-                                        {(specs || []).find(s => s.key === dep.key)?.label}</button>
-                                    {
-                                        dep.required && <small>(required)</small>
-                                    }
-                                </div>)
-                            }
-                        </Col>
-                        <Col>
-                            <h4>
-                                Related Apps
-                                <span className="badge rounded-pill" style={{
-                                    backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
-                                    color: darkThemeEnabled ? 'white' : '#283845'
-                                }}>
-                                    {(specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.length}
-                                </span>
-                            </h4>
-                            {
-                                // TODO: Render something for other apps with same tags
-                                (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <div key={spec.key+'-tag-'+s.key}>
-                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }}
-                                            className="btn btn-sm btn-outline-primary dependency-link"
-                                            onClick={() => setRedirect('/all-apps/' + s.key)}>
-                                        {s.label || s.key}
-                                    </button>
-                                </div>)
-                            }
                         </Col>
                     </Row>
                 </>
