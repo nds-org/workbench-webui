@@ -173,7 +173,7 @@ function SpecView() {
                                                 (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <>
                                                     <Button key={spec.key+'-dep-of-'+s.key}
                                                             style={{ borderRadius: "10px" }}
-                                                            className="btn btn-sm btn-warning"
+                                                            className="btn btn-sm btn-info"
                                                             onClick={() => setRedirect('/all-apps/' + s.key)}>
                                                         {specs.find(spec => spec.key === s.key)?.label || s.key}
                                                     </Button>
@@ -198,11 +198,11 @@ function SpecView() {
 
                                             <Col sm={6}>
                                                 {
-                                                    // TODO: Render something for apps that are dependencies
+                                                    // Render something for apps that depend on this one
                                                     spec?.depends?.map(dep => <>
                                                         <Button key={spec.key+'-dep-'+dep.key}
                                                                 style={{ borderRadius: "10px" }}
-                                                                className="btn btn-sm btn-warning"
+                                                                className="btn btn-sm btn-info"
                                                                 onClick={() => setRedirect('/all-apps/' + dep.key)}>
                                                             {(specs || []).find(s => s.key === dep.key)?.label}
                                                             {
@@ -234,11 +234,11 @@ function SpecView() {
                                             <Col sm={6}>
 
                                                 {
-                                                    // TODO: Render something for other apps with same tags
+                                                    // Render something for other apps with same tags
                                                     (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <>
                                                         <Button key={spec.key+'-tag-'+s.key}
                                                                 style={{ borderRadius: "10px" }}
-                                                                className="btn btn-sm btn-warning"
+                                                                className="btn btn-sm btn-info"
                                                                 onClick={() => setRedirect('/all-apps/' + s.key)}>
                                                             {s.label || s.key}
                                                         </Button>

@@ -14,12 +14,7 @@ p.description-text {
     text-align: left;
 }
 
-Button.btn-warning {
+.btn.btn-sm {
     margin-left: 20px;
     margin-right: 20px;
-}
-
-Button.btn-warning.related-apps {
-    margin-left: 40px;
-    margin-right: 40px;
 }
