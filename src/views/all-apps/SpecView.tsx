@@ -113,7 +113,7 @@ function SpecView() {
                                 </Col>
                             </Row>
 
-                            <Col style={{ textAlign: "left" }} sm={11}>
+                            <Col style={{ textAlign: "left", marginTop: "50px" }} sm={11}>
                                 {
                                     spec?.tags?.length > 0 && <>
                                         <hr/>
