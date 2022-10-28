@@ -23,6 +23,10 @@ function SwaggerUiPage() {
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
         }
         
+        h4, h5, .btn-clear {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
+        }
+        
         code.language-json, code.language-json > span {
             color: white;
         }
