@@ -72,7 +72,7 @@ function SpecView() {
         V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
             setSpec(target);
         }).catch(reason => handleError(`Failed to fetch spec=${specKey}: `, reason));
-    }, [specKey, specs]);
+    }, [specKey, specs, darkThemeEnabled]);
 
     return (
         <>
@@ -147,7 +147,7 @@ function SpecView() {
                             {
                                 // Render something for apps that depend on this app
                                 (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <div key={spec.key+'-dep-of-'+s.key}>
-                                    <button className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }} className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + s.key)}>
                                         {specs.find(spec => spec.key === s.key)?.label || s.key}
                                     </button>
                                     {
@@ -166,7 +166,7 @@ function SpecView() {
                             {
                                 // TODO: Render something for apps that are dependencies
                                 spec?.depends?.map(dep => <div key={spec.key+'-dep-'+dep.key}>
-                                    <button type="button" className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + dep.key)}>
+                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }} type="button" className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + dep.key)}>
                                         {(specs || []).find(s => s.key === dep.key)?.label}</button>
                                     {
                                         dep.required && <small>(required)</small>
@@ -187,7 +187,7 @@ function SpecView() {
                             {
                                 // TODO: Render something for other apps with same tags
                                 (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <div key={spec.key+'-tag-'+s.key}>
-                                    <button style={{ backgroundColor: 'white' }}
+                                    <button style={{ backgroundColor: darkThemeEnabled ? 'lightgrey' : 'white' }}
                                             className="btn btn-sm btn-outline-primary dependency-link"
                                             onClick={() => setRedirect('/all-apps/' + s.key)}>
                                         {s.label || s.key}
