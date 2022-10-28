@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import {textColor} from "../../App";
-import {useSelector} from "react-redux";
 
 const NumericHeader = styled.span`
     bottom: 10px;

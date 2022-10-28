@@ -9,11 +9,11 @@ import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
 import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import Taglist from "./Taglist";
 import {useSelector} from "react-redux";
-import Badge from "react-bootstrap/Badge";
 import ReactGA from "react-ga";
 
 import './SpecView.css';
-import {dark} from "@material-ui/core/styles/createPalette";
+import {newStack} from "../../common/services/userapps.service";
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 interface SpecViewParams {
     specKey: string;
@@ -31,6 +31,24 @@ function SpecView() {
     const [ specs, setSpecs ] = useState<Array<V1.Service>>([]);
 
     const [ redirect, setRedirect ] = useState('');
+
+    const installApplication = (): void => {
+        const appSpec = specs.find(s => s.key === specKey);
+        if (!appSpec) {
+            return;
+        }
+        const userApp: V1.Stack = newStack(appSpec, specs);
+
+        // POST /stacks
+        V1.UserAppService.createUserapp(userApp).then(stk => {
+            ReactGA.event({
+                category: 'application',
+                action: 'add',
+                label: stk.key
+            });
+            setRedirect(`/my-apps`);
+        }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
+    }
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
@@ -54,7 +72,7 @@ function SpecView() {
         V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
             setSpec(target);
         }).catch(reason => handleError(`Failed to fetch spec=${specKey}: `, reason));
-    }, [specKey]);
+    }, [specKey, specs]);
 
     return (
         <>
@@ -74,23 +92,31 @@ function SpecView() {
                                 </Col>
                                 <Col>
                                     <Row>
-                                        <Col style={{ textAlign: "left" }}><h1>{spec?.label || spec?.key}</h1></Col>
-                                        <Col><Taglist tags={tags} spec={spec} chunkSize={4} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)} /></Col>
-                                        <Col xs={2}>
-                                            <Button variant={ darkThemeEnabled ? 'light' : 'dark' }>Add</Button>
+                                        <Col sm={4} style={{ textAlign: "left" }}><h1>{spec?.label || spec?.key}</h1></Col>
+                                        <Col sm={2}>
+                                            <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
+                                                <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
+                                            </Button>
                                             {
                                                 // TODO: "More Actions" Dropdown...
                                             }
                                             <Button hidden={true} variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
                                         </Col>
                                     </Row>
+                                    <Row>
+                                        <Col sm={4}>
+                                            <Taglist tags={tags} spec={spec} chunkSize={4} onClick={(tag) => setRedirect('/all-apps#' + tag?.name)}></Taglist>
+
+                                            <p className={'description-text'}>{spec?.description}</p>
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
 
-                            <Row style={{ marginTop: "50px",minHeight:"100px"}}>{spec?.description}</Row>
+
                             {
                                 spec?.additionalResources?.map(r => <>
-                                    <Row style={{ marginTop: "50px",minHeight:"200px"}}>{r}</Row>
+                                    <Row key={'addl-resrc-'+r} style={{ marginTop: "50px",minHeight:"200px"}}>{r}</Row>
                                 </>)
                             }
                             <hr />
@@ -120,14 +146,14 @@ function SpecView() {
                             </h4>
                             {
                                 // Render something for apps that depend on this app
-                                (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <p>
-                                    <button className="btn btn-sm btn-outline-primary" onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <div key={spec.key+'-dep-of-'+s.key}>
+                                    <button className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + s.key)}>
                                         {specs.find(spec => spec.key === s.key)?.label || s.key}
                                     </button>
                                     {
                                         s.depends.find(d => d.key === spec.key && d.required) && <small>(required)</small>
                                     }
-                                </p>)
+                                </div>)
                             }
                         </Col>
                         <Col>
@@ -135,12 +161,12 @@ function SpecView() {
                                 <span className={"badge rounded-pill"} style={{
                                     backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
                                     color: darkThemeEnabled ? 'white' : '#283845'
-                                }}>{spec?.depends?.length}</span>
+                                }}>{(spec?.depends || []).length}</span>
                             </h4>
                             {
                                 // TODO: Render something for apps that are dependencies
-                                spec?.depends?.map(dep => <div>
-                                    <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => setRedirect('/all-apps/' + dep.key)}>
+                                spec?.depends?.map(dep => <div key={spec.key+'-dep-'+dep.key}>
+                                    <button type="button" className="btn btn-sm btn-outline-primary dependency-link" onClick={() => setRedirect('/all-apps/' + dep.key)}>
                                         {(specs || []).find(s => s.key === dep.key)?.label}</button>
                                     {
                                         dep.required && <small>(required)</small>
@@ -155,16 +181,18 @@ function SpecView() {
                                     backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
                                     color: darkThemeEnabled ? 'white' : '#283845'
                                 }}>
-                                    {(spec.tags || []).filter((t: any) => spec.tags?.includes(t.id+""))?.length}
+                                    {(specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.length}
                                 </span>
                             </h4>
                             {
                                 // TODO: Render something for other apps with same tags
-                                (spec.tags || []).filter((t: any) => spec.tags?.includes(t.id+"")).map(tag => <p>
-                                    <Button variant={'link'} size={'sm'} onClick={() => setRedirect('/all-apps#' + encodeURIComponent(tag))}>
-                                        {tag}
-                                    </Button>
-                                </p>)
+                                (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <div key={spec.key+'-tag-'+s.key}>
+                                    <button style={{ backgroundColor: 'white' }}
+                                            className="btn btn-sm btn-outline-primary dependency-link"
+                                            onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                        {s.label || s.key}
+                                    </button>
+                                </div>)
                             }
                         </Col>
                     </Row>

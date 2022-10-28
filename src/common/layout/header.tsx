@@ -13,18 +13,13 @@ import {resetUser, setUser} from "../../store/actions";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
-import {faGavel} from "@fortawesome/free-solid-svg-icons/faGavel";
 import {UserState} from "../../store/store";
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
 
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     const env = useSelector((state: any) => state.env);
 
-    const token: string | undefined = useSelector((state: any) => state.auth.token);
     const user: UserState | undefined = useSelector((state: any) => state.auth.user);
     const dispatch = useDispatch();
 
@@ -88,7 +83,7 @@ function Header() {
             console.log('Failed to fetch current user: ', reason);
             dispatch(resetUser());
         });
-    }, []);
+    }, [dispatch]);
 
     const activeColor = darkThemeEnabled ? 'white' : '#283845';
     const css = `

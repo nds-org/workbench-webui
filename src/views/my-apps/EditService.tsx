@@ -1,10 +1,10 @@
-import {ChangeEvent, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Container from "react-bootstrap/Container";
 import {Redirect, useParams} from 'react-router-dom';
 import {useSelector} from "react-redux";
 
 import ReactGA from "react-ga";
-import {Button, Col, Form, FormControl, Nav, Row, Tab, Table, Tabs} from "react-bootstrap";
+import {Button, Col, Form, Nav, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretLeft, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
 import {V1} from "../../common";
@@ -57,7 +57,7 @@ function EditServicePage(props: {}) {
                 setKey(app?.services[0].service);
             }
         });
-    }, []);
+    }, [stackId]);
 
     const css = `
         #editContainer {

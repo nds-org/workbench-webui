@@ -5,3 +5,11 @@
 small {
     margin-left: 10px;
 }
+
+p.description-text {
+    margin: 50px;
+}
+
+button.btn-outline-primary.dependency-link {
+    background-color: white;
+}
