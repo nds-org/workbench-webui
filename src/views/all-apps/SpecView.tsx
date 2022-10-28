@@ -227,15 +227,14 @@ function SpecView() {
                                                         backgroundColor: darkThemeEnabled ? '#283845' : '#ddd',
                                                         color: darkThemeEnabled ? 'white' : '#283845'
                                                     }}>
-                                                {(specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.length}
+                                                {(specs || []).filter((s: V1.Service) => spec.key !== s.key && spec.tags?.some(t => s?.tags?.includes(t)))?.length}
                                             </span>
                                                 </h4>
                                             </Col>
                                             <Col sm={6}>
-
                                                 {
                                                     // Render something for other apps with same tags
-                                                    (specs || []).filter((s: V1.Service) => spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <>
+                                                    (specs || []).filter((s: V1.Service) => spec.key !== s.key && spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <>
                                                         <Button key={spec.key+'-tag-'+s.key}
                                                                 style={{ borderRadius: "10px" }}
                                                                 className="btn btn-sm btn-info"
