@@ -58,8 +58,7 @@ export const $Service = {
         additionalResources: {
             type: 'array',
             contains: {
-                properties: {
-                },
+                type: 'string',
             },
             isRequired: true,
         },
