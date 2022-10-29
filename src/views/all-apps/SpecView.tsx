@@ -136,7 +136,7 @@ function SpecView() {
                                                                 tags.find(t => tag === t.id) && <>
                                                                     <Button className="btn btn-sm btn-warning"
                                                                             style={{borderRadius: "10px"}}
-                                                                            onClick={() => setRedirect('/all-apps#' + tag)}>{
+                                                                            onClick={() => setRedirect('/all-apps#' + tags.find(t => t.id == tag)?.name)}>{
                                                                         tags.find(t => tag === t.id)?.name}
                                                                     </Button>
                                                                 </>
