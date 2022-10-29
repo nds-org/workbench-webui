@@ -29,7 +29,7 @@ const LandingPage = () => {
                 <LoginBanner />
             </div>
 
-            <div className="container sections">
+            <div className="container sections" style={{ textAlign: "center" }}>
                 <div id="sectionListHeader" className="row">
                     <div className="col">
                         <h2>How It Works...</h2>

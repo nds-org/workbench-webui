@@ -106,7 +106,7 @@ function SpecView() {
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col>
+                                        <Col style={{ textAlign: "left" }}>
                                            <p className={'description-text'}>{spec?.description}</p>
                                         </Col>
                                     </Row>
@@ -129,7 +129,7 @@ function SpecView() {
                                                 </span>
                                                 </h4>
                                             </Col>
-                                            <Col>
+                                            <Col style={{ textAlign: "left" }}>
                                                 {
                                                     spec?.tags?.map(tag => <>
                                                             {
@@ -250,7 +250,7 @@ function SpecView() {
                                 <hr />
 
                             </Col>
-                            <Row>
+                            <Row style={{ textAlign: "left" }}>
                                 <Col xs={3}>
                                     <h4>Help & Support</h4>
                                 </Col>
