@@ -12,6 +12,12 @@ function SwaggerUiPage() {
     const env = useSelector((state: any) => state.env);
 
     useEffect(() => {
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: API Reference`;
+        }
+    }, [env]);
+
+    useEffect(() => {
         if (env?.analytics_tracking_id) {
             ReactGA.pageview('/swagger');
         }

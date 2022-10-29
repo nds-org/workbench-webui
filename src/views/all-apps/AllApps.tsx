@@ -96,8 +96,10 @@ function AllAppsPage() {
     }
 
     useEffect(() => {
-        document.title = "App Catalog";
-    }, []);
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: App Catalog`;
+        }
+    }, [env]);
 
     useEffect(() => {
         const hash = window.location.hash;

@@ -50,6 +50,12 @@ function SpecView() {
     }
 
     useEffect(() => {
+        if (env?.customization?.product_name && spec) {
+            document.title = `${env?.customization?.product_name}: ${spec?.label || spec?.key}`;
+        }
+    }, [env, spec]);
+
+    useEffect(() => {
         if (env?.analytics_tracking_id) {
             ReactGA.pageview('/all-apps/' + specKey);
         }
@@ -136,7 +142,7 @@ function SpecView() {
                                                                 tags.find(t => tag === t.id) && <>
                                                                     <Button className="btn btn-sm btn-warning"
                                                                             style={{borderRadius: "10px"}}
-                                                                            onClick={() => setRedirect('/all-apps#' + tags.find(t => t.id == tag)?.name)}>{
+                                                                            onClick={() => setRedirect('/all-apps#' + tags.find(t => t.id === tag)?.name)}>{
                                                                         tags.find(t => tag === t.id)?.name}
                                                                     </Button>
                                                                 </>

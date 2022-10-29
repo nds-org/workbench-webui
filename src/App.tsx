@@ -10,7 +10,7 @@ import DarkThemeProvider from "./common/layout/toggle/DarkThemeProvider";
 import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
 
 import './App.css';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 import ReactGA from "react-ga";
@@ -51,12 +51,19 @@ const history = createBrowserHistory();
 
 function App() {
     const dispatch = useDispatch();
-    // const env = useSelector((state: any) => state.env);
+    const env = useSelector((state: any) => state.env);
 
     const fetchEnv = async (url: string) => {
         const response = await fetch(url);
         return await response.json();
     };
+
+    useEffect(() => {
+        // Set default Tab name if nothing set explicitly
+        if (!env?.customization?.product_name) {
+            document.title = 'Workbench';
+        }
+    }, [env]);
 
     useEffect(() => {
         fetchEnv('/frontend.json').then(env => {

@@ -22,6 +22,7 @@ interface ServiceVars {
 
 function EditServicePage(props: {}) {
     const env = useSelector((state: any) => state.env);
+    const user = useSelector((state: any) => state.auth.user);
 
     const tabNames = ['Environment Variables'];
     const {stackId} = useParams<{ stackId: string; }>();
@@ -32,6 +33,12 @@ function EditServicePage(props: {}) {
     const [innerKey, setInnerKey] = useState<string>(tabNames[0]);
     const [vars, setVars] = useState<Array<ServiceVars>>([]);
 
+    useEffect(() => {
+        if (env?.customization?.product_name && user) {
+            const username = user?.sub?.replace('@', '')?.replace('\.', '');
+            document.title = `${env?.customization?.product_name}: Edit ${username}-${stackId}`;
+        }
+    }, [env, user, stackId]);
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
@@ -156,7 +163,7 @@ function EditServicePage(props: {}) {
             <FontAwesomeIcon icon={faCaretLeft} className={'marginRight'} />
             My Apps
         </Button>
-        <h2 className={'marginTop'}>Edit UserApp: {stackId}</h2>
+        <h2 className={'marginTop'}>Edit UserApp: {user?.sub.replace('@', '').replace('\.', '')}-{stackId}</h2>
         <Tabs id={'outerTabBar'} activeKey={key} onSelect={(e) => e && setKey(e)} fill>
             {
                 userApp?.services?.map((svc, index) => <Tab title={svc.service} key={svc.service+"-svc-"+index} eventKey={svc.service}>

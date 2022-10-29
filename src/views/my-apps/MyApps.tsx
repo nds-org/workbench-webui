@@ -75,6 +75,12 @@ function MyAppsPage(props: any) {
     const [showSelected, setShowSelected] = useState(false);
 
     useEffect(() => {
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: My Apps`;
+        }
+    }, [env]);
+
+    useEffect(() => {
         if (env?.analytics_tracking_id) {
             ReactGA.pageview('/my-apps');
         }
