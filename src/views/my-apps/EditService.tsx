@@ -35,7 +35,7 @@ function EditServicePage(props: {}) {
 
     useEffect(() => {
         if (env?.customization?.product_name && user) {
-            const username = user?.sub?.replace('@', '')?.replace('\.', '');
+            const username = user?.sub?.replace('@', '')?.replace('.', '');
             document.title = `${env?.customization?.product_name}: Edit ${username}-${stackId}`;
         }
     }, [env, user, stackId]);
@@ -163,7 +163,7 @@ function EditServicePage(props: {}) {
             <FontAwesomeIcon icon={faCaretLeft} className={'marginRight'} />
             My Apps
         </Button>
-        <h2 className={'marginTop'}>Edit UserApp: {user?.sub.replace('@', '').replace('\.', '')}-{stackId}</h2>
+        <h2 className={'marginTop'}>Edit UserApp: {user?.sub.replace('@', '').replace('.', '')}-{stackId}</h2>
         <Tabs id={'outerTabBar'} activeKey={key} onSelect={(e) => e && setKey(e)} fill>
             {
                 userApp?.services?.map((svc, index) => <Tab title={svc.service} key={svc.service+"-svc-"+index} eventKey={svc.service}>
