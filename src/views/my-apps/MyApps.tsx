@@ -108,7 +108,6 @@ function MyAppsPage(props: any) {
     useEffect(() => {
         if (!Object.keys(env).length) return;
 
-        document.title = "Workbench: My Apps";
         V1.AppSpecService.listServices().then(specs => setSpecs(specs)).catch(reason => handleError('Failed to fetch specs: ', reason));
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
     }, [env]);
