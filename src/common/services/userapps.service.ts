@@ -68,30 +68,6 @@ export const newStackService = (appSpec: V1.Service, stack: V1.Stack): V1.StackS
         };
     }
 
-    // Build up key-value pairs for volumeMounts
-    const specVolumes = appSpec.volumeMounts || [];
-    const volumes: any = {};
-    specVolumes.forEach(vol => {
-        const name = vol.name + "";
-        volumes[name] = vol.mountPath;
-    });
-
-    // Build up key-value pairs for all configs
-    const specConfigs = appSpec.config || [];
-    const config: any = {};
-    specConfigs.forEach((cfg: V1.Config) => {
-        const name = cfg.name + "";
-        if (cfg.isPassword) {
-            // TODO: Generate random password
-            // Generate passwords for any missing configs
-            config[name] = Math.random().toString(36).substr(2, 8);
-        } else {
-            config[name] = cfg.value;
-        }
-    });
-
-    service.config = config;
-
     return service;
 }
 
