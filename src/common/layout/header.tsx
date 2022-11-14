@@ -1,52 +1,39 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import Gravatar from 'react-gravatar';
 import {useDispatch, useSelector} from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap';
 
-import {handleError, V1} from '..';
+import {V1} from '..';
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import DarkThemeToggle from "../toggle/darkthemetoggle";
-import {resetAuth} from "../../store/actions";
+import DarkThemeToggle from "./toggle/darkthemetoggle";
+import {resetUser, setUser} from "../../store/actions";
 
 
-import jwt from 'jwt-decode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
-
+import {UserState} from "../../store/store";
 
 function Header() {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     const env = useSelector((state: any) => state.env);
 
-    const [username, setUsername] = useState('');
-    const token = useSelector((state: any) => state.auth.token);
+    const user: UserState | undefined = useSelector((state: any) => state.auth.user);
     const dispatch = useDispatch();
-
-    const [user, setUser] = useState<V1.Account | undefined>(undefined);
 
     //const [interval, setInterv] = useState<any>();
 
-    const onLogout = useCallback(() => {
-        setUser(undefined);
-        dispatch(resetAuth());
+    const onLogout = () => {
+        dispatch(resetUser());
 
-        if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
+        if (env?.signout_url) {
+            window.location.href = env?.signout_url;
+        } else if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
             window.location.href = `/`;
         }
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (token) {
-            const tokenFields: any = jwt(token);
-            const username = tokenFields?.user;
-            setUsername(username);
-        } else {
-            setUsername('')
-        }
-    }, [token]);
+    };
 
     useEffect(() => {
         let link: HTMLLinkElement | null = document.querySelector("link[rel~='icon']");
@@ -89,12 +76,14 @@ function Header() {
     }, [username, token, interval, dispatch, onLogout]);*/
 
     useEffect(() => {
-        if (username) {
-            V1.UserAccountService.getAccountById(username).then(user => {
-                setUser(user);
-            }).catch(reason => handleError("Failed to fetch user: ", reason));
-        }
-    }, [username]);
+        V1.UserAccountService.getUserMe().then((user: UserState) => {
+            console.log('Fetched User: ', user);
+            dispatch(setUser({ user }));
+        }).catch(reason => {
+            console.log('Failed to fetch current user: ', reason);
+            dispatch(resetUser());
+        });
+    }, [dispatch]);
 
     const activeColor = darkThemeEnabled ? 'white' : '#283845';
     const css = `
@@ -123,7 +112,7 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     {
-                        token && <Nav activeKey="">
+                        user && <Nav activeKey="">
                             <LinkContainer key='all-apps' to='/all-apps'>
                                 <Nav.Link>All Apps</Nav.Link>
                             </LinkContainer>
@@ -154,11 +143,12 @@ function Header() {
                             <Nav.Link>API Reference</Nav.Link>
                         </LinkContainer>
                         {
-                            token && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
-                                user?.email && <>
-                                    <Gravatar style={{borderRadius:"25px"}} width={28} height={28} email={user?.email} /> {user?.email}
+                            user && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
+                                <>
+                                    <Gravatar style={{borderRadius: "25px"}} width={28} height={28} email={user?.email} />
+                                    <span style={{marginLeft: "6px", paddingRight: "2px"}}>{user?.email}</span>
                                 </>
-                            } id='navbar-user-dropdown'>
+                                } id='navbar-user-dropdown'>
                                 <NavDropdown.Item href="#" onClick={onLogout}>Logout</NavDropdown.Item>
                             </NavDropdown>
                         }

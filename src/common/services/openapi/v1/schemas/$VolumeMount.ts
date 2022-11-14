@@ -3,11 +3,12 @@
 /* eslint-disable */
 export const $VolumeMount = {
     properties: {
-        mountPath: {
+        defaultPath: {
             type: 'string',
         },
-        name: {
+        mountPath: {
             type: 'string',
+            isRequired: true,
         },
     },
 };

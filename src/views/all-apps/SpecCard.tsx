@@ -7,100 +7,17 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
-import {handleError, V1} from '..';
-import Taglist from "../taglist/Taglist";
+import {handleError, V1} from '../../common';
+import Taglist from "./Taglist";
 
-import './card.css';
+import './SpecCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import ReactGA from "react-ga";
+import {newStack} from "../../common/services/userapps.service";
 
 // TODO: Abstract this?
-const copy = (obj: any) => {
-    return JSON.parse(JSON.stringify(obj));
-}
 
-const newStack = (appSpec: V1.Service, allSpecs: Array<V1.Service>): V1.Stack => {
-    const key = appSpec.key;
-
-    const stack: V1.Stack = {
-        id: "",
-        name: copy(appSpec.label),
-        key: key,
-        // secure: this.copy(appSpec.authRequired),
-        status: "stopped",
-        services: []
-    }
-
-    const services = stack.services || [];
-
-    // Add base service
-    services.push(newStackService(appSpec, stack));
-
-    const deps = appSpec.depends || [];
-
-    // Add required service dependencies
-    deps.filter(dep => dep.required).forEach((reqDep: V1.ServiceDependency) => {
-        const depKey = reqDep.key;
-        if (!depKey) {
-            console.error(`Empty key encountered: ${appSpec.key}-${depKey}   <--- this shouldn't be empty`);
-        } else {
-            const depSpec = allSpecs.find(spec => spec.key === reqDep.key);
-            if (depSpec) {
-                services.push(newStackService(depSpec, stack));
-            }
-        }
-    });
-
-    stack.services = services;
-
-    return stack;
-}
-
-const newStackService = (appSpec: V1.Service, stack: V1.Stack): V1.StackService => {
-    const service = {
-        id: "",
-        stack: stack.key,
-        service: appSpec.key,
-        status: "",
-
-        // Copy default values from spec
-        resourceLimits: copy(appSpec.resourceLimits),
-        ports: copy(appSpec.ports),
-
-        // Different format means we need to build this up manually
-        volumeMounts: {},
-        config: {},
-    }
-
-    // Build up key-value pairs for volumeMounts
-    const specVolumes = appSpec.volumeMounts || [];
-    const volumes: any = {};
-    specVolumes.forEach(vol => {
-        const name = vol.name + "";
-        volumes[name] = vol.mountPath;
-    });
-
-    // Build up key-value pairs for all configs
-    const specConfigs = appSpec.config || [];
-    const config: any = {};
-    specConfigs.forEach((cfg: V1.Config) => {
-        const name = cfg.name + "";
-        if (cfg.isPassword) {
-            // TODO: Generate random password
-            // Generate passwords for any missing configs
-            config[name] = Math.random().toString(36).substr(2, 8);
-        } else {
-            config[name] = cfg.value;
-        }
-    });
-
-    service.config = config;
-
-    return service;
-}
-
-// Creates a new Stack (UserApp) from the given Service (AppSpec)
 
 
 
@@ -161,7 +78,7 @@ function SpecCard(props: CardProps) {
                         </Button>
                     </Col>
                 </Row>
-                <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }}>
+                <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }} onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)}>
                     <h5>{props.spec.label || props.spec.key}</h5>
                 </Row>
                 <Row style={{ paddingLeft: "10px", paddingRight: "10px" }}>

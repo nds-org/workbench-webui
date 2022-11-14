@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import '../index.css';
+import '../../index.css';
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -9,7 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {V1, handleError} from "../common";
+import {V1, handleError} from "../../common";
 
 import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
 import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
@@ -23,11 +23,12 @@ import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
+import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import Console from "./Console";
 import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
-import {colors} from "../App";
+import {colors} from "../../App";
 import ReactGA from "react-ga";
 
 
@@ -55,6 +56,7 @@ function MyAppsPage(props: any) {
     // Global state
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
     const env = useSelector((state: any) => state.env);
+    const user = useSelector((state: any) => state.auth.user);
 
     // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -73,6 +75,12 @@ function MyAppsPage(props: any) {
     const [showSelected, setShowSelected] = useState(false);
 
     useEffect(() => {
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: My Apps`;
+        }
+    }, [env]);
+
+    useEffect(() => {
         if (env?.analytics_tracking_id) {
             ReactGA.pageview('/my-apps');
         }
@@ -85,8 +93,8 @@ function MyAppsPage(props: any) {
          }
 
         if (autoRefresh && !refreshInterval) {
-            //setInterval(() => refresh(), 3000);
-            const interval = setInterval(() => refresh(), 3000);
+            //setInterval(() => refresh(), 1500);
+            const interval = setInterval(() => refresh(), 1500);
             setRefreshInterval(interval);
         } else if (autoRefresh && !transient.length) {
             setAutoRefresh(false);
@@ -100,7 +108,6 @@ function MyAppsPage(props: any) {
     useEffect(() => {
         if (!Object.keys(env).length) return;
 
-        document.title = "Workbench: My Apps";
         V1.AppSpecService.listServices().then(specs => setSpecs(specs)).catch(reason => handleError('Failed to fetch specs: ', reason));
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
     }, [env]);
@@ -134,10 +141,11 @@ function MyAppsPage(props: any) {
 
     const startStack = (stack: V1.Stack) => {
         const stackId = stack.id + "";
-        //setAutoRefresh(true);
         return V1.UserAppService.startStack(stackId)
             .catch(reason => handleError("Failed to start stack", reason))
-            .then(() => {
+            .then((resp) => {
+                if (!resp) return;
+
                 if (env?.auth?.gaTrackingId) {
                     ReactGA.event({
                         category: 'application',
@@ -149,12 +157,14 @@ function MyAppsPage(props: any) {
                 refresh();
             });
     }
+
     const stopStack = (stack: V1.Stack) => {
         const stackId = stack.id + "";
-        //setAutoRefresh(true);
         return V1.UserAppService.stopStack(stackId)
             .catch(reason => handleError("Failed to stop stack", reason))
-            .then(() => {
+            .then((resp) => {
+                if (!resp) return;
+
                 if (env?.auth?.gaTrackingId) {
                     ReactGA.event({
                         category: 'application',
@@ -165,6 +175,10 @@ function MyAppsPage(props: any) {
                 console.log("Stack is now stopping...");
                 refresh();
             });
+    }
+
+    const editStack = (stack: V1.Stack) => {
+        window.location.href = `/my-apps/${stack?.id}/edit`;
     }
 
     const openConsole = (stack: V1.Stack, svc: V1.StackService) => {
@@ -186,16 +200,8 @@ function MyAppsPage(props: any) {
         setSelectedService(undefined);
     }
 
-    /*const waitForStack = async (stackId: string, condition: (stack?: V1.Stack) => boolean): Promise<boolean> => {
-        return refresh().then(stks => {
-            setStacks(stks);
-            const stack = stks.find(stack => stack.id === stackId);
-            return condition(stack);
-        });
-    }*/
-
     const openConsoleInNewTab = () => {
-        window.open(`/my-apps/${selectedService?.id}`, '_blank');
+        window.open(`/my-apps/${selectedService?.id}/console`, '_blank');
     }
 
     const computeStackBorderColor = (stack: V1.Stack, index: number) => {
@@ -267,13 +273,19 @@ function MyAppsPage(props: any) {
                                         </h4>
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
-                                        {(!stack.status || stack.status === 'stopped') && <>
-                                            <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
-                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
-                                        </>}
-                                        {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') &&
-                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                        <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
+                                        {
+                                            user?.groups?.includes('/workbench-developers') && <Button variant="link" onClick={() => editStack(stack)}
+                                                    style={{color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black'}}
+                                                    title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon
+                                                icon={faEdit}/></Button>
                                         }
+                                        {(!stack.status || stack.status === 'stopped') && <>
+                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
+                                        </>}
+                                        {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') && <>
+                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                        </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
                                         <Accordion.Toggle as={Button} variant={"link"} style={{
@@ -294,7 +306,7 @@ function MyAppsPage(props: any) {
                                         <th>Status</th>
                                         <th>Name</th>
                                         <th>ID</th>
-                                        <th hidden={stack.status !== 'started'}>Console</th>
+                                        <th hidden={stack.status !== 'started'}></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -304,11 +316,11 @@ function MyAppsPage(props: any) {
                                                 <td key={svc.id+"-status"} width='10%'>{svc.status || 'Stopped'}</td>
                                                 <td key={svc.id+"-endpoints"} width='40%'>{svc.service}
                                                     {
-                                                        (svc.endpoints || []).map(ep => ep.host &&
+                                                        svc?.endpoints?.map(ep => ep.host &&
                                                             <Button variant="link"
                                                                     key={svc.id+"-endpoint-link-"+ep.host}
                                                                     size={'sm'}
-                                                                    hidden={svc.status !== 'ready'}
+                                                                    hidden={svc.status !== 'started'}
                                                                     title={'Open ' + svc.service + ' in a new tab'}
                                                                     onClick={() => navigate(stack, ep)}
                                                                     style={{ marginLeft: "20px" }}>
@@ -318,7 +330,7 @@ function MyAppsPage(props: any) {
                                                     }
                                                 </td>
                                                 <td key={svc.id+"-id"}>{svc.id}</td>
-                                                <td key={svc.id+"-console"} width='5%' style={{ textAlign: "center"}}>
+                                                <td key={svc.id+"-buttons"} width='10%' style={{ textAlign: "center"}}>
                                                     <Button variant="link" size={'sm'} style={{
                                                         color: darkThemeEnabled ? 'white' : 'black',
                                                         borderColor: darkThemeEnabled ? 'white' : 'black',

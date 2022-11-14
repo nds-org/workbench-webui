@@ -1,9 +1,12 @@
 import {V1} from "../common";
+import {UserState} from "./store";
 
 export const TOGGLE_DARKTHEME = "TOGGLE_DARKTHEME";
 export const SET_ENV = "SET_ENV";
-export const SET_AUTH = "SET_AUTH";
-export const RESET_AUTH = "RESET_AUTH";
+export const SET_TOKEN = "SET_TOKEN";
+export const RESET_TOKEN = "RESET_TOKEN";
+export const SET_USER = "SET_USER";
+export const RESET_USER = "RESET_USER";
 
 // TODO: Server data
 export const STACK_CREATE = "STACK_CREATE";
@@ -17,9 +20,10 @@ export const SPEC_DELETE = "SPEC_DELETE";
 
 
 export interface AuthPayload {
-    username: string;
-    token: string;
+    user?: UserState;
+    token?: string;
 }
+
 export interface EnvPayload {
     env: any;
 }
@@ -36,13 +40,22 @@ export const setEnv = (payload: EnvPayload) => ({
     payload
 });
 
-export const setAuth = (payload: AuthPayload) => ({
-    type: SET_AUTH,
+export const setToken = (payload: AuthPayload) => ({
+    type: SET_TOKEN,
     payload
 });
 
-export const resetAuth = () => ({
-    type: RESET_AUTH,
+export const setUser = (payload: AuthPayload) => ({
+    type: SET_USER,
+    payload
+});
+
+
+export const resetToken = () => ({
+    type: RESET_TOKEN,
+});
+export const resetUser = () => ({
+    type: RESET_USER,
 });
 
 export const stackCreate = (payload: StackPayload) => ({

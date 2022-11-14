@@ -1,22 +1,22 @@
 import {useEffect, useState} from 'react';
-import { V1, SpecCard, handleError } from '../common';
+import { V1, handleError } from '../../common';
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import Jumbotron from "react-bootstrap/Jumbotron";
 import Badge from "react-bootstrap/Badge";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
 
 import {StringParam, useQueryParam} from "use-query-params";
 import {useSelector} from "react-redux";
-import {colors} from "../App";
+import {colors} from "../../App";
 import ReactGA from "react-ga";
+import SearchCatalogHeader from "./SearchCatalogHeader";
+import SpecCard from "./SpecCard";
 
 const fetchStacks = () => {
     return V1.UserAppService.listUserapps().then(stacks => {
@@ -27,31 +27,6 @@ const fetchStacks = () => {
             return lc1.localeCompare(lc2);
         });
     }).catch(reason => handleError("Failed to fetch user apps tho", reason));
-}
-
-const fetchSpecs = (filter: string, searchQuery: string) => {
-    return V1.AppSpecService.listServices('all').then(specs => {
-        // Sort by label or key
-        return specs.sort((s1, s2) => {
-            const lc1 = s1.label?.toLowerCase() || s1.key;
-            const lc2 = s2.label?.toLowerCase() || s2.key;
-            return lc1.localeCompare(lc2);
-        });
-    }).then(specs => {
-        return specs.filter((spec) => {
-            if (!filter) return true;
-            return spec?.tags?.includes(filter);
-        });
-    }).then(specs => {
-        return specs.filter((spec) => {
-            if (!searchQuery) return true;
-            if (spec?.label?.includes(searchQuery)) return true;
-            if (spec?.key?.includes(searchQuery)) return true;
-            if (spec?.description?.includes(searchQuery)) return true;
-            if (spec?.maintainer?.includes(searchQuery)) return true;
-            return false;
-        });
-    });
 }
 
 const theme = createMuiTheme({
@@ -66,12 +41,39 @@ function AllAppsPage() {
     const [tags, setTags] = useState<Array<VocabTerm>>([]);
 
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
+    const [allSpecs, setAllSpecs] = useState<Array<V1.Service>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
     const [filter, setFilter] = useState('');
 
     const [categoryName, setCategoryName] = useQueryParam('category', StringParam);
+
+    const fetchSpecs = (filter: string, searchQuery: string) => {
+        return V1.AppSpecService.listServicesAll().then(specs => {
+            // Sort by label or key
+            return specs.sort((s1, s2) => {
+                const lc1 = s1.label?.toLowerCase() || s1.key;
+                const lc2 = s2.label?.toLowerCase() || s2.key;
+                return lc1.localeCompare(lc2);
+            });
+        }).then(allSpecs => {
+            setAllSpecs(allSpecs);
+            return allSpecs.filter((spec) => {
+                if (!filter) return true;
+                return spec?.tags?.includes(filter);
+            });
+        }).then(specs => {
+            return specs.filter((spec) => {
+                if (!searchQuery) return true;
+                if (spec?.label?.includes(searchQuery)) return true;
+                if (spec?.key?.includes(searchQuery)) return true;
+                if (spec?.description?.includes(searchQuery)) return true;
+                if (spec?.maintainer?.includes(searchQuery)) return true;
+                return false;
+            });
+        });
+    }
 
     useEffect(() => {
         if (env?.analytics_tracking_id) {
@@ -94,8 +96,10 @@ function AllAppsPage() {
     }
 
     useEffect(() => {
-        document.title = "App Catalog";
-    }, []);
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: App Catalog`;
+        }
+    }, [env]);
 
     useEffect(() => {
         const hash = window.location.hash;
@@ -111,17 +115,17 @@ function AllAppsPage() {
         V1.VocabularyService.getVocabularyByName('tags').then(vocab => {
             setTags(vocab.terms || []);
         }).catch(reason => handleError("Failed to fetch tags", reason));
-    }, [categoryName, env]);
+    }, [categoryName, env, env?.domain]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
         fetchSpecs(filter, searchQuery).then(specs => setSpecs(specs || [])).catch(reason => handleError("Failed to fetch app specs: ", reason));
-    }, [filter, searchQuery, env]);
+    }, [filter, searchQuery, env, env?.domain]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
         fetchStacks().then(stacks => setStacks(stacks || [])).catch(reason => handleError("Failed to fetch user apps: ", reason));
-    }, [stacks.length, env]);
+    }, [stacks.length, env, env?.domain]);
 
 
     const css = `
@@ -148,19 +152,8 @@ function AllAppsPage() {
     return (
         <MuiThemeProvider theme={theme}>
             <Container fluid={true} style={{ paddingLeft: "0", paddingRight: "0", height: "100%" }}>
-                <Jumbotron className='bg-banner' style={{
-                    width: "100%",
-                    color: "white",
-                    backgroundImage: darkThemeEnabled ? "linear-gradient(rgba(100, 100, 0, 0.35),rgba(100, 100, 0, 0.35)),url('/catalog-banner.jpg')" : "linear-gradient(rgba(200, 0, 0, 0.35),rgba(200, 0, 0, 0.35)),url('/catalog-banner.jpg')",
-                    backgroundSize: "1800px 500px",
-                    backgroundPosition: "-120px -100px",
-                    backgroundRepeat: "no-repeat",
-                    padding: "80px",
-                    fontWeight: "bold",
-                }}>
-                    <h1 style={{ paddingTop: "25px" }}>Explore Apps from { env?.customization?.org_name || 'NCSA' }</h1>
-                    <Input style={{ color: "white", width: "480px", fontWeight: 800 }} placeholder={"Search for apps..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                </Jumbotron>
+                <SearchCatalogHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery}></SearchCatalogHeader>
+
                 <Row style={{ height: "100%" }}>
                     <Col className='col-3' style={{ paddingTop: "40px", paddingLeft: "60px", paddingRight: "20px", textAlign: "left", backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }}>
                         <h3 style={{ paddingLeft: "15px" }}>Tags</h3>
@@ -246,7 +239,7 @@ function AllAppsPage() {
                             {
                                 specs.map(spec =>
                                     spec.display === 'stack' && <Col className='col-4' key={spec.key} style={{ padding: "20px"}}>
-                                        <SpecCard key={'spec-'+spec.key} specs={specs} stacks={stacks} spec={spec} tags={tags} setFilter={setFilter}  />
+                                        <SpecCard key={'spec-'+spec.key} specs={allSpecs} stacks={stacks} spec={spec} tags={tags} setFilter={setFilter}  />
                                     </Col>
                                 )
                             }

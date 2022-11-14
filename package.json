@@ -65,10 +65,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start:remote": "BROWSER_ARGS='--remote-debugging-port=9222' react-scripts start",
+    "build": "yarn run swagger && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "swagger": "openapi -i https://raw.githubusercontent.com/nds-org/workbench-apiserver-python/master/openapi/swagger-v1.yml -o src/common/services/openapi/v1 --useUnionTypes --exportSchemas=true && openapi -i ./public/swagger-v2.yml -o src/common/services/openapi/v2 --useUnionTypes --exportSchemas=true"
+    "swagger": "npm run openapi",
+    "openapi": "npm run openapi:v1 && npm run openapi:v2",
+    "openapi:sync": "cp ../apiserver/openapi/swagger-v1.yml ./public/swagger.yml",
+    "openapi:v1": "openapi -i ./public/swagger.yml -o src/common/services/openapi/v1 --useUnionTypes --exportSchemas=true",
+    "openapi:v2": "openapi -i ./public/swagger-v2.yml -o src/common/services/openapi/v2 --useUnionTypes --exportSchemas=true"
   },
   "eslintConfig": {
     "extends": [

@@ -5,6 +5,7 @@
 import * as V1 from './openapi/v1';
 import * as V2 from './openapi/v2';
 
+import { copy, newStack, newStackService } from './userapps.service';
 
 /*const token = cookies.get('token');
 if (token) {
@@ -26,4 +27,4 @@ if (token) {
 }, 10000);*/
 
 
-export { V1, V2 };
+export { V1, V2, copy, newStack, newStackService };

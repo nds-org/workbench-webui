@@ -62,7 +62,7 @@ export class VocabularyService {
             body: requestBody,
             errors: {
                 304: `Not modified`,
-                401: `Not authorized`,
+                401: `Access token is missing or invalid`,
                 403: `Forbidden`,
                 409: `Conflict`,
             },

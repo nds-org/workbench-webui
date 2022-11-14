@@ -1,12 +1,12 @@
 import Container from "react-bootstrap/Container";
-import { Router, Route, Switch } from "react-router-dom";
+import {Router, Route, Switch, Redirect} from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
 
 import {Header} from './common/layout';
-import DarkThemeProvider from "./common/toggle/DarkThemeProvider";
+import DarkThemeProvider from "./common/layout/toggle/DarkThemeProvider";
 import { AllAppsPage, ConsolePage, LandingPage, LoginPage, MyAppsPage, SpecView, SwaggerUiPage } from "./views";
 
 import './App.css';
@@ -15,6 +15,7 @@ import {useEffect} from "react";
 import {setEnv} from "./store/actions";
 import ReactGA from "react-ga";
 import {V1, V2} from "./common";
+import EditServicePage from "./views/my-apps/EditService";
 
 export const colors = {
     backgroundColor: { light: "#FBFBFB", dark: "#475362" },
@@ -58,13 +59,17 @@ function App() {
     };
 
     useEffect(() => {
+        // Set default Tab name if nothing set explicitly
+        if (!env?.customization?.product_name) {
+            document.title = 'Workbench';
+        }
+    }, [env]);
+
+    useEffect(() => {
         fetchEnv('/frontend.json').then(env => {
             if (env?.domain) {
                 V1.OpenAPI.BASE = env?.domain + '/api/v1';
                 V2.OpenAPI.BASE = env?.domain + '/api/v2';
-            } else {
-                V1.OpenAPI.BASE = '/api/v1';
-                V2.OpenAPI.BASE = '/api/v2';
             }
 
             env?.customization?.product_name && (document.title = env?.customization?.product_name);
@@ -86,8 +91,7 @@ function App() {
                             <Route exact path="/">
                                 <LandingPage />
                             </Route>
-
-                            <Route path="/login">
+                            <Route exact path="/login">
                                 <LoginPage />
                             </Route>
                             <Route exact path="/my-apps">
@@ -96,14 +100,20 @@ function App() {
                             <Route exact path="/all-apps">
                                 <AllAppsPage />
                             </Route>
-                            <Route path="/all-apps/:specKey">
+                            <Route exact path="/my-apps/:stackId/edit">
+                                <EditServicePage />
+                            </Route>
+                            <Route exact path="/all-apps/:specKey">
                                 <SpecView />
                             </Route>
-                            <Route path="/my-apps/:stackServiceId">
+                            <Route exact path="/my-apps/:stackServiceId/console">
                                 <ConsolePage />
                             </Route>
                             <Route exact path="/swagger">
                                 <SwaggerUiPage />
+                            </Route>
+                            <Route path="/*">
+                                <Redirect to="/" />
                             </Route>
                         </Switch>
                         </QueryParamProvider>

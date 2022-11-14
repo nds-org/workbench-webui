@@ -27,6 +27,7 @@ export type Service = {
     readinessProbe?: ReadyProbe;
     image: ServiceImage;
     resourceLimits?: ResourceLimits;
+    additionalResources: Array<string>;
     depends: Array<ServiceDependency>;
     ports: Array<Port>;
     volumeMounts: Array<VolumeMount>;

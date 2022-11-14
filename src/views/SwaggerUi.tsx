@@ -12,6 +12,12 @@ function SwaggerUiPage() {
     const env = useSelector((state: any) => state.env);
 
     useEffect(() => {
+        if (env?.customization?.product_name) {
+            document.title = `${env?.customization?.product_name}: API Reference`;
+        }
+    }, [env]);
+
+    useEffect(() => {
         if (env?.analytics_tracking_id) {
             ReactGA.pageview('/swagger');
         }
@@ -21,6 +27,14 @@ function SwaggerUiPage() {
         /* Shared colors */
         * {
             color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light};
+        }
+        
+        h4, h5, .btn-clear {
+            color: ${darkThemeEnabled ? colors.textColor.dark : colors.textColor.light} !important;
+        }
+        
+        code.language-json, code.language-json > span {
+            color: white;
         }
         
         .markdown > p, .model.model-title, .title.info, .title, .base-url, .opblock-title, .try-out__btn, th.col_header,td.col_header, .response-col_status, .parameter__name, .parameter__type, .opblock-section-header > h4 {

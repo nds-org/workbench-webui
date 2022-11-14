@@ -45,6 +45,9 @@ export const $StackService = {
         singlePod: {
             type: 'boolean',
         },
+        collocate: {
+            type: 'boolean',
+        },
         readinessProbe: {
             type: 'ReadyProbe',
         },

@@ -6,15 +6,28 @@ Running instances of etcd + apiserver are required.
 
 Prerequisites:
 * Kubernetes Cluster
-* Helm
+* Helm v3.7.0+
 
 ### Install via Helm Chart
-
+To install the full application and all dependencies via the Helm chart:
 ```bash
-cd ~
-git clone https://github.com/nds-org/workbench-helm-chart && cd workbench-helm-chart
-helm upgrade --install workbench . -f values.yaml
+$ git clone https://github.com/nds-org/workbench-helm-chart && cd workbench-helm-chart
+$ helm upgrade --install workbench -n workbench .
 ```
+
+To customize the installation, see the Configuration section of the [Helm chart](https://github.com/nds-org/workbench-helm-chart).
+
+### Live editing TypeScript via Helm chart
+To mount the webui compiled source into a webui dev container:
+```bash
+$ make dev
+```
+
+You can then re-compile the source using `yarn build`.
+
+Once compilation has finished, your browser window should automatically refresh.
+
+NOTE: Unfortunately, CRA doesn't provide a `/build` output folder while also watching for changes (a la `ng build --watch`), so true live-reload is not yet feasible. This would require an `eject` and for us to build up more tooling here for the build.
 
 ## Docker Compose (Development Only)
 
@@ -27,14 +40,14 @@ Prerequisites:
 
 Start up the backend + build/start the webui in production mode:
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
 ### Development Mode
 
 [WIP] Start up the backend + build/start the webui in development mode:
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
 * NOTE: File watching is currently broken in dev mode, so the code **does not** automatically recompile properly
@@ -43,7 +56,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 To use an external IDE, you can start up only the backend services:
 ```bash
-docker-compose -f docker-compose.yml up -d
+$ docker-compose -f docker-compose.yml up -d
 ```
 
 

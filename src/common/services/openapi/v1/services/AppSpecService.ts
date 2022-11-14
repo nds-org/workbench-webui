@@ -7,21 +7,51 @@ import { request as __request } from '../core/request';
 export class AppSpecService {
 
     /**
-     * Retrieves a site-wide list of available service definitions.
+     * Retrieves a site-wide list of all available service definitions,
+     * including those added by the user.
      *
-     * @param catalog Filter list for catalog (user, system, all)
      * @returns Service OK
      * @throws ApiError
      */
-    public static async listServices(
-        catalog?: string,
-    ): Promise<Array<Service>> {
+    public static async listServicesAll(): Promise<Array<Service>> {
+        const result = await __request({
+            method: 'GET',
+            path: `/services/all`,
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * Retrieves a list of available service definitions that have been
+     * added by the current user.
+     *
+     * @returns Service OK
+     * @throws ApiError
+     */
+    public static async listServicesForUser(): Promise<Array<Service>> {
+        const result = await __request({
+            method: 'GET',
+            path: `/services/mine`,
+            errors: {
+                401: `Unauthorized - missing or invalid login token`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * Retrieves a site-wide list of available service definitions.
+     *
+     * @returns Service OK
+     * @throws ApiError
+     */
+    public static async listServices(): Promise<Array<Service>> {
         const result = await __request({
             method: 'GET',
             path: `/services`,
-            query: {
-                'catalog': catalog,
-            },
             errors: {
                 401: `Unauthorized - missing or invalid login token`,
             },

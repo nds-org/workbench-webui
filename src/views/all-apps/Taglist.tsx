@@ -1,4 +1,4 @@
-import {V1} from "..";
+import {V1} from "../../common";
 import Button from "react-bootstrap/Button";
 import Carousel  from "react-bootstrap/Carousel";
 import Col from "react-bootstrap/Col";
@@ -40,11 +40,15 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
                                 {
                                     values.map((tag: string) =>
                                         <Col key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index + '-' + tag}>
-                                            <Button className="btn btn-sm btn-warning"
-                                                    style={{borderRadius: "10px"}}
-                                                    onClick={() => props.onClick(props.tags.find(t => tag === t.id))}>{
-                                                props.tags.find(t => tag === t.id)?.name}
-                                            </Button>
+                                            {
+                                                props.tags.find(t => tag === t.id) && <>
+                                                    <Button className="btn btn-sm btn-warning"
+                                                            style={{borderRadius: "10px"}}
+                                                            onClick={() => props.onClick(props.tags.find(t => tag === t.id))}>{
+                                                        props.tags.find(t => tag === t.id)?.name}
+                                                    </Button>
+                                                </>
+                                            }
                                         </Col>
                                     )
                                 }

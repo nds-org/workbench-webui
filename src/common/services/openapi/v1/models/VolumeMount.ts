@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type VolumeMount = {
-    mountPath?: string;
-    name?: string;
+    defaultPath?: string;
+    mountPath: string;
 }
