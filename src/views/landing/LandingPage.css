@@ -135,6 +135,10 @@ i.icon.criss.cross {
   font-weight: bold;
 }
 
+.col.numeric-header {
+  overflow: hidden;
+}
+
 #sectionOne {
 
 }

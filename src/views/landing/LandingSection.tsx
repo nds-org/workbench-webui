@@ -42,7 +42,7 @@ const LandingSection = (props: { numeral: string; header: string; body: string; 
 
     const header = <>
         <div className="row">
-            <div className="col"><NumericHeader>{props.numeral}</NumericHeader></div>
+            <div className="col numeric-header"><NumericHeader>{props.numeral}</NumericHeader></div>
             <div className="col"><SectionHeader>
                 <span className="text-content" dangerouslySetInnerHTML={{__html: props.header+""}}></span>
             </SectionHeader></div>
