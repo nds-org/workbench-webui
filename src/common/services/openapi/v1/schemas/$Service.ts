@@ -23,6 +23,41 @@ export const $Service = {
         maintainer: {
             type: 'string',
         },
+        securityContext: {
+            properties: {
+                privileged: {
+                    type: 'boolean',
+                },
+                allowPrivilegeEscalation: {
+                    type: 'boolean',
+                },
+                runAsUser: {
+                    type: 'number',
+                },
+                runAsGroup: {
+                    type: 'number',
+                },
+                procMount: {
+                    type: 'string',
+                },
+                readOnlyRootFilesystem: {
+                    type: 'boolean',
+                },
+                runAsNonRoot: {
+                    type: 'boolean',
+                },
+                capabilities: {
+                    properties: {
+                        add: {
+                            type: 'array',
+                            contains: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+        },
         logo: {
             type: 'string',
         },

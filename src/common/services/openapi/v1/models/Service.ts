@@ -18,6 +18,18 @@ export type Service = {
     catalog: 'system' | 'user' | 'all';
     description?: string;
     maintainer?: string;
+    securityContext?: {
+        privileged?: boolean,
+        allowPrivilegeEscalation?: boolean,
+        runAsUser?: number,
+        runAsGroup?: number,
+        procMount?: string,
+        readOnlyRootFilesystem?: boolean,
+        runAsNonRoot?: boolean,
+        capabilities?: {
+            add?: Array<string>,
+        },
+    };
     logo?: string;
     info?: string;
     display?: string;
