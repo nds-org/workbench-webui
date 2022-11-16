@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../index.css';
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
@@ -74,6 +74,10 @@ function MyAppsPage(props: any) {
     const [selectedService, setSelectedService] = useState<V1.StackService>();
     const [showSelected, setShowSelected] = useState(false);
 
+    // Delete confirmation
+    const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
+    const [selectedApp, setSelectedApp] = useState<V1.Stack>();
+
     useEffect(() => {
         if (env?.customization?.product_name) {
             document.title = `${env?.customization?.product_name}: My Apps`;
@@ -112,7 +116,15 @@ function MyAppsPage(props: any) {
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
     }, [env]);
 
-    const deleteStack = (stack: V1.Stack) => {
+    const confirmDelete = (stack: V1.Stack) => {
+        setSelectedApp(stack);
+        setShowConfirmDelete(true);
+    }
+
+    const deleteStack = (stack?: V1.Stack) => {
+        if (!stack) {
+            return;
+        }
         const stackId = stack.id+"";
         return V1.UserAppService.deleteUserapp(stackId).then(() => {
             if (env?.auth?.gaTrackingId) {
@@ -123,6 +135,7 @@ function MyAppsPage(props: any) {
                 });
             }
             console.log("Stack has been deleted: ", stackId);
+            setShowConfirmDelete(false);
             refresh();
         }).catch(reason => handleError("Failed to delete stack", reason));
     }
@@ -273,7 +286,7 @@ function MyAppsPage(props: any) {
                                         </h4>
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
-                                        <Button variant="link" onClick={() => deleteStack(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
+                                        <Button variant="link" onClick={() => confirmDelete(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
                                         {
                                             user?.groups?.includes('/workbench-developers') && <Button variant="link" onClick={() => editStack(stack)}
                                                     style={{color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black'}}
@@ -353,6 +366,35 @@ function MyAppsPage(props: any) {
                     )
                 }
             </Accordion>
+
+            <Modal show={showConfirmDelete}
+                   fullscreen={'true'}>
+                <Modal.Header style={{
+                    backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
+                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                }}>
+                    <Modal.Title>Confirm Delete: {selectedApp?.id}</Modal.Title>
+                    <div>
+                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={() => setShowConfirmDelete(false)}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </Button>
+                    </div>
+                </Modal.Header>
+                <Modal.Body style={{
+                    backgroundColor: darkThemeEnabled ? colors.backgroundColor.dark : colors.backgroundColor.light,
+                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                }}>
+                    <p>You are about to delete your instance of the {selectedApp?.name}.</p>
+                    <p>Are you sure?</p>
+                </Modal.Body>
+                <Modal.Footer style={{
+                    backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
+                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                }}>
+                    <Button variant="secondary" onClick={() => setShowConfirmDelete(false)}>No</Button>
+                    <Button variant="primary" onClick={() => deleteStack(selectedApp)}>Yes</Button>
+                </Modal.Footer>
+            </Modal>
 
             <Modal show={showSelected}
                    onHide={closeConsole}
