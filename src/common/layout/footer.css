@@ -18,3 +18,8 @@ footer {
    height: 10vh;
    display: block;
 }
+
+#version-hash-link {
+   text-decoration: none;
+   margin-left: 1vw;
+}

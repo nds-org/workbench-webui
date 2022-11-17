@@ -8,10 +8,13 @@ export class SystemService {
     /**
      * Retrieve the server version from the Swagger spec
      *
-     * @returns string OK
+     * @returns any OK
      * @throws ApiError
      */
-    public static async getVersion(): Promise<string> {
+    public static async getVersion(): Promise<{
+        version?: string,
+        hash?: string,
+    }> {
         const result = await __request({
             method: 'GET',
             path: `/version`,
