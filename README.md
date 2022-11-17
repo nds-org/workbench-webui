@@ -21,13 +21,13 @@ To customize the installation, see the Configuration section of the [Helm chart]
 To mount the webui compiled source into a webui dev container:
 ```bash
 $ make dev
-# OR
-$ make local
 ```
 
 You can then re-compile the source using `yarn build`.
 
 Once compilation has finished, your browser window should automatically refresh.
+
+NOTE: Unfortunately, CRA doesn't provide a `/build` output folder while also watching for changes (a la `ng build --watch`), so true live-reload is not yet feasible. This would require an `eject` and for us to build up more tooling here for the build.
 
 ## Docker Compose (Development Only)
 
