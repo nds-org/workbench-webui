@@ -1,6 +1,6 @@
 # Labs Workbench WebUI 2.x
 
-Running instances of etcd + apiserver are required.
+Running instances of mongodb + apiserver are required.
 
 ## Kubernetes
 
