@@ -114,6 +114,7 @@ jobs:
           password: ${{ secrets.GHCR_PASSWORD }}
           context: ${{ matrix.FOLDER }}
           tags: "${{ env.TAGS }}"
+          dockerfile: "${{ matrix.DOCKERFILE }}"
           buildargs: BRANCH,VERSION,BUILDNUMBER,GITSHA1
 
       # this will publish to dockerhub
@@ -131,4 +132,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           context: ${{ matrix.FOLDER }}
           tags: "${{ env.TAGS }}"
+          dockerfile: "${{ matrix.DOCKERFILE }}"
           buildargs: BRANCH,VERSION,BUILDNUMBER,GITSHA1
