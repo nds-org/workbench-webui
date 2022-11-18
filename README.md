@@ -29,36 +29,6 @@ Once compilation has finished, your browser window should automatically refresh.
 
 NOTE: Unfortunately, CRA doesn't provide a `/build` output folder while also watching for changes (a la `ng build --watch`), so true live-reload is not yet feasible. This would require an `eject` and for us to build up more tooling here for the build.
 
-## Docker Compose (Development Only)
-
-Prerequisites:
-* Docker for Mac / Docker for Windows
-* Kubernetes in Docker
-
-
-### Production Mode
-
-Start up the backend + build/start the webui in production mode:
-```bash
-$ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-```
-
-### Development Mode
-
-[WIP] Start up the backend + build/start the webui in development mode:
-```bash
-$ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
-```
-
-* NOTE: File watching is currently broken in dev mode, so the code **does not** automatically recompile properly
-
-### Backend Only
-
-To use an external IDE, you can start up only the backend services:
-```bash
-$ docker-compose -f docker-compose.yml up -d
-```
-
 
 ## Local Development
 
