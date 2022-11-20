@@ -6,9 +6,7 @@ import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 import {Button, Col, Form, Nav, Row, Tab, Table, Tabs} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCaretLeft, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
 import {V1} from "../../common";
-import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
 
 interface EnvVar {
     name: string;
@@ -160,7 +158,7 @@ function EditServicePage(props: {}) {
             redirect && <Redirect to={redirect}></Redirect>
         }
         <Button variant="link" onClick={() => window.location.href = '/my-apps'}>
-            <FontAwesomeIcon icon={faCaretLeft} className={'marginRight'} />
+            <FontAwesomeIcon icon={'caret-left'} className={'marginRight'} />
             My Apps
         </Button>
         <h2 className={'marginTop'}>Edit UserApp: {user?.sub.replace('@', '').replace('.', '')}-{stackId}</h2>
@@ -207,8 +205,8 @@ function EditServicePage(props: {}) {
                                         }
                                         </Form>
 
-                                        <Button onClick={() => addVar(svc.service)}><FontAwesomeIcon icon={faPlus} /></Button>
-                                        <Button disabled={disabled()} className={'btn-success'} onClick={save}><FontAwesomeIcon className={saving ? 'fa-spin' : ''} icon={saving ? faSpinner : faSave} /></Button>
+                                        <Button onClick={() => addVar(svc.service)}><FontAwesomeIcon icon={'plus'} /></Button>
+                                        <Button disabled={disabled()} className={'btn-success'} onClick={save}><FontAwesomeIcon className={saving ? 'fa-spin' : ''} icon={saving ? 'spinner' : 'save'} /></Button>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>

@@ -6,15 +6,13 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import {handleError, V1} from '../../common';
 import Taglist from "./Taglist";
 
 import './SpecCard.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import ReactGA from "react-ga";
-import {newStack} from "../../common/services/userapps.service";
+import {newStack} from "../../common";
 
 // TODO: Abstract this?
 
@@ -68,13 +66,13 @@ function SpecCard(props: CardProps) {
                     </Col>
                     <Col style={{ textAlign: "right" }}>
                         <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
-                            <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
+                            <FontAwesomeIcon className={'fa-fw'} icon={'plus'} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
                         {
                             // TODO: "More Actions" Dropdown...
                         }
                         <Button variant={'link'} onClick={showDropdown} style={{ marginTop: "15px" }} hidden={true}>
-                            <FontAwesomeIcon icon={faEllipsisV} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
+                            <FontAwesomeIcon icon={'ellipsis-v'} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                         </Button>
                     </Col>
                 </Row>

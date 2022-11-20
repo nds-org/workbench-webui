@@ -11,20 +11,6 @@ import Table from "react-bootstrap/Table";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {V1, handleError} from "../../common";
 
-import {faCheckCircle} from "@fortawesome/free-solid-svg-icons/faCheckCircle";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons/faExclamationCircle";
-import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
-import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
-import {faTerminal} from "@fortawesome/free-solid-svg-icons/faTerminal";
-import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
-import {faRocket} from "@fortawesome/free-solid-svg-icons/faRocket";
-import {faStop} from "@fortawesome/free-solid-svg-icons/faStop";
-import {faCaretDown} from "@fortawesome/free-solid-svg-icons/faCaretDown";
-import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
-import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
-
 import Console from "./Console";
 import {useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
@@ -278,26 +264,26 @@ function MyAppsPage(props: any) {
                                     <Col style={{ textAlign: "left"}}>
                                         <h4 style={{ marginTop: "15px" }}>{stack.name || stack.id}
                                             <span style={{ marginLeft: "30px" }}>
-                                                {(!stack?.status || stack?.status === 'stopped') && <FontAwesomeIcon icon={faPowerOff} />}
-                                                {(stack?.status === 'started') && <FontAwesomeIcon icon={faCheckCircle}  />}
-                                                {(stack?.status === 'error') && <FontAwesomeIcon icon={faExclamationCircle}  />}
-                                                {(stack?.status === 'stopping' || stack?.status === 'starting') && <FontAwesomeIcon icon={faSpinner} className={'fa-pulse'} />}
+                                                {(!stack?.status || stack?.status === 'stopped') && <FontAwesomeIcon icon={'power-off'} />}
+                                                {(stack?.status === 'started') && <FontAwesomeIcon icon={'check-circle'}  />}
+                                                {(stack?.status === 'error') && <FontAwesomeIcon icon={'exclamation-circle'}  />}
+                                                {(stack?.status === 'stopping' || stack?.status === 'starting') && <FontAwesomeIcon icon={'spinner'} className={'fa-pulse'} />}
                                             </span>
                                         </h4>
                                     </Col>
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
-                                        <Button variant="link" onClick={() => confirmDelete(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
+                                        <Button variant="link" onClick={() => confirmDelete(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={'trash'} /></Button>
                                         {
                                             user?.groups?.includes('/workbench-developers') && <Button variant="link" onClick={() => editStack(stack)}
                                                     style={{color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black'}}
                                                     title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon
-                                                icon={faEdit}/></Button>
+                                                icon={'edit'}/></Button>
                                         }
                                         {(!stack.status || stack.status === 'stopped') && <>
-                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={faRocket} /></Button>
+                                            <Button variant="link" onClick={() => startStack(stack)} style={{ color: darkThemeEnabled ? 'white' : 'black' }} title={'Launch this stack'}><FontAwesomeIcon icon={'rocket'} /></Button>
                                         </>}
                                         {(stack.status === 'started' || stack.status === 'error' || stack.status === 'starting' || stack.status === 'stopping') && <>
-                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={faStop} /></Button>
+                                            <Button variant="link" onClick={() => stopStack(stack)} style={{ color: 'black' }} title={'Shutdown this stack'}><FontAwesomeIcon icon={'stop'} /></Button>
                                         </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
@@ -307,7 +293,7 @@ function MyAppsPage(props: any) {
                                             marginLeft: "30px",
                                             display: activated === index ? "none" : ""
                                         }}   eventKey={index+""} onClick={() => setActivated(index)}>
-                                            <FontAwesomeIcon icon={faCaretDown} size={'2x'} />
+                                            <FontAwesomeIcon icon={'caret-down'} size={'2x'} />
                                         </Accordion.Toggle>
                                     </Col>
                                 </Row>
@@ -337,7 +323,7 @@ function MyAppsPage(props: any) {
                                                                     title={'Open ' + svc.service + ' in a new tab'}
                                                                     onClick={() => navigate(stack, ep)}
                                                                     style={{ marginLeft: "20px" }}>
-                                                                <FontAwesomeIcon icon={faLink} />
+                                                                <FontAwesomeIcon icon={'link'} />
                                                             </Button>
                                                         )
                                                     }
@@ -352,7 +338,7 @@ function MyAppsPage(props: any) {
                                                         padding: "3px" }}
                                                             hidden={svc?.status?.toLowerCase() !== 'started'}
                                                             onClick={() => openConsole(stack, svc)}>
-                                                        <FontAwesomeIcon icon={faTerminal} />
+                                                        <FontAwesomeIcon icon={'terminal'} />
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -376,7 +362,7 @@ function MyAppsPage(props: any) {
                     <Modal.Title>Confirm Delete: {selectedApp?.id}</Modal.Title>
                     <div>
                         <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={() => setShowConfirmDelete(false)}>
-                            <FontAwesomeIcon icon={faTimes} />
+                            <FontAwesomeIcon icon={'times'} />
                         </Button>
                     </div>
                 </Modal.Header>
@@ -409,10 +395,10 @@ function MyAppsPage(props: any) {
                     <Modal.Title>Application Console: {selectedService?.id}</Modal.Title>
                     <div>
                         <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={openConsoleInNewTab}>
-                            <FontAwesomeIcon icon={faExpand} />
+                            <FontAwesomeIcon icon={'expand'} />
                         </Button>
                         <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={closeConsole}>
-                            <FontAwesomeIcon icon={faTimes} />
+                            <FontAwesomeIcon icon={'times'} />
                         </Button>
                     </div>
                 </Modal.Header>

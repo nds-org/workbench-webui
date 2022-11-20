@@ -5,14 +5,11 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faEllipsisV} from "@fortawesome/free-solid-svg-icons/faEllipsisV";
-import {faChevronLeft} from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 
 import './SpecView.css';
-import {newStack} from "../../common/services/userapps.service";
-import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
+import {newStack} from "../../common";
 
 interface SpecViewParams {
     specKey: string;
@@ -88,7 +85,7 @@ function SpecView() {
             {spec && <>
                     <Row style={{ marginTop: "50px" }}>
                         <Col xs={1} style={{ textAlign: "center", paddingTop: "20px" }}>
-                            <Button variant="link" onClick={() => setRedirect('/all-apps')}><FontAwesomeIcon icon={faChevronLeft} style={{ color: darkThemeEnabled ? "white" : "black" }}/></Button>
+                            <Button variant="link" onClick={() => setRedirect('/all-apps')}><FontAwesomeIcon icon={'chevron-left'} style={{ color: darkThemeEnabled ? "white" : "black" }}/></Button>
                         </Col>
                         <Col>
                             <Row>
@@ -103,12 +100,12 @@ function SpecView() {
                                         </Col>
                                         <Col sm={2}>
                                             <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
-                                                <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
+                                                <FontAwesomeIcon className={'fa-fw'} icon={'plus'} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
                                             </Button>
                                             {
                                                 // TODO: "More Actions" Dropdown...
                                             }
-                                            <Button hidden={true} variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={faEllipsisV} /></Button>
+                                            <Button hidden={true} variant="link" style={{ color: darkThemeEnabled ? "white" : "black" }}><FontAwesomeIcon icon={'ellipsis-v'} /></Button>
                                         </Col>
                                     </Row>
                                     <Row>

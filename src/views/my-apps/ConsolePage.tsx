@@ -2,7 +2,6 @@ import Console from "./Console";
 import {useParams} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "react-bootstrap/Button";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 import {useEffect} from "react";
@@ -31,7 +30,7 @@ function ConsolePage() {
                 Application Console: {stackServiceId}
                 <Button className='float-end' variant={darkThemeEnabled ? 'dark':'light'}
                         onClick={() => window.close()}>
-                    <FontAwesomeIcon icon={faTimes} />
+                    <FontAwesomeIcon icon={'times'} />
                 </Button>
             </h5>
 

@@ -12,7 +12,6 @@ import {resetUser, setUser} from "../../store/actions";
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import {UserState} from "../../store/store";
 
 function Header() {
@@ -127,7 +126,7 @@ function Header() {
                         </Navbar.Text>
                         {
                             (env?.customization?.help_links?.length > 0) && <NavDropdown color={darkThemeEnabled ? 'dark':'light'} title={
-                                    <FontAwesomeIcon icon={faQuestionCircle} />
+                                    <FontAwesomeIcon icon={'question-circle'} />
                             } id='navbar-help-dropdown'>
                                 {
                                     env?.customization?.help_links?.map((link: any, index: number) =>
