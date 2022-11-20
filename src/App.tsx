@@ -4,6 +4,7 @@ import { createBrowserHistory } from 'history';
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter5Adapter } from "use-query-params/adapters/react-router-5";
 
 import {Header} from './common/layout';
 import DarkThemeProvider from "./common/layout/toggle/DarkThemeProvider";
@@ -85,7 +86,7 @@ function App() {
             <DarkThemeProvider>
                 <Container as={MyContainer} fluid={true}>
                     <Router history={history}>
-                        <QueryParamProvider ReactRouterRoute={Route}>
+                        <QueryParamProvider adapter={ReactRouter5Adapter}>
                         <Header />
                         <Switch>
                             <Route exact path="/">
