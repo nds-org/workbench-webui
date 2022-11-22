@@ -35,8 +35,7 @@ function EditServicePage(props: {}) {
 
     useEffect(() => {
         if (env?.customization?.product_name && user) {
-            const username = user?.sub?.replace('@', '')?.replace('.', '');
-            document.title = `${env?.customization?.product_name}: Edit ${username}-${stackId}`;
+            document.title = `${env?.customization?.product_name}: Edit ${user?.sub}-${stackId}`;
         }
     }, [env, user, stackId]);
 
