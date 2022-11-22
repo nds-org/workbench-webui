@@ -287,14 +287,14 @@ function MyAppsPage(props: any) {
                                         </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
-                                        <Accordion.Toggle as={Button} variant={"link"} style={{
+                                        <Accordion.Button as={Button} variant={"link"} style={{
                                             color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black',
                                             marginRight: "10px",
                                             marginLeft: "30px",
                                             display: activated === index ? "none" : ""
                                         }}   eventKey={index+""} onClick={() => setActivated(index)}>
                                             <FontAwesomeIcon icon={'caret-down'} size={'2x'} />
-                                        </Accordion.Toggle>
+                                        </Accordion.Button>
                                     </Col>
                                 </Row>
                             </Card.Header>
