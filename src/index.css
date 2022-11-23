@@ -16,3 +16,10 @@ code {
 #root, #root > div {
   min-height: 100vh;
 }
+
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}

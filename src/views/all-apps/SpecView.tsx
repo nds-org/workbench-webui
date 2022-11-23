@@ -98,7 +98,7 @@ function SpecView() {
                                 <Col>
                                     <Row>
                                         <Col style={{ textAlign: "left" }}>
-                                            <h1>{spec?.label || spec?.key}</h1>
+                                            <h2>{spec?.label || spec?.key}</h2>
                                             <small>ID: {spec.key}</small>
                                         </Col>
                                         <Col sm={2}>

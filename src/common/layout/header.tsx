@@ -119,6 +119,13 @@ function Header() {
                             <LinkContainer key='my-apps' to='/my-apps'>
                                 <Nav.Link>My Apps</Nav.Link>
                             </LinkContainer>
+                            {
+                                (user?.groups?.includes('/workbench-developers') || user?.groups?.includes('/workbench-admin')) && <>
+                                    <LinkContainer key='my-catalog' to='/my-catalog'>
+                                        <Nav.Link>My Catalog</Nav.Link>
+                                    </LinkContainer>
+                                </>
+                            }
                         </Nav>
                     }
                     <Nav className="ms-auto" activeKey="">
