@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from "react-bootstrap/Container";
 import {Redirect, useParams} from 'react-router-dom';
 import {useSelector} from "react-redux";
@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCaretLeft, faPlus, faSave} from "@fortawesome/free-solid-svg-icons";
 import {V1} from "../../common";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons/faSpinner";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 
 interface EnvVar {
     name: string;
@@ -102,7 +103,7 @@ function EditServicePage(props: {}) {
     }
 
     const handleChange = (event: any, serviceKey: string, envIndex: number, field: string = 'name') => {
-        console.log("Handling change to target: ", );
+        console.log("Handling change to target: ", event);
         const envVars = vars;
         const svcEnv = vars.find(s => s.service === serviceKey);
         if (!svcEnv) {
@@ -115,6 +116,10 @@ function EditServicePage(props: {}) {
         envVars[index] = svcEnv;
         setVars([...envVars]);
     };
+
+    const cancel = () => {
+        setRedirect('/my-apps');
+    }
 
     const save = () => {
         setSaving(true);
@@ -207,7 +212,6 @@ function EditServicePage(props: {}) {
                                         </Form>
 
                                         <Button onClick={() => addVar(svc.service)}><FontAwesomeIcon icon={faPlus} /></Button>
-                                        <Button disabled={disabled()} className={'btn-success'} onClick={save}><FontAwesomeIcon className={saving ? 'fa-spin' : ''} icon={saving ? faSpinner : faSave} /></Button>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>
@@ -216,6 +220,16 @@ function EditServicePage(props: {}) {
                 </Tab>)
             }
         </Tabs>
+
+
+        <div className={'pull-right'}>
+            <Button className={'btn-lg btn-secondary'} onClick={cancel}>
+                <FontAwesomeIcon icon={faTimes} /> Cancel
+            </Button>
+            <Button disabled={disabled()} className={'btn-lg btn-success'} onClick={save}>
+                <FontAwesomeIcon className={saving ? 'fa-spin' : ''} icon={saving ? faSpinner : faSave} /> Save
+            </Button>
+        </div>
     </Container>
 }
 

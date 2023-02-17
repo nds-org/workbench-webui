@@ -16,6 +16,8 @@ import {setEnv} from "./store/actions";
 import ReactGA from "react-ga";
 import {V1, V2} from "./common";
 import EditServicePage from "./views/my-apps/EditService";
+import MyCatalogPage from "./views/my-catalog/MyCatalog";
+import AddEditSpecPage from "./views/my-catalog/AddEditSpec";
 
 export const colors = {
     backgroundColor: { light: "#FBFBFB", dark: "#475362" },
@@ -99,6 +101,15 @@ function App() {
                             </Route>
                             <Route exact path="/all-apps">
                                 <AllAppsPage />
+                            </Route>
+                            <Route exact path="/my-catalog">
+                                <MyCatalogPage />
+                            </Route>
+                            <Route exact path="/my-catalog/create">
+                                <AddEditSpecPage />
+                            </Route>
+                            <Route path="/my-catalog/:specKey">
+                                <AddEditSpecPage />
                             </Route>
                             <Route exact path="/my-apps/:stackId/edit">
                                 <EditServicePage />

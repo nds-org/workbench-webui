@@ -31,6 +31,7 @@ import {Redirect} from "react-router-dom";
 import {colors} from "../../App";
 import ReactGA from "react-ga";
 
+import './MyApps.css';
 
 const navigate = (stk: V1.Stack, ep: any) => {
     window.open(`${ep.protocol}://${ep.host}`, '_blank');

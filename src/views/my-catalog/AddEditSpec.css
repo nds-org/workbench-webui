@@ -1,0 +1,26 @@
+
+.text-align-left {
+    text-align: left;
+}
+.text-align-right {
+    text-align: right;
+}
+
+#showJsonCard {
+    margin: 25px;
+}
+
+#showJsonCard pre {
+    padding: 25px;
+}
+
+.marginTop {
+    margin-top: 5vh;
+}
+.marginLeft {
+    margin-left: 5vh;
+}
+
+.text-red {
+    color: red;
+}
