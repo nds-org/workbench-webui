@@ -87,10 +87,10 @@ function Header() {
 
     const activeColor = darkThemeEnabled ? 'white' : '#283845';
     const css = `
-    .navbar-light {
+    #navbar.navbar-light {
         box-shadow: 0 2px 3px darkgrey;
     }
-    .nav-link.active {
+    #navbar .nav-link.active {
         border-bottom: ${activeColor} 8px solid;
         margin-bottom: -10px;
     }
@@ -103,7 +103,7 @@ function Header() {
     return (
         <>
             <style>{css}</style>
-            <Navbar expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? '#fff' : '#283845' }}>
+            <Navbar id={'navbar'} expand="lg" variant={darkThemeEnabled ? 'dark' : 'light'} style={{ paddingLeft: "20px", paddingRight: "20px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? '#fff' : '#283845' }}>
                 <LinkContainer key="ROOT" to="/">
                     <Navbar.Brand title='Workbench'>
                         <img alt={'favicon'} width="32" height="32" src={ env?.customization?.favicon_path || '/favicon.svg' } /> { env?.customization?.product_name }

@@ -15,12 +15,14 @@ import {Redirect, useParams} from "react-router-dom";
 import ReactGA from "react-ga";
 
 import './AddEditSpec.css';
+import Accordion from 'react-bootstrap/Accordion';
 import Form from "react-bootstrap/Form";
 import {FormControl, Tab, Tabs} from "react-bootstrap";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
+import Card from "react-bootstrap/Card";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
     const sid1 = s1.label+"";
@@ -82,8 +84,10 @@ const AddEditSpecPage = (props: any) => {
     });
 
     // User selection
-    const [selectedTab, setSelectedTab] = useState('Basic Info');
+    const [selectedTab, setSelectedTab] = useState('BasicInfo');
     const [redirect, setRedirect] = useState<string>('');
+    const [showJson, setShowJson] = useState(false);
+
 
     useEffect(() => {
         if (env?.customization?.product_name) {
@@ -285,11 +289,29 @@ const AddEditSpecPage = (props: any) => {
         }
     }
 
+    const css = `
+        #outerTabBar-tab-BasicInfo,
+        #outerTabBar-tab-Dependencies,
+        #outerTabBar-tab-Environment,
+        #outerTabBar-tab-Volumes,
+        #outerTabBar-tab-Ports {
+            color: ${darkThemeEnabled ? 'white' : 'black'}
+        }
+        #outerTabBar-tab-BasicInfo.nav-link.active,
+        #outerTabBar-tab-Dependencies.nav-link.active,
+        #outerTabBar-tab-Environment.nav-link.active,
+        #outerTabBar-tab-Volumes.nav-link.active,
+        #outerTabBar-tab-Ports.nav-link.active {
+            color: black;
+        }
+    `;
+
     return (
         <Container fluid={false}>
             {
                 redirect && <Redirect to={redirect} />
             }
+            <style>{css}</style>
             <div style={{ height: "10vh" }}></div>
             <Row>
                 <Col className={'text-align-left'}>
@@ -307,8 +329,13 @@ const AddEditSpecPage = (props: any) => {
             <Row>
                 <Col>
                     <Form>
-                        <Tabs id={'outerTabBar'} activeKey={selectedTab} onSelect={(e: any) => e && setSelectedTab(e)} fill>
-                            <Tab title={'Basic Info'} key={'Basic Info'} eventKey={'Basic Info'}>
+                        <Tabs id={'outerTabBar'} activeKey={selectedTab} onSelect={(e: any) => e && setSelectedTab(e)} fill
+                              style={{
+                                  textAlign: "left",
+                                  color: darkThemeEnabled ? 'white' : 'black',
+                                  backgroundColor: darkThemeEnabled ? '#283845' : '#eee',       // night mode bg / default bg
+                              }}>
+                            <Tab title={'Basic Info'} key={'BasicInfo'} eventKey={'BasicInfo'} style={{ margin: "25px", color: darkThemeEnabled ? 'white' : 'black' }}>
                                 <Row>
                                     <Col className={'text-align-left marginTop'}>
                                         <h3>Basic Info</h3>
@@ -343,7 +370,7 @@ const AddEditSpecPage = (props: any) => {
                                                 }
                                                 <tr>
                                                     <td>
-                                                        <Button className={'btn-secondary btn-sm marginLeft'} onClick={() => addTag()}>
+                                                        <Button className={'btn-primary btn-sm marginLeft'} onClick={() => addTag()}>
                                                             <FontAwesomeIcon icon={faPlus} />
                                                         </Button>
                                                     </td>
@@ -366,11 +393,11 @@ const AddEditSpecPage = (props: any) => {
                                             </Form.Control>
                                         </FormGroup>
                                         <FormGroup>
-                                            <Form.Label>Access</Form.Label>
+                                            <Form.Label>Who else can access this app?</Form.Label>
                                             <Form.Control as="select" defaultValue="external" onChange={(e) => handleFieldChange(e, 'access')}>
-                                                <option value={'external'}>External (ingress + service)</option>
-                                                <option value={'internal'}>Internal (service only)</option>
-                                                <option value={'none'}>None</option>
+                                                <option value={'external'}>External - Publicly Accessible</option>
+                                                <option value={'internal'}>Internal - Accessible only from within Cluster</option>
+                                                <option value={'none'}>None - Isolate this app on the network</option>
                                             </Form.Control>
                                         </FormGroup>
                                     </Col>
@@ -388,7 +415,7 @@ const AddEditSpecPage = (props: any) => {
                                 </Row>
                             </Tab>
                             <Tab title={'Dependencies'} key={'Dependencies'} eventKey={'Dependencies'}>
-                                <Table size={'sm'}>
+                                <Table size={'sm'} borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -436,7 +463,7 @@ const AddEditSpecPage = (props: any) => {
                                 </Table>
                             </Tab>
                             <Tab title={'Environment'} key={'Environment'} eventKey={'Environment'}>
-                                <Table size={'sm'}>
+                                <Table size={'sm'} borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -499,7 +526,7 @@ const AddEditSpecPage = (props: any) => {
                             </Tab>
 
                             <Tab title={'Volumes'} key={'Volumes'} eventKey={'Volumes'}>
-                                <Table size={'sm'}>
+                                <Table size={'sm'} borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -541,7 +568,7 @@ const AddEditSpecPage = (props: any) => {
                             </Tab>
 
                             <Tab title={'Ports'} key={'Ports'} eventKey={'Ports'}>
-                                <Table size={'sm'}>
+                                <Table size={'sm'} borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -600,7 +627,34 @@ const AddEditSpecPage = (props: any) => {
                     </Form>
                 </Col>
             </Row>
-            <pre>{JSON.stringify(spec, null, 4)}</pre>
+            <Row>
+                <Col>
+                    <Accordion >
+                        <Card id={'showJsonCard'} bg={darkThemeEnabled ? 'dark' : 'light'} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
+                            borderColor: darkThemeEnabled ? '#283845' : '#fff',
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
+                            <Card.Header style={{
+                                textAlign: "left",
+                                borderRadius: showJson ? "18px 18px 0 0" : "18px",
+                                borderBottomColor: !showJson  ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
+                                color: darkThemeEnabled ? 'white' : 'black',
+                                backgroundColor: darkThemeEnabled ? '#283845' : '#fff',       // night mode bg / default bg
+                            }}>
+                                <Accordion.Toggle as={Button} variant="link" eventKey="0" onClick={() => setShowJson(!showJson)} style={{
+                                    color: darkThemeEnabled ? 'white' : 'black',
+                                    marginRight: "10px",
+                                    marginLeft: "30px"
+                                }}>
+                                    {showJson ? 'Hide' : 'Show'} JSON Spec
+                                </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="0" style={{textAlign: "left"}}>
+                                <Card.Body><pre>{JSON.stringify(spec, null, 4)}</pre></Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                </Col>
+            </Row>
         </Container>
     );
 }

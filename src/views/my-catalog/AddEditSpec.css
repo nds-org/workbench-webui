@@ -1,13 +1,17 @@
 
-.tab-content {
-    margin-top: 5vh;
-}
-
 .text-align-left {
     text-align: left;
 }
 .text-align-right {
     text-align: right;
+}
+
+#showJsonCard {
+    margin: 25px;
+}
+
+#showJsonCard pre {
+    padding: 25px;
 }
 
 .marginTop {
