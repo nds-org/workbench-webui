@@ -12,7 +12,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import {useSelector} from "react-redux";
-import {Navigate, redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {colors} from "../../App";
 import ReactGA from "react-ga";
 import {faClone, faFileExport, faPlus} from "@fortawesome/free-solid-svg-icons";
@@ -109,6 +109,7 @@ const MyCatalogPage = (props: any) => {
         try {
             const spec = JSON.parse(jsonStr);
             const imported = await V1.AppSpecService.createService(spec);
+            return imported;
         } catch (e) {
             console.log('Failed to parse JSON: ', e);
             return;

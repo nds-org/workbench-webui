@@ -113,7 +113,7 @@ const AddEditSpecPage = (props: any) => {
             }
         }).catch(reason => handleError('Failed to fetch specs: ', reason));
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
-    }, [env]);
+    }, [env, specKey]);
 
     /** Basic Info tab functions */
     const handleFieldChange = (event: any, field: string) => {
