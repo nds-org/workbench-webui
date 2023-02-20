@@ -11,7 +11,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
 
 import {useSelector} from "react-redux";
-import {Redirect, useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import ReactGA from "react-ga";
 
 import './AddEditSpec.css';
@@ -309,7 +309,7 @@ const AddEditSpecPage = (props: any) => {
     return (
         <Container fluid={false}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <style>{css}</style>
             <div style={{ height: "10vh" }}></div>

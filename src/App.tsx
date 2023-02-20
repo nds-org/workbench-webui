@@ -1,6 +1,5 @@
 import Container from "react-bootstrap/Container";
-import {Router, Route, Switch, Redirect} from "react-router-dom";
-import { createBrowserHistory } from 'history';
+import {Route, Routes, BrowserRouter, Navigate} from "react-router-dom";
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
@@ -49,8 +48,6 @@ const MyContainer = styled.div`
   height: 100%;
 `;
 
-const history = createBrowserHistory();
-
 function App() {
     const dispatch = useDispatch();
     const env = useSelector((state: any) => state.env);
@@ -86,49 +83,47 @@ function App() {
         <>
             <DarkThemeProvider>
                 <Container as={MyContainer} fluid={true}>
-                    <Router history={history}>
+                    <BrowserRouter>
                         <QueryParamProvider ReactRouterRoute={Route}>
                         <Header />
-                        <Switch>
-                            <Route exact path="/">
+                        <Routes>
+                            <Route path="/">
                                 <LandingPage />
                             </Route>
-                            <Route exact path="/login">
+                            <Route path="/login">
                                 <LoginPage />
                             </Route>
-                            <Route exact path="/my-apps">
+                            <Route path="/my-apps">
                                 <MyAppsPage />
                             </Route>
-                            <Route exact path="/all-apps">
+                            <Route path="/all-apps">
                                 <AllAppsPage />
                             </Route>
-                            <Route exact path="/my-catalog">
+                            <Route path="/my-catalog">
                                 <MyCatalogPage />
                             </Route>
-                            <Route exact path="/my-catalog/create">
+                            <Route path="/my-catalog/create">
                                 <AddEditSpecPage />
                             </Route>
                             <Route path="/my-catalog/:specKey">
                                 <AddEditSpecPage />
                             </Route>
-                            <Route exact path="/my-apps/:stackId/edit">
+                            <Route path="/my-apps/:stackId/edit">
                                 <EditServicePage />
                             </Route>
-                            <Route exact path="/all-apps/:specKey">
+                            <Route path="/all-apps/:specKey">
                                 <SpecView />
                             </Route>
-                            <Route exact path="/my-apps/:stackServiceId/console">
+                            <Route path="/my-apps/:stackServiceId/console">
                                 <ConsolePage />
                             </Route>
-                            <Route exact path="/swagger">
-                                <SwaggerUiPage />
+                            <Route path="/swagger" element={<SwaggerUiPage />} />
+                            <Route path="/*" >
+                                <Navigate to="/" replace />
                             </Route>
-                            <Route path="/*">
-                                <Redirect to="/" />
-                            </Route>
-                        </Switch>
+                        </Routes>
                         </QueryParamProvider>
-                    </Router>
+                    </BrowserRouter>
                 </Container>
             </DarkThemeProvider>
         </>

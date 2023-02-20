@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import {useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {useState} from "react";
 import  './LoginBanner.css'
 
@@ -17,7 +17,7 @@ const LoginBanner = () => {
     }
 
     return (
-        redirect ? <Redirect to={redirect} /> : <>
+        redirect ? <Navigate to={redirect} replace /> : <>
             <div className="thumbnail text-center">
                 <img src="/login-banner.jpg" className="img-fluid" alt="..." />
                 <div className="caption">

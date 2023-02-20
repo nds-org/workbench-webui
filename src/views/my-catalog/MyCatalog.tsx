@@ -12,7 +12,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import {useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import {Navigate, redirect} from "react-router-dom";
 import {colors} from "../../App";
 import ReactGA from "react-ga";
 import {faClone, faFileExport, faPlus} from "@fortawesome/free-solid-svg-icons";
@@ -41,7 +41,7 @@ const MyCatalogPage = (props: any) => {
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
 
-    const [redirect, setRedirect] = useState<string>('');
+    const [redirectDest, setRedirectDest] = useState<string>('');
 
     // Delete confirmation
     const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
@@ -79,7 +79,7 @@ const MyCatalogPage = (props: any) => {
         existing.key = existing.key + 'copy'
 
         const copied = await V1.AppSpecService.createService(existing);
-        setRedirect('/my-catalog/'+copied.key);
+        setRedirectDest('/my-catalog/'+copied.key);
     }
 
     const deleteSelectedSpec = () => {
@@ -95,12 +95,12 @@ const MyCatalogPage = (props: any) => {
     }
 
     const createSpec = () => {
-        setRedirect('/my-catalog/create');
+        setRedirectDest('/my-catalog/create');
     }
 
     const editSpec = (spec?: V1.Service) => {
         if (!spec || !spec.key) { return; }
-        setRedirect('/my-catalog/' + spec.key);
+        setRedirectDest('/my-catalog/' + spec.key);
     }
 
     const importSpec = async (jsonStr: string) => {
@@ -131,7 +131,7 @@ const MyCatalogPage = (props: any) => {
     return (
         <Container fluid={false}>
             {
-                redirect && <Redirect to={redirect} />
+                redirectDest && <Navigate to={redirectDest} replace />
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>

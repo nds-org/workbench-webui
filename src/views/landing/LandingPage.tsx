@@ -1,7 +1,7 @@
 import {Footer} from "../../common";
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 import './LandingPage.css';
 import {useSelector} from "react-redux";
@@ -28,7 +28,7 @@ const LandingPage = () => {
 
     return (
         redirect ?
-            <Redirect to={redirect} />
+            <Navigate to={redirect} replace />
             :
         <>
             <div className="login area row">

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Container from "react-bootstrap/Container";
-import {Redirect, useParams} from 'react-router-dom';
+import {Navigate, useParams} from 'react-router-dom';
 import {useSelector} from "react-redux";
 
 import ReactGA from "react-ga";
@@ -48,7 +48,7 @@ function EditServicePage(props: {}) {
 
 
     useEffect(() => {
-        V1.UserAppService.getUserappById(stackId).then((app) => {
+        stackId && V1.UserAppService.getUserappById(stackId).then((app) => {
             const serviceVars: Array<ServiceVars> = [];
             app?.services?.forEach((svc: V1.StackService) => {
                 const env: Array<EnvVar> = [];
@@ -127,7 +127,7 @@ function EditServicePage(props: {}) {
             const svcEnv = vars.find(s => s.service === svc.service);
             svc.config = {};
             svcEnv?.env?.forEach(e => svc.config[e.name] = e.value);
-            V1.UserAppService.updateUserapp(stackId, userApp).then((updated) => {
+            stackId && V1.UserAppService.updateUserapp(stackId, userApp).then((updated) => {
                 console.log("UserApp saved: ", updated);
                 setRedirect('/my-apps');
             }).finally(() => {
@@ -161,7 +161,7 @@ function EditServicePage(props: {}) {
     return <Container id={'editContainer'} style={{textAlign: "left"}}>
         <style>{css}</style>
         {
-            redirect && <Redirect to={redirect}></Redirect>
+            redirect && <Navigate to={redirect} replace />
         }
         <Button variant="link" onClick={() => window.location.href = '/my-apps'}>
             <FontAwesomeIcon icon={faCaretLeft} className={'marginRight'} />

@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 import Button from "react-bootstrap/Button";
@@ -59,7 +59,7 @@ function SpecCard(props: CardProps) {
     return (
         <Card bg={darkThemeEnabled ? 'dark' : 'light'} style={{ borderRadius: "16px", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <Card.Body className="spec-card-body" style={{marginTop:"0", textAlign: "left", padding: "20px",  borderRadius: "15px 15px 0 0", backgroundColor: darkThemeEnabled ? '#283845' : '#fff', borderColor: darkThemeEnabled ? '#283845' : 'lightgrey' }}>
                 <Row>
