@@ -46,6 +46,7 @@ const AddEditSpecPage = (props: any) => {
     const {specKey} = useParams<{ specKey?: string; }>();
 
     // Server data
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
     const [spec, setSpec] = useState<V1.Service>({
