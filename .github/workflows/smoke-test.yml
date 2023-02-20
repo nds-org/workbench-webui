@@ -25,6 +25,10 @@ jobs:
         run: |
           yarn install
 
+      - name: Generate OpenAPI Clients
+        run: |
+          yarn swagger
+          
       - name: Compile React app
         run: |
           yarn build
