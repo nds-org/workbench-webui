@@ -41,7 +41,7 @@ const MyCatalogPage = (props: any) => {
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
 
-    const [redirectDest, setRedirectDest] = useState<string>('');
+    const [redirect, setRedirect] = useState<string>('');
 
     // Delete confirmation
     const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
@@ -79,7 +79,7 @@ const MyCatalogPage = (props: any) => {
         existing.key = existing.key + 'copy'
 
         const copied = await V1.AppSpecService.createService(existing);
-        setRedirectDest('/my-catalog/'+copied.key);
+        setRedirect('/my-catalog/'+copied.key);
     }
 
     const deleteSelectedSpec = () => {
@@ -95,12 +95,12 @@ const MyCatalogPage = (props: any) => {
     }
 
     const createSpec = () => {
-        setRedirectDest('/my-catalog/create');
+        setRedirect('/my-catalog/create');
     }
 
     const editSpec = (spec?: V1.Service) => {
         if (!spec || !spec.key) { return; }
-        setRedirectDest('/my-catalog/' + spec.key);
+        setRedirect('/my-catalog/' + spec.key);
     }
 
     const importSpec = async (jsonStr: string) => {
@@ -131,7 +131,7 @@ const MyCatalogPage = (props: any) => {
     return (
         <Container fluid={false}>
             {
-                redirectDest && <Navigate to={redirectDest} replace />
+                redirect && <Navigate to={redirect} replace />
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>
