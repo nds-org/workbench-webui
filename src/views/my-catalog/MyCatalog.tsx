@@ -12,7 +12,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import {useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {colors} from "../../App";
 import ReactGA from "react-ga";
 import {faClone, faFileExport, faPlus} from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +38,7 @@ const MyCatalogPage = (props: any) => {
     const user = useSelector((state: any) => state.auth.user);
 
     // Server data
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
 
@@ -103,12 +104,14 @@ const MyCatalogPage = (props: any) => {
         setRedirect('/my-catalog/' + spec.key);
     }
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const importSpec = async (jsonStr: string) => {
         if (!jsonStr) { return; }
 
         try {
             const spec = JSON.parse(jsonStr);
             const imported = await V1.AppSpecService.createService(spec);
+            return imported;
         } catch (e) {
             console.log('Failed to parse JSON: ', e);
             return;
@@ -118,6 +121,7 @@ const MyCatalogPage = (props: any) => {
 
     const exportSpec = (spec?: V1.Service) => {
         if (!spec || !spec.id) { return; }
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         const jsonStr = JSON.stringify(spec);
 
         // TODO: show modal?
@@ -131,7 +135,7 @@ const MyCatalogPage = (props: any) => {
     return (
         <Container fluid={false}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>

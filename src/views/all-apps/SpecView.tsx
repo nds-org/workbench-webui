@@ -1,5 +1,5 @@
 import {handleError, V1} from "../../common";
-import {Redirect, useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -14,7 +14,7 @@ import './SpecView.css';
 import {newStack} from "../../common/services/userapps.service";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
-interface SpecViewParams {
+type SpecViewParams = {
     specKey: string;
 }
 
@@ -74,7 +74,7 @@ function SpecView() {
     }, []);
 
     useEffect(() => {
-        V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
+        specKey && V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
             setSpec(target);
         }).catch(reason => handleError(`Failed to fetch spec=${specKey}: `, reason));
     }, [specKey, specs, darkThemeEnabled]);
@@ -83,7 +83,7 @@ function SpecView() {
         <>
             {!spec && <p>Loading... Please Wait!</p>}
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             {spec && <>
                     <Row style={{ marginTop: "50px" }}>

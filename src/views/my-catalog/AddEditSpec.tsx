@@ -11,7 +11,7 @@ import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
 import {faSave} from "@fortawesome/free-solid-svg-icons/faSave";
 
 import {useSelector} from "react-redux";
-import {Redirect, useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import ReactGA from "react-ga";
 
 import './AddEditSpec.css';
@@ -46,6 +46,7 @@ const AddEditSpecPage = (props: any) => {
     const {specKey} = useParams<{ specKey?: string; }>();
 
     // Server data
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
     const [spec, setSpec] = useState<V1.Service>({
@@ -113,7 +114,7 @@ const AddEditSpecPage = (props: any) => {
             }
         }).catch(reason => handleError('Failed to fetch specs: ', reason));
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
-    }, [env]);
+    }, [env, specKey]);
 
     /** Basic Info tab functions */
     const handleFieldChange = (event: any, field: string) => {
@@ -309,7 +310,7 @@ const AddEditSpecPage = (props: any) => {
     return (
         <Container fluid={false}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <style>{css}</style>
             <div style={{ height: "10vh" }}></div>

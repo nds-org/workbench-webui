@@ -19,7 +19,7 @@ const NumericHeader = styled.span`
 `;
 
 const LandingSection = (props: { numeral: string; header: string; body: string; diagram: string; textFirst: boolean; }) => {
-    if (typeof(props.textFirst) === undefined) {
+    if (!props.textFirst) {
         props.textFirst = false;
     }
 

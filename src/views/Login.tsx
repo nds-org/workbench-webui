@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import FormGroup from "react-bootstrap/FormGroup";
 import FormLabel from "react-bootstrap/FormLabel";
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import {StringParam, useQueryParam} from "use-query-params";
 import {useDispatch, useSelector} from "react-redux";
 import {setToken,setUser} from "../store/actions";
@@ -76,7 +76,7 @@ function LoginPage(props: {}) {
         handleNextRedirect()
         return <Container id={'loginContainer'} style={{textAlign: "center"}}>
             <style>{css}</style>
-            <Redirect to={redirect}></Redirect>
+            <Navigate to={redirect} replace />
             <h3>Logging you in...</h3>
         </Container>
     }
@@ -90,7 +90,7 @@ function LoginPage(props: {}) {
 
         return <Container id={'loginContainer'} style={{textAlign: "center"}}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <style>{css}</style>
             <h3>Redirecting to Login...</h3>
@@ -103,7 +103,7 @@ function LoginPage(props: {}) {
     return (
         <Container fluid={false} id={'loginContainer'}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <style>{css}</style>
             <Alert className='alert-danger' show={!!error}>{error}</Alert>

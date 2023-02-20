@@ -7,7 +7,7 @@ import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 import {useEffect} from "react";
 
-interface ConsoleViewParams {
+type ConsoleViewParams = {
     stackServiceId: string;
 }
 

@@ -27,7 +27,7 @@ import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
 
 import Console from "./Console";
 import {useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import {colors} from "../../App";
 import ReactGA from "react-ga";
 
@@ -235,7 +235,7 @@ function MyAppsPage(props: any) {
     return (
         <Container fluid={false}>
             {
-                redirect && <Redirect to={redirect} />
+                redirect && <Navigate to={redirect} replace />
             }
             <div style={{ height: "10vh" }}></div>
             <Accordion defaultActiveKey="0">
