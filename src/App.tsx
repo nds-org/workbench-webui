@@ -84,44 +84,22 @@ function App() {
             <DarkThemeProvider>
                 <Container as={MyContainer} fluid={true}>
                     <BrowserRouter>
-                        <QueryParamProvider ReactRouterRoute={Route}>
-                        <Header />
-                        <Routes>
-                            <Route path="/">
-                                <LandingPage />
-                            </Route>
-                            <Route path="/login">
-                                <LoginPage />
-                            </Route>
-                            <Route path="/my-apps">
-                                <MyAppsPage />
-                            </Route>
-                            <Route path="/all-apps">
-                                <AllAppsPage />
-                            </Route>
-                            <Route path="/my-catalog">
-                                <MyCatalogPage />
-                            </Route>
-                            <Route path="/my-catalog/create">
-                                <AddEditSpecPage />
-                            </Route>
-                            <Route path="/my-catalog/:specKey">
-                                <AddEditSpecPage />
-                            </Route>
-                            <Route path="/my-apps/:stackId/edit">
-                                <EditServicePage />
-                            </Route>
-                            <Route path="/all-apps/:specKey">
-                                <SpecView />
-                            </Route>
-                            <Route path="/my-apps/:stackServiceId/console">
-                                <ConsolePage />
-                            </Route>
-                            <Route path="/swagger" element={<SwaggerUiPage />} />
-                            <Route path="/*" >
-                                <Navigate to="/" replace />
-                            </Route>
-                        </Routes>
+                        <QueryParamProvider>
+                            <Header />
+                            <Routes>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route path="/my-apps" element={<MyAppsPage />} />
+                                <Route path="/all-apps" element={<AllAppsPage />} />
+                                <Route path="/my-catalog" element={<MyCatalogPage />} />
+                                <Route path="/my-catalog/create" element={<AddEditSpecPage />} />
+                                <Route path="/my-catalog/:specKey" element={<AddEditSpecPage />} />
+                                <Route path="/my-apps/:stackId/edit" element={<EditServicePage />} />
+                                <Route path="/all-apps/:specKey" element={<SpecView />} />
+                                <Route path="/my-apps/:stackServiceId/console" element={<ConsolePage />} />
+                                <Route path="/swagger" element={<SwaggerUiPage />} />
+                                <Route path="/*" element={<Navigate to="/" replace />} />
+                            </Routes>
                         </QueryParamProvider>
                     </BrowserRouter>
                 </Container>

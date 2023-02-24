@@ -261,7 +261,7 @@ function MyAppsPage(props: any) {
                     stacks.sort(sortBy).map((stack, index) =>
                         <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: computeStackBorderColor(stack, index),
-                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
                             <Card.Header style={{
                                 textAlign: "left",
                                 borderRadius: activated === index ? "18px 18px 0 0" : "18px",
@@ -302,18 +302,18 @@ function MyAppsPage(props: any) {
                                         </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
-                                        <Accordion.Toggle as={Button} variant={"link"} style={{
+                                        <Accordion.Button as={Button} variant={"link"} style={{
                                             color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black',
                                             marginRight: "10px",
                                             marginLeft: "30px",
                                             display: activated === index ? "none" : ""
                                         }}   eventKey={index+""} onClick={() => setActivated(index)}>
                                             <FontAwesomeIcon icon={faCaretDown} size={'2x'} />
-                                        </Accordion.Toggle>
+                                        </Accordion.Button>
                                     </Col>
                                 </Row>
                             </Card.Header>
-                            <Accordion.Collapse as={Card.Body} eventKey={index+""} style={{ padding: "40px 120px" }}>
+                            <Accordion.Body as={Card.Body} eventKey={index+""} style={{ padding: "40px 120px" }}>
                                 <Table className='compact' responsive='sm' borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
@@ -362,7 +362,7 @@ function MyAppsPage(props: any) {
                                     }
                                     </tbody>
                                 </Table>
-                            </Accordion.Collapse>
+                            </Accordion.Body>
                         </Card>
                     )
                 }

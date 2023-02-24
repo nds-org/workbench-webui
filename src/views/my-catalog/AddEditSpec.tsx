@@ -630,29 +630,30 @@ const AddEditSpecPage = (props: any) => {
             </Row>
             <Row>
                 <Col>
-                    <Accordion >
-                        <Card id={'showJsonCard'} bg={darkThemeEnabled ? 'dark' : 'light'} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
+                    <Accordion>
+                        <Accordion.Item eventKey={'showJson'} id={'showJsonCard'} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: darkThemeEnabled ? '#283845' : '#fff',
-                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
-                            <Card.Header style={{
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff',
+                            color: darkThemeEnabled ? 'light' : 'dark'}}>
+                            <Accordion.Header style={{
                                 textAlign: "left",
                                 borderRadius: showJson ? "18px 18px 0 0" : "18px",
                                 borderBottomColor: !showJson  ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
                                 color: darkThemeEnabled ? 'white' : 'black',
                                 backgroundColor: darkThemeEnabled ? '#283845' : '#fff',       // night mode bg / default bg
                             }}>
-                                <Accordion.Toggle as={Button} variant="link" eventKey="0" onClick={() => setShowJson(!showJson)} style={{
+                                <Accordion.Button as={Button} variant="link" eventKey="0" onClick={() => setShowJson(!showJson)} style={{
                                     color: darkThemeEnabled ? 'white' : 'black',
                                     marginRight: "10px",
                                     marginLeft: "30px"
                                 }}>
                                     {showJson ? 'Hide' : 'Show'} JSON Spec
-                                </Accordion.Toggle>
-                            </Card.Header>
+                                </Accordion.Button>
+                            </Accordion.Header>
                             <Accordion.Collapse eventKey="0" style={{textAlign: "left"}}>
                                 <Card.Body><pre>{JSON.stringify(spec, null, 4)}</pre></Card.Body>
                             </Accordion.Collapse>
-                        </Card>
+                        </Accordion.Item>
                     </Accordion>
                 </Col>
             </Row>

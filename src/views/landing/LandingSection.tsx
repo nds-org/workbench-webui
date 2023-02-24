@@ -19,10 +19,6 @@ const NumericHeader = styled.span`
 `;
 
 const LandingSection = (props: { numeral: string; header: string; body: string; diagram: string; textFirst: boolean; }) => {
-    if (!props.textFirst) {
-        props.textFirst = false;
-    }
-
     const SectionHeader = styled.h3`
         color: ${textColor};
         
