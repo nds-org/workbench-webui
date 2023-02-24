@@ -38,6 +38,7 @@ const MyCatalogPage = (props: any) => {
     const user = useSelector((state: any) => state.auth.user);
 
     // Server data
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
 
@@ -103,11 +104,13 @@ const MyCatalogPage = (props: any) => {
         setRedirect('/my-catalog/' + spec.key);
     }
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const importSpec = async (jsonStr: string) => {
         if (!jsonStr) { return; }
 
         try {
             const spec = JSON.parse(jsonStr);
+            /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
             const imported = await V1.AppSpecService.createService(spec);
         } catch (e) {
             console.log('Failed to parse JSON: ', e);
@@ -118,6 +121,7 @@ const MyCatalogPage = (props: any) => {
 
     const exportSpec = (spec?: V1.Service) => {
         if (!spec || !spec.id) { return; }
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         const jsonStr = JSON.stringify(spec);
 
         // TODO: show modal?
