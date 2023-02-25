@@ -23,6 +23,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
 import Card from "react-bootstrap/Card";
+import {colors} from "../../App";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
     const sid1 = s1.label+"";
@@ -273,18 +274,22 @@ const AddEditSpecPage = (props: any) => {
         setRedirect('/my-catalog');
     }
 
-    const saveSpec = (spec: V1.Service) => {
+    const saveSpec = async (spec: V1.Service) => {
         if (spec.catalog === 'system' && !user?.groups?.includes('/workbench-admin')) {
             // User is not an admin
             return;
         }
 
-        if (specKey) {
-            V1.AppSpecService.updateService(spec.key, spec).then((updated: V1.Service) => {
+        if (!spec || !spec.key) { return; }
+        const existing: V1.Service = await V1.AppSpecService.getServiceById(spec.key);
+
+
+        if (existing) {
+            return V1.AppSpecService.updateService(spec.key, spec).then((updated: V1.Service) => {
                 setRedirect('/my-catalog')
             });
         } else {
-            V1.AppSpecService.createService(spec).then((created: V1.Service) => {
+            return V1.AppSpecService.createService(spec).then((created: V1.Service) => {
                 setRedirect('/my-catalog')
             });
         }
@@ -642,17 +647,11 @@ const AddEditSpecPage = (props: any) => {
                                 color: darkThemeEnabled ? 'white' : 'black',
                                 backgroundColor: darkThemeEnabled ? '#283845' : '#fff',       // night mode bg / default bg
                             }}>
-                                <Accordion.Button as={Button} variant="link" eventKey="0" onClick={() => setShowJson(!showJson)} style={{
-                                    color: darkThemeEnabled ? 'white' : 'black',
-                                    marginRight: "10px",
-                                    marginLeft: "30px"
-                                }}>
-                                    {showJson ? 'Hide' : 'Show'} JSON Spec
-                                </Accordion.Button>
+                                {showJson ? 'Hide' : 'Show'} JSON Spec
                             </Accordion.Header>
-                            <Accordion.Collapse eventKey="0" style={{textAlign: "left"}}>
-                                <Card.Body><pre>{JSON.stringify(spec, null, 4)}</pre></Card.Body>
-                            </Accordion.Collapse>
+                            <Accordion.Body>
+                                <pre className={'text-align-left'} style={{ color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light}}>{JSON.stringify(spec, null, 4)}</pre>
+                            </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>
                 </Col>
