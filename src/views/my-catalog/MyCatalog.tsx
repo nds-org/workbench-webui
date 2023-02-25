@@ -110,6 +110,7 @@ const MyCatalogPage = (props: any) => {
 
         try {
             const spec = JSON.parse(jsonStr);
+            /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
             const imported = await V1.AppSpecService.createService(spec);
             return imported;
         } catch (e) {
