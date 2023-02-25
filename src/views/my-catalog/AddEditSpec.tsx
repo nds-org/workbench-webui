@@ -22,7 +22,6 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
-import Card from "react-bootstrap/Card";
 import {colors} from "../../App";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
@@ -88,8 +87,6 @@ const AddEditSpecPage = (props: any) => {
     // User selection
     const [selectedTab, setSelectedTab] = useState('BasicInfo');
     const [redirect, setRedirect] = useState<string>('');
-    const [showJson, setShowJson] = useState(false);
-
 
     useEffect(() => {
         if (env?.customization?.product_name) {
@@ -642,12 +639,10 @@ const AddEditSpecPage = (props: any) => {
                             color: darkThemeEnabled ? 'light' : 'dark'}}>
                             <Accordion.Header style={{
                                 textAlign: "left",
-                                borderRadius: showJson ? "18px 18px 0 0" : "18px",
-                                borderBottomColor: !showJson  ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
                                 color: darkThemeEnabled ? 'white' : 'black',
                                 backgroundColor: darkThemeEnabled ? '#283845' : '#fff',       // night mode bg / default bg
                             }}>
-                                {showJson ? 'Hide' : 'Show'} JSON Spec
+                                View JSON Spec
                             </Accordion.Header>
                             <Accordion.Body>
                                 <pre className={'text-align-left'} style={{ color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light}}>{JSON.stringify(spec, null, 4)}</pre>
