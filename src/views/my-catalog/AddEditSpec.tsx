@@ -22,7 +22,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
-import Card from "react-bootstrap/Card";
+import {colors} from "../../App";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
     const sid1 = s1.label+"";
@@ -87,8 +87,6 @@ const AddEditSpecPage = (props: any) => {
     // User selection
     const [selectedTab, setSelectedTab] = useState('BasicInfo');
     const [redirect, setRedirect] = useState<string>('');
-    const [showJson, setShowJson] = useState(false);
-
 
     useEffect(() => {
         if (env?.customization?.product_name) {
@@ -273,18 +271,22 @@ const AddEditSpecPage = (props: any) => {
         setRedirect('/my-catalog');
     }
 
-    const saveSpec = (spec: V1.Service) => {
+    const saveSpec = async (spec: V1.Service) => {
         if (spec.catalog === 'system' && !user?.groups?.includes('/workbench-admin')) {
             // User is not an admin
             return;
         }
 
-        if (specKey) {
-            V1.AppSpecService.updateService(spec.key, spec).then((updated: V1.Service) => {
+        if (!spec || !spec.key) { return; }
+        const existing: V1.Service = await V1.AppSpecService.getServiceById(spec.key);
+
+
+        if (existing) {
+            return V1.AppSpecService.updateService(spec.key, spec).then((updated: V1.Service) => {
                 setRedirect('/my-catalog')
             });
         } else {
-            V1.AppSpecService.createService(spec).then((created: V1.Service) => {
+            return V1.AppSpecService.createService(spec).then((created: V1.Service) => {
                 setRedirect('/my-catalog')
             });
         }
@@ -630,29 +632,22 @@ const AddEditSpecPage = (props: any) => {
             </Row>
             <Row>
                 <Col>
-                    <Accordion >
-                        <Card id={'showJsonCard'} bg={darkThemeEnabled ? 'dark' : 'light'} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
+                    <Accordion>
+                        <Accordion.Item eventKey={'showJson'} id={'showJsonCard'} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: darkThemeEnabled ? '#283845' : '#fff',
-                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
-                            <Card.Header style={{
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff',
+                            color: darkThemeEnabled ? 'light' : 'dark'}}>
+                            <Accordion.Header style={{
                                 textAlign: "left",
-                                borderRadius: showJson ? "18px 18px 0 0" : "18px",
-                                borderBottomColor: !showJson  ? 'transparent' : darkThemeEnabled ? 'white' : 'lightgrey',
                                 color: darkThemeEnabled ? 'white' : 'black',
                                 backgroundColor: darkThemeEnabled ? '#283845' : '#fff',       // night mode bg / default bg
                             }}>
-                                <Accordion.Toggle as={Button} variant="link" eventKey="0" onClick={() => setShowJson(!showJson)} style={{
-                                    color: darkThemeEnabled ? 'white' : 'black',
-                                    marginRight: "10px",
-                                    marginLeft: "30px"
-                                }}>
-                                    {showJson ? 'Hide' : 'Show'} JSON Spec
-                                </Accordion.Toggle>
-                            </Card.Header>
-                            <Accordion.Collapse eventKey="0" style={{textAlign: "left"}}>
-                                <Card.Body><pre>{JSON.stringify(spec, null, 4)}</pre></Card.Body>
-                            </Accordion.Collapse>
-                        </Card>
+                                View JSON Spec
+                            </Accordion.Header>
+                            <Accordion.Body>
+                                <pre className={'text-align-left'} style={{ color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light}}>{JSON.stringify(spec, null, 4)}</pre>
+                            </Accordion.Body>
+                        </Accordion.Item>
                     </Accordion>
                 </Col>
             </Row>
