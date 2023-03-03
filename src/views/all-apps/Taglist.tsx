@@ -32,7 +32,7 @@ function Taglist(props: { tags: Array<any>, spec: V1.Service, onClick: (tag: any
 
     return (
         <>
-            <Carousel controls={false}>
+            <Carousel controls={false} indicators={false}>
                 {
                     chunkedTags.map((values: Array<any>, index: number) =>
                         <Carousel.Item key={'spec-' + props.spec?.key + '-tags-carousel-item-' + index}>

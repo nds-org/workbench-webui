@@ -9,7 +9,7 @@ import Badge from "react-bootstrap/Badge";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
-import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
+import {createTheme, MuiThemeProvider} from "@material-ui/core/styles";
 
 import {StringParam, useQueryParam} from "use-query-params";
 import {useSelector} from "react-redux";
@@ -29,7 +29,7 @@ const fetchStacks = () => {
     }).catch(reason => handleError("Failed to fetch user apps tho", reason));
 }
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         type: 'dark'
     },
@@ -230,7 +230,7 @@ function AllAppsPage() {
                             <Col style={{ textAlign: "left", paddingLeft: "25px" }}>
                                 <h3>
                                     {!filter ? 'All' : filter === 'featured' ? 'Featured' : tags.find(t => filter === t.id)?.name} Apps
-                                    <Badge pill variant={darkThemeEnabled ? 'light' : 'dark'}>{specs.filter(s => s.display === 'stack').length}</Badge>
+                                    <Badge pill bg={darkThemeEnabled ? 'dark' : 'light'}>{specs.filter(s => s.display === 'stack').length}</Badge>
                                 </h3>
                             </Col>
                         </Row>

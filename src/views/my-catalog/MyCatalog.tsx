@@ -142,9 +142,9 @@ const MyCatalogPage = (props: any) => {
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>
-            <button className={'btn-secondary btn-lg pull-right'} onClick={()=> createSpec()}>
+            <Button className={'btn-secondary btn-lg pull-right'} onClick={()=> createSpec()}>
                 <FontAwesomeIcon icon={faPlus} /> Create New Application
-            </button>
+            </Button>
             <Table className='compact' responsive='sm' borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                 <thead>
                 <tr>

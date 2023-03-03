@@ -238,7 +238,7 @@ function MyAppsPage(props: any) {
                 redirect && <Navigate to={redirect} replace />
             }
             <div style={{ height: "10vh" }}></div>
-            <Accordion defaultActiveKey="0">
+            <Accordion activeKey={activated+''}>
                 {
                     // Placeholder for when no applications have been added
                     (!stacks || !stacks.length) && <>
@@ -259,9 +259,9 @@ function MyAppsPage(props: any) {
                 {
                     // Show the list of all applications added by the user
                     stacks.sort(sortBy).map((stack, index) =>
-                        <Card key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
+                        <Accordion.Item eventKey={index+''} as={Card} key={stack.id} style={{ marginTop: "25px", borderRadius: "20px", borderWidth: "2px",
                             borderColor: computeStackBorderColor(stack, index),
-                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff' }} text={darkThemeEnabled ? 'light' : 'dark'}>
+                            backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
                             <Card.Header style={{
                                 textAlign: "left",
                                 borderRadius: activated === index ? "18px 18px 0 0" : "18px",
@@ -302,18 +302,19 @@ function MyAppsPage(props: any) {
                                         </>}
                                     </Col>
                                     <Col xs={1} style={{ marginTop: "3px" }}>
-                                        <Accordion.Toggle as={Button} variant={"link"} style={{
+                                        <Button variant={"link"} style={{
                                             color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black',
                                             marginRight: "10px",
+                                            background: 'transparent',
                                             marginLeft: "30px",
                                             display: activated === index ? "none" : ""
-                                        }}   eventKey={index+""} onClick={() => setActivated(index)}>
+                                        }} onClick={() => setActivated(index)}>
                                             <FontAwesomeIcon icon={faCaretDown} size={'2x'} />
-                                        </Accordion.Toggle>
+                                        </Button>
                                     </Col>
                                 </Row>
                             </Card.Header>
-                            <Accordion.Collapse as={Card.Body} eventKey={index+""} style={{ padding: "40px 120px" }}>
+                            <Accordion.Body as={Card.Body} style={{ padding: "40px 120px" }}>
                                 <Table className='compact' responsive='sm' borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                                     <thead>
                                     <tr>
@@ -362,8 +363,8 @@ function MyAppsPage(props: any) {
                                     }
                                     </tbody>
                                 </Table>
-                            </Accordion.Collapse>
-                        </Card>
+                            </Accordion.Body>
+                        </Accordion.Item>
                     )
                 }
             </Accordion>
