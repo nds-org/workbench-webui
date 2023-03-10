@@ -7,7 +7,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
-import {handleError, V1} from '../../common';
+import {CONFLICT_409, handleError, V1} from '../../common';
 import Taglist from "./Taglist";
 
 import './SpecCard.css';
@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 import ReactGA from "react-ga";
 import {newStack} from "../../common/services/userapps.service";
+import {faCopy} from "@fortawesome/free-solid-svg-icons";
+import {ButtonGroup, Dropdown} from "react-bootstrap";
 
 // TODO: Abstract this?
 
@@ -32,6 +34,8 @@ interface CardProps {
 //class Card extends Component<CardProps, CardState> {
 function SpecCard(props: CardProps) {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    const user = useSelector((state: any) => state.auth.user);
+
     //const [stacks, setStacks] = useState([]);
     const [redirect, setRedirect] = useState('');
 
@@ -51,8 +55,32 @@ function SpecCard(props: CardProps) {
         }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
     }
 
-    const showDropdown = () => {
+    const cloneSpec = (): void => {
+        const spec = {...props.spec};
 
+        spec.id = '';
+        spec.catalog = 'user';
+        spec.label = 'Copy of ' + (spec.label || spec.key);
+        spec.key = spec.key + 'copy';
+        spec.resourceLimits = undefined;
+        spec.repositories = spec.repositories || [];
+
+        V1.AppSpecService.createService(spec).then(appSpec => {
+            ReactGA.event({
+                category: 'application',
+                action: 'clone',
+                label: appSpec.key
+            });
+            props.specs.push(appSpec);
+            setRedirect(`/my-catalog`);
+        }).catch(reason => {
+            if (CONFLICT_409(reason)) {
+                // Copy of this spec already exists, redirect to catalog to see it
+                setRedirect(`/my-catalog`);
+            } else {
+                handleError(`Failed to clone ${spec.key} app spec`, reason)
+            }
+        });
     }
 
     // TODO: onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)}
@@ -67,15 +95,24 @@ function SpecCard(props: CardProps) {
                         <img alt={props.spec.key} width="60" height="60" id="spec-card-img" src={props.spec.logo || '/ndslabs-badge.png'} style={{ borderRadius: "50px", border: "solid 1px lightgrey", backgroundColor: 'white' }}/>
                     </Col>
                     <Col style={{ textAlign: "right" }}>
-                        <Button variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
-                            <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
-                        </Button>
-                        {
-                            // TODO: "More Actions" Dropdown...
-                        }
-                        <Button variant={'link'} onClick={showDropdown} style={{ marginTop: "15px" }} hidden={true}>
-                            <FontAwesomeIcon icon={faEllipsisV} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
-                        </Button>
+                        <ButtonGroup>
+                            <Button variant={'link'} style={{ padding: "1px", marginRight: "8px", width: "30px", height: "30px", borderRadius: "25px", border: darkThemeEnabled ? 'white 2px solid' : 'darkgrey 2px solid', marginTop: "15px" }} onClick={installApplication}>
+                                <FontAwesomeIcon className={'fa-fw'} icon={faPlus} style={{ color: darkThemeEnabled ? '#FFFFFF' : '#707070'}} />
+                            </Button>
+                            {
+                                user?.groups?.includes('/workbench-developers') && <Dropdown className={'spec-dropdown'}>
+                                    <Dropdown.Toggle variant={'link'} style={{ padding: "1px",  width: "30px", height: "30px", borderRadius: "25px", border: 'none', marginTop: "15px", color: darkThemeEnabled ? '#FFFFFF' : '#707070', backgroundColor: darkThemeEnabled ? '#283845' : '#fff'}}>
+                                        <FontAwesomeIcon className={'fa-fw'} icon={faEllipsisV} />
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item onClick={cloneSpec} style={{ color: '#707070' }}>
+                                            <FontAwesomeIcon className={'fa-fw'} icon={faCopy} /> Clone Application
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            }
+                        </ButtonGroup>
                     </Col>
                 </Row>
                 <Row title={props.spec.key} style={{ cursor: "pointer", marginTop: "10px" }} onClick={() => setRedirect(`/all-apps/${props.spec?.key}`)}>

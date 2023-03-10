@@ -7,3 +7,15 @@ img.spec-card-img {
     height: 60px;
     width: 60px;
 }
+
+.spec-card-btn {
+    width: 30px;
+    height: 30px;
+    padding: 1px;
+    border-radius: 25px;
+    margin-top: 15px;
+}
+
+.spec-dropdown .dropdown-toggle::after {
+    display: none;
+}

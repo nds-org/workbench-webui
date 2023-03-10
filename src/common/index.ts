@@ -49,12 +49,13 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";*/
 //export { Container, Alert, Carousel, Button, Form, FormControl, FormGroup, FormLabel, Accordion, Card, Col, Row, Modal, Table, ListGroup, Jumbotron, Dropdown, DropdownButton, Navbar, Nav, NavDropdown };
 //export {FontAwesomeIcon, faPlus, faCloudMoon, faCloudSun, faCheckCircle, faExclamationCircle, faPowerOff, faSpinner, faTerminal, faTrash, faRocket, faStop, faCaretDown, faLink, faTimes, faExpand, faEllipsisV, faChevronLeft}
 
-const AUTH_ERR = (reason: Error) => {console.log("Full reason", reason);return reason.message.includes('Unauthorized');}
+export const UNAUTHORIZED_401 = (reason: Error) => {return reason.message.includes('Unauthorized');}
+export const CONFLICT_409 = (reason: Error) => {return reason.message.includes('Conflict');}
 
 const handleError = (message: string, reason: Error, onUnath?: () => void) => {
     console.error(`${message}: `, reason);
     console.error("Should redirect to login view...");
-    const isAuthErr = AUTH_ERR(reason);
+    const isAuthErr = UNAUTHORIZED_401(reason);
 
     if (isAuthErr) {
         // Clear any stale auth info
@@ -69,6 +70,8 @@ const handleError = (message: string, reason: Error, onUnath?: () => void) => {
         if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
             window.location.href = '/login?rd=' + encodeURIComponent(window.location.pathname);
         }
+    } else {
+        console.log('Full reason: ', reason);
     }
 
 }

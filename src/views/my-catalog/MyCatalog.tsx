@@ -78,6 +78,8 @@ const MyCatalogPage = (props: any) => {
         existing.catalog = 'user';
         existing.label = 'Copy of ' + (existing.label || existing.key)
         existing.key = existing.key + 'copy'
+        existing.resourceLimits = undefined;
+        existing.repositories = existing.repositories || [];
 
         const copied = await V1.AppSpecService.createService(existing);
         setRedirect('/my-catalog/'+copied.key);
