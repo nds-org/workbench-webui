@@ -73,17 +73,23 @@ function SpecView() {
         }).catch(reason => handleError('Failed to fetch tags: ', reason));
     }, []);
 
+    // Reset redirect if we're still on the same view
     useEffect(() => {
-        specKey && V1.AppSpecService.getServiceById(specKey).then((target: V1.Service) => {
-            setSpec(target);
-        }).catch(reason => handleError(`Failed to fetch spec=${specKey}: `, reason));
-    }, [specKey, specs, darkThemeEnabled]);
+        redirect && setRedirect('');
+    }, [redirect]);
+
+    useEffect(() => {
+       if (specs && specKey) {
+           const spec = specs.find(s => s.key === specKey)
+           setSpec(spec);
+       }
+    }, [specKey, specs]);
 
     return (
         <>
             {!spec && <p>Loading... Please Wait!</p>}
             {
-                redirect && <Navigate to={redirect} replace />
+                redirect && <Navigate to={redirect} />
             }
             {spec && <>
                     <Row style={{ marginTop: "50px" }}>
@@ -137,18 +143,14 @@ function SpecView() {
                                             </Col>
                                             <Col style={{ textAlign: "left" }}>
                                                 {
-                                                    spec?.tags?.map(tag => <>
-                                                            {
-                                                                tags.find(t => tag === t.id) && <>
-                                                                    <Button className="btn btn-sm btn-warning"
-                                                                            style={{borderRadius: "10px"}}
-                                                                            onClick={() => setRedirect('/all-apps#' + tags.find(t => t.id === tag)?.name)}>{
-                                                                        tags.find(t => tag === t.id)?.name}
-                                                                    </Button>
-                                                                </>
-                                                            }
-                                                        </>
-                                                    )
+                                                    spec?.tags?.map((tag, index) =>
+                                                        <Button key={spec.key+'-tag-'+index}
+                                                                className="btn btn-sm btn-warning"
+                                                                style={{borderRadius: "10px"}}
+                                                                hidden={!tags.find(t => tag === t.id)}
+                                                                onClick={() => setRedirect('/all-apps#' + tags.find(t => t.id === tag)?.name)}>
+                                                            {tags.find(t => tag === t.id)?.name}
+                                                        </Button>)
                                                 }
                                             </Col>
                                         </Row>
@@ -176,14 +178,15 @@ function SpecView() {
                                         <Col sm={6}>
                                             {
                                                 // Render something for apps that depend on this app
-                                                (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key)).map(s => s && <>
-                                                    <Button key={spec.key+'-dep-of-'+s.key}
-                                                            style={{ borderRadius: "10px" }}
-                                                            className="btn btn-sm btn-info"
-                                                            onClick={() => setRedirect('/all-apps/' + s.key)}>
-                                                        {specs.find(spec => spec.key === s.key)?.label || s.key}
-                                                    </Button>
-                                                </>)
+                                                (specs || []).filter(s => s?.depends?.find(d => d.key === spec.key))
+                                                    .map(s =>
+                                                        <Button key={spec.key+'-dep-of-'+s.key}
+                                                                style={{ borderRadius: "10px" }}
+                                                                className="btn btn-sm btn-info"
+                                                                onClick={() => setRedirect('/all-apps/' + s.key)}>
+                                                            {specs.find(spec => spec.key === s.key)?.label || s.key}
+                                                        </Button>
+                                                    )
                                             }
                                         </Col>
                                     </Row>
@@ -205,17 +208,15 @@ function SpecView() {
                                             <Col sm={6}>
                                                 {
                                                     // Render something for apps that depend on this one
-                                                    spec?.depends?.map(dep => <>
-                                                        <Button key={spec.key+'-dep-'+dep.key}
-                                                                style={{ borderRadius: "10px" }}
-                                                                className="btn btn-sm btn-info"
-                                                                onClick={() => setRedirect('/all-apps/' + dep.key)}>
-                                                            {(specs || []).find(s => s.key === dep.key)?.label}
-                                                            {
-                                                                dep.required && <div><small>(required)</small></div>
-                                                            }
-                                                        </Button>
-                                                    </>)
+                                                    spec?.depends?.map(dep => <Button key={spec.key+'-dep-'+dep.key}
+                                                            style={{ borderRadius: "10px" }}
+                                                            className="btn btn-sm btn-info"
+                                                            onClick={() => setRedirect('/all-apps/' + dep.key)}>
+                                                        {(specs || []).find(s => s.key === dep.key)?.label}
+                                                        {
+                                                            dep.required && <div><small>(required)</small></div>
+                                                        }
+                                                    </Button>)
                                                 }
                                             </Col>
                                         </Row>
@@ -240,14 +241,13 @@ function SpecView() {
                                             <Col sm={6}>
                                                 {
                                                     // Render something for other apps with same tags
-                                                    (specs || []).filter((s: V1.Service) => spec.key !== s.key && spec.tags?.some(t => s?.tags?.includes(t)))?.map(s => <>
-                                                        <Button key={spec.key+'-tag-'+s.key}
+                                                    (specs || []).filter((s: V1.Service) => spec.key !== s.key && spec.tags?.some(t => s?.tags?.includes(t)))
+                                                        ?.map(s => <Button key={spec.key+'-related-to-'+s.key}
                                                                 style={{ borderRadius: "10px" }}
                                                                 className="btn btn-sm btn-info"
                                                                 onClick={() => setRedirect('/all-apps/' + s.key)}>
                                                             {s.label || s.key}
-                                                        </Button>
-                                                    </>)
+                                                        </Button>)
                                                 }
                                             </Col>
                                         </Row>
@@ -265,7 +265,6 @@ function SpecView() {
                                 </Col>
                             </Row>
 
-
                             {
                                 spec?.additionalResources?.length > 0 && <>
                                     <Row>
@@ -274,16 +273,13 @@ function SpecView() {
                                             <h4>Additional Resources</h4>
                                             <ul>
                                                 {
-                                                    spec?.additionalResources?.map(r => <>
-                                                        <li key={'addl-resrc-'+r} style={{ marginTop: "50px",minHeight:"200px"}}>{r}</li>
-                                                    </>)
+                                                    spec?.additionalResources?.map((r, index) => (<li key={'addl-resrc-'+index} style={{ marginTop: "50px",minHeight:"200px"}}>{r}</li>))
                                                 }
                                             </ul>
                                         </Col>
                                     </Row>
                                 </>
                             }
-
                         </Col>
                     </Row>
                 </>
