@@ -55,13 +55,13 @@ const AddEditSpecPage = (props: any) => {
         label: '',
 
         // Access Info
-        display: 'standalone',
+        display: 'stack',
         access: 'external',
 
         // Docker info
         image: {
             name: '',
-            tags: []
+            tags: ['latest']
         },
 
         // Help Info
@@ -115,7 +115,13 @@ const AddEditSpecPage = (props: any) => {
     }, [env, specKey]);
 
     /** Basic Info tab functions */
+    const lowercaseAlphaNumeric = /^[a-z0-9]+$/
     const handleFieldChange = (event: any, field: string) => {
+        // `key` must be a unique lowercase alphanumeric string
+        if (field === 'key' && event.target.value && !event.target.value.match(lowercaseAlphaNumeric)) {
+            return;
+        }
+
         console.log("Handling change to field: ", field);
         if (field === 'imageName') {
             spec.image.name = event.target.value;
@@ -143,6 +149,44 @@ const AddEditSpecPage = (props: any) => {
     const removeTag = (tagIndex: number) => {
         console.log("Removing tag: ", tagIndex);
         spec.image.tags.splice(tagIndex, 1);
+        setSpec({...spec});
+    }
+
+    const handleCommandChange = (event: any, index: number) => {
+        console.log("Handling change to command: ", event);
+        spec.command[index] = event.target.value;
+        setSpec({...spec});
+    };
+
+    const addCommand = () => {
+        const cmd = spec.command || [];
+        cmd.push('');
+        spec.command = cmd;
+        setSpec({...spec});
+    }
+
+    const removeCommand = (index: number) => {
+        console.log("Removing command: ", index);
+        spec.command.splice(index, 1);
+        setSpec({...spec});
+    }
+
+    const handleArgsChange = (event: any, index: number) => {
+        console.log("Handling change to command: ", event);
+        spec.args[index] = event.target.value;
+        setSpec({...spec});
+    };
+
+    const addArg = () => {
+        const args = spec.args || [];
+        args.push('');
+        spec.args = args;
+        setSpec({...spec});
+    }
+
+    const removeArg = (index: number) => {
+        console.log("Removing arg: ", index);
+        spec.args.splice(index, 1);
         setSpec({...spec});
     }
 
@@ -216,8 +260,12 @@ const AddEditSpecPage = (props: any) => {
     const handlePortChange = (event: any, portIndex: number, field: string) => {
         console.log("Handling change to port: ", event);
         const port: V1.Port = spec.ports[portIndex];
-        // @ts-ignore
-        port[field] = event.target.value;
+        if (field === 'port') {
+            port[field] = Number(event.target.value);
+        } else {
+            // @ts-ignore
+            port[field] = event.target.value;
+        }
         spec.ports[portIndex] = port;
         setSpec({...spec});
     };
@@ -339,30 +387,36 @@ const AddEditSpecPage = (props: any) => {
                                   backgroundColor: darkThemeEnabled ? '#283845' : '#eee',       // night mode bg / default bg
                               }}>
                             <Tab title={'Basic Info'} key={'BasicInfo'} eventKey={'BasicInfo'} style={{ margin: "25px", color: darkThemeEnabled ? 'white' : 'black' }}>
+                                <h3 className={'text-align-left marginTop'}>Basic Info</h3>
                                 <Row>
                                     <Col className={'text-align-left marginTop'}>
-                                        <h3>Basic Info</h3>
                                         <FormGroup>
                                             <Form.Label>Key<span className={'text-red'}>*</span></Form.Label>
                                             <FormControl required value={spec.key} onChange={(e) => handleFieldChange(e, 'key')}></FormControl>
                                         </FormGroup>
+                                    </Col>
+                                    <Col className={'text-align-left marginTop'}>
                                         <FormGroup>
                                             <Form.Label>Label</Form.Label>
                                             <FormControl value={spec.label} onChange={(e) => handleFieldChange(e, 'label')}></FormControl>
                                         </FormGroup>
                                     </Col>
+                                </Row>
+                                
+                                <h3 className={'text-align-left marginTop'}>Docker Info</h3>
+                                <Row>
                                     <Col className={'text-align-left marginTop'}>
-                                        <h3>Docker Info</h3>
                                         <FormGroup>
                                             <Form.Label>Image Name<span className={'text-red'}>*</span></Form.Label>
                                             <Form.Control required value={spec.image.name} onChange={(e) => handleFieldChange(e, 'imageName')}></Form.Control>
                                         </FormGroup>
+
                                         <FormGroup>
                                             <Form.Label>Tags<span className={'text-red'}>*</span></Form.Label>
                                             <Table>
                                                 <tbody>
                                                 {
-                                                    spec?.image?.tags?.map((tag, tagIndex) => <tr>
+                                                    spec?.image?.tags?.map((tag, tagIndex) => <tr key={'tag-'+tagIndex}>
                                                         <td width='5%'>
                                                             <Button className={'btn-secondary btn-sm'} onClick={() => removeTag(tagIndex)}><FontAwesomeIcon icon={faTrash} /></Button>
                                                         </td>
@@ -383,8 +437,62 @@ const AddEditSpecPage = (props: any) => {
                                             </Table>
                                         </FormGroup>
                                     </Col>
+
+                                    <Col className={'text-align-left marginTop'}>
+                                        <FormGroup>
+                                            <Form.Label>Command</Form.Label>
+                                            <Table>
+                                                <tbody>
+                                                {
+                                                    spec?.command.map((cmd, index) => <tr key={'cmd-'+index}>
+                                                        <td width='5%'>
+                                                            <Button className={'btn-secondary btn-sm'} onClick={() => removeCommand(index)}><FontAwesomeIcon icon={faTrash} /></Button>
+                                                        </td>
+                                                        <td>
+                                                            <FormControl required value={cmd} onChange={(e) => handleCommandChange(e, index)}></FormControl>
+                                                        </td>
+                                                    </tr>)
+                                                }
+                                                <tr>
+                                                    <td>
+                                                        <Button className={'btn-primary btn-sm marginLeft'} onClick={() => addCommand()}>
+                                                            <FontAwesomeIcon icon={faPlus} />
+                                                        </Button>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                </tbody>
+                                            </Table>
+                                        </FormGroup>
+
+                                        <FormGroup>
+                                            <Form.Label>Args</Form.Label>
+                                            <Table>
+                                                <tbody>
+                                                {
+                                                    spec?.args.map((arg, index) => <tr key={'arg-'+index}>
+                                                        <td width='5%'>
+                                                            <Button className={'btn-secondary btn-sm'} onClick={() => removeArg(index)}><FontAwesomeIcon icon={faTrash} /></Button>
+                                                        </td>
+                                                        <td>
+                                                            <FormControl required value={arg} onChange={(e) => handleArgsChange(e, index)}></FormControl>
+                                                        </td>
+                                                    </tr>)
+                                                }
+                                                <tr>
+                                                    <td>
+                                                        <Button className={'btn-primary btn-sm marginLeft'} onClick={() => addArg()}>
+                                                            <FontAwesomeIcon icon={faPlus} />
+                                                        </Button>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                </tbody>
+                                            </Table>
+                                        </FormGroup>
+                                    </Col>
                                 </Row>
-                                <hr/>
+
                                 <Row>
                                     <Col className={'text-align-left marginTop'}>
                                         <h3>Access Info</h3>
@@ -438,7 +546,7 @@ const AddEditSpecPage = (props: any) => {
                                                 <Form.Group controlId="depKey">
                                                     <Form.Control as="select" required name={'depKey'} defaultValue="stack" value={dep.key || 'Choose a dependency service'} onChange={(e) => handleDepChange(e, depIndex, 'key')}>
                                                         {
-                                                            specs.map(spec => <option value={spec.key}>{spec.label} ({spec.key})</option>)
+                                                            specs.map((spec, index) => <option key={'spec-'+index} value={spec.key}>{spec.label} ({spec.key})</option>)
                                                         }
                                                     </Form.Control>
                                                 </Form.Group>
