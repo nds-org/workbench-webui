@@ -319,25 +319,24 @@ const AddEditSpecPage = (props: any) => {
         setRedirect('/my-catalog');
     }
 
-    const saveSpec = async (spec: V1.Service) => {
+    const saveSpec = (spec: V1.Service) => {
         if (spec.catalog === 'system' && !user?.groups?.includes('/workbench-admin')) {
             // User is not an admin
             return;
         }
 
         if (!spec || !spec.key) { return; }
-        const existing: V1.Service = await V1.AppSpecService.getServiceById(spec.key);
-
-
-        if (existing) {
+        return V1.AppSpecService.getServiceById(spec.key).then((existing) => {
+            console.log('Spec exists, updating it now: ', spec);
             return V1.AppSpecService.updateService(spec.key, spec).then((updated: V1.Service) => {
                 setRedirect('/my-catalog')
-            });
-        } else {
+            })
+        }).catch(e => {
+            console.log('Spec does not exist, creating it now: ', spec);
             return V1.AppSpecService.createService(spec).then((created: V1.Service) => {
                 setRedirect('/my-catalog')
             });
-        }
+        });
     }
 
     const css = `
@@ -402,7 +401,7 @@ const AddEditSpecPage = (props: any) => {
                                         </FormGroup>
                                     </Col>
                                 </Row>
-                                
+
                                 <h3 className={'text-align-left marginTop'}>Docker Info</h3>
                                 <Row>
                                     <Col className={'text-align-left marginTop'}>
