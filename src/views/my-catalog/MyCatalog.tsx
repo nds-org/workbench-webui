@@ -1,22 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import '../../index.css';
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Modal from "react-bootstrap/Modal";
-import Table from "react-bootstrap/Table";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {V1, handleError} from "../../common";
-
-import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
-
+// React + plugins
+import {useEffect, useState} from 'react';
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
-import {colors} from "../../App";
 import ReactGA from "react-ga";
-import {faClone, faFileExport, faPlus} from "@fortawesome/free-solid-svg-icons";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
 
+// FontAwesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
+import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
+import {faClone} from "@fortawesome/free-solid-svg-icons/faClone";
+import {faFileImport} from "@fortawesome/free-solid-svg-icons/faFileImport";
+import {faFileExport} from "@fortawesome/free-solid-svg-icons/faFileExport";
+import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
+
+// Custom helpers
+import {colors} from "../../App";
+import {V1, handleError, copySpec, CONFLICT_409} from "../../common/services";
+import ConfirmDialog from "../../common/dialogs/ConfirmDialog";
+import ImportExportSpecDialog from "../../common/dialogs/ImportExportSpecDialog";
+
+import '../../index.css';
 import './MyCatalog.css';
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
@@ -44,6 +50,8 @@ const MyCatalogPage = (props: any) => {
 
     const [redirect, setRedirect] = useState<string>('');
 
+    const [showImportExportSpec, setShowImportExportSpec] = useState<boolean>(false);
+
     // Delete confirmation
     const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
     const [selectedSpec, setSelectedSpec] = useState<V1.Service>();
@@ -70,19 +78,31 @@ const MyCatalogPage = (props: any) => {
         V1.UserAppService.listUserapps().then(stacks => setStacks(stacks)).catch(reason => handleError('Failed to fetch stacks: ', reason));
     }, [env, user?.groups]);
 
-    const cloneSpec = async (spec: V1.Service) => {
+    const cloneSpec = (spec: V1.Service) => {
         if (!spec || !spec.key) { return; }
-        const existing: V1.Service = await V1.AppSpecService.getServiceById(spec.key);
 
-        existing.id = '';
-        existing.catalog = 'user';
-        existing.label = 'Copy of ' + (existing.label || existing.key)
-        existing.key = existing.key + 'copy'
-        existing.resourceLimits = undefined;
-        existing.repositories = existing.repositories || [];
+        V1.AppSpecService.getServiceById(spec.key).then(existing => {
+            const specCopy = copySpec(existing);
 
-        const copied = await V1.AppSpecService.createService(existing);
-        setRedirect('/my-catalog/'+copied.key);
+            V1.AppSpecService.createService(specCopy).then(appSpec => {
+                ReactGA.event({
+                    category: 'application',
+                    action: 'clone',
+                    label: appSpec.key
+                });
+                props.specs.push(appSpec);
+                setRedirect('/my-catalog/'+specCopy.key);
+            }).catch(reason => {
+                if (CONFLICT_409(reason)) {
+                    // Copy of this spec already exists, redirect to catalog to see it
+                    setRedirect(`/my-catalog`);
+                } else {
+                    handleError(`Failed to clone ${specCopy.key} app spec`, reason)
+                }
+            });
+        }).catch(reason => {
+            handleError(`Failed to clone ${spec.key} app spec: key=${spec.key} not found: `, reason)
+        });
     }
 
     const deleteSelectedSpec = () => {
@@ -106,33 +126,14 @@ const MyCatalogPage = (props: any) => {
         setRedirect('/my-catalog/' + spec.key);
     }
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    const importSpec = async (jsonStr: string) => {
-        if (!jsonStr) { return; }
-
-        try {
-            const spec = JSON.parse(jsonStr);
-            /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-            const imported = await V1.AppSpecService.createService(spec);
-            return imported;
-        } catch (e) {
-            console.log('Failed to parse JSON: ', e);
-            return;
-        }
-        // TODO: navigate to /all-apps/{id}/edit
-    }
-
-    const exportSpec = (spec?: V1.Service) => {
-        if (!spec || !spec.id) { return; }
-        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-        const jsonStr = JSON.stringify(spec);
-
-        // TODO: show modal?
-    }
-
     const confirmDelete = (spec: V1.Service) => {
         setSelectedSpec(spec);
         setShowConfirmDelete(true);
+    }
+
+    const importSpec = () => {
+        setSelectedSpec(undefined);
+        setShowImportExportSpec(true);
     }
 
     return (
@@ -142,8 +143,11 @@ const MyCatalogPage = (props: any) => {
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>
-            <Button className={'btn-secondary btn-lg pull-right'} onClick={()=> createSpec()}>
+            <Button className={'btn-secondary btn-lg pull-right m-10'} onClick={createSpec}>
                 <FontAwesomeIcon icon={faPlus} /> Create New Application
+            </Button>
+            <Button className={'btn-secondary btn-lg pull-right m-10'} onClick={importSpec}>
+                <FontAwesomeIcon icon={faFileImport} /> Import Spec
             </Button>
             <Table className='compact' responsive='sm' borderless={true} style={{ backgroundColor: darkThemeEnabled ? '#283845' : '#fff', color: darkThemeEnabled ? 'white' : 'black' }}>
                 <thead>
@@ -166,7 +170,7 @@ const MyCatalogPage = (props: any) => {
                                 <Button title={'Export Application Spec'} size={'sm'} style={{
                                     color: darkThemeEnabled ? colors.textColor.dark: colors.textColor.light,
                                     backgroundColor: darkThemeEnabled ? colors.backgroundColor.dark: colors.backgroundColor.light
-                                }} onClick={() => exportSpec(spec)}>
+                                }} onClick={() => {setSelectedSpec(spec); setShowImportExportSpec(true)}}>
                                     <FontAwesomeIcon icon={faFileExport} />
                                 </Button>
                             </td>
@@ -201,43 +205,20 @@ const MyCatalogPage = (props: any) => {
                 </tbody>
             </Table>
 
-            <Modal show={showConfirmDelete}
-                   fullscreen={'true'}>
-                <Modal.Header style={{
-                    backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
-                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
-                }}>
-                    <Modal.Title>Confirm Delete: {selectedSpec?.id}</Modal.Title>
-                    <div>
-                        <Button variant={darkThemeEnabled ? 'dark' : 'light'} onClick={() => setShowConfirmDelete(false)}>
-                            <FontAwesomeIcon icon={faTimes} />
-                        </Button>
-                    </div>
-                </Modal.Header>
-                <Modal.Body style={{
-                    backgroundColor: darkThemeEnabled ? colors.backgroundColor.dark : colors.backgroundColor.light,
-                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
-                }}>
-                    <p>You are about to delete the following catalog application: {selectedSpec?.label}.</p>
-                    <p>Are you sure?</p>
-                </Modal.Body>
-                <Modal.Footer style={{
-                    backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
-                    color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
-                }}>
-                    <Button variant="secondary" onClick={() => setShowConfirmDelete(false)}>No</Button>
-                    <Button variant="primary" onClick={() => deleteSelectedSpec()}>Yes</Button>
-                </Modal.Footer>
-            </Modal>
+            <ImportExportSpecDialog spec={selectedSpec}
+                                    show={showImportExportSpec}
+                                    onClose={() => setShowImportExportSpec(false)}
+                                    setRedirect={setRedirect}></ImportExportSpecDialog>
+
+            <ConfirmDialog show={showConfirmDelete}
+                           title={`Confirm Delete: ${selectedSpec?.id}`}
+                           onClose={() => setShowConfirmDelete(false)}
+                           onConfirm={() => deleteSelectedSpec()}>
+                <p>You are about to delete the following catalog application: {selectedSpec?.label}.</p>
+                <p>Are you sure?</p>
+            </ConfirmDialog>
         </Container>
     );
-    /*
-    <Modal.Footer>
-                    <Button variant="secondary" onClick={closeConsole}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-     */
 }
 
 export default MyCatalogPage;

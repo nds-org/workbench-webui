@@ -5,4 +5,6 @@
 .text-align-right {
     text-align: right;
 }
-
+.m-10 {
+    margin: 10px;
+}
