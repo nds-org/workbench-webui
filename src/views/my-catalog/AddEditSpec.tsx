@@ -23,6 +23,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
 import {colors} from "../../App";
+import {newSpec} from "../../common/services/userapps.service";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
     const sid1 = s1.label+"";
@@ -49,40 +50,7 @@ const AddEditSpecPage = (props: any) => {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
-    const [spec, setSpec] = useState<V1.Service>({
-        // Basic Info
-        key: '',
-        label: '',
-
-        // Access Info
-        display: 'stack',
-        access: 'external',
-
-        // Docker info
-        image: {
-            name: '',
-            tags: ['latest']
-        },
-
-        // Help Info
-        logo: '',
-        info: '',
-
-        // Tabbed info
-        depends: [],
-        config: [],
-        ports: [],
-        volumeMounts: [],
-
-        // TODO: no UI for these yet (advanced features)
-        additionalResources: [],
-        developerEnvironment: undefined,
-        repositories: [],
-        command: [],
-        args: [],
-        catalog: 'user',
-        tags: []
-    });
+    const [spec, setSpec] = useState<V1.Service>(newSpec());
 
     // User selection
     const [selectedTab, setSelectedTab] = useState('BasicInfo');
@@ -319,10 +287,32 @@ const AddEditSpecPage = (props: any) => {
         setRedirect('/my-catalog');
     }
 
+    const getError = (spec: V1.Service): string => {
+        if (!spec?.key) {
+            console.error('Error: you must assign a unique key to this service to save it');
+            return '"key" is required';
+        }
+
+        if (!spec?.image.name) {
+            console.error('Error: you must assign a Docker image name to run for this app');
+            return '"image.name" is required';
+        }
+
+        return '';
+    }
+
+    const isValid = (spec: V1.Service): boolean => {
+        return getError(spec) === '';
+    }
+
     const saveSpec = (spec: V1.Service) => {
         if (spec.catalog === 'system' && !user?.groups?.includes('/workbench-admin')) {
             // User is not an admin
             return;
+        }
+
+        if (!spec.image.tags?.length) {
+            spec.image.tags = ['latest'];
         }
 
         if (!spec || !spec.key) { return; }
@@ -368,11 +358,12 @@ const AddEditSpecPage = (props: any) => {
                     <h2>{specKey ? 'Edit Application: ' + specKey : 'Create New Application'}</h2>
                 </Col>
                 <Col className={'text-align-right'}>
-                    <Button className={'btn-lg btn-secondary'} onClick={() => cancelSave(spec)}>
-                        <FontAwesomeIcon icon={faTimes} /> Cancel
-                    </Button>
-                    <Button disabled={!spec.key || !spec.image.name || !(spec.image.tags.length && spec.image.tags[0])} className={'btn-lg btn-success'} onClick={() => saveSpec(spec)}>
+                    <span style={{ color: 'red' }}>{getError(spec)}</span>
+                    <Button disabled={!isValid(spec)} className={'btn-lg btn-success pull-right m-10'} onClick={() => saveSpec(spec)}>
                         <FontAwesomeIcon icon={faSave} /> Save
+                    </Button>
+                    <Button className={'btn-lg btn-secondary pull-right m-10'} onClick={() => cancelSave(spec)}>
+                        <FontAwesomeIcon icon={faTimes} /> Cancel
                     </Button>
                 </Col>
             </Row>
