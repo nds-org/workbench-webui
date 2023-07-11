@@ -23,6 +23,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import FormGroup from "react-bootstrap/FormGroup";
 import {colors} from "../../App";
+import {newSpec} from "../../common/services/userapps.service";
 
 const sortBy = (s1: V1.Service, s2: V1.Service) => {
     const sid1 = s1.label+"";
@@ -49,40 +50,7 @@ const AddEditSpecPage = (props: any) => {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
     const [specs, setSpecs] = useState<Array<V1.Service>>([]);
-    const [spec, setSpec] = useState<V1.Service>({
-        // Basic Info
-        key: '',
-        label: '',
-
-        // Access Info
-        display: 'stack',
-        access: 'external',
-
-        // Docker info
-        image: {
-            name: '',
-            tags: ['latest']
-        },
-
-        // Help Info
-        logo: '',
-        info: '',
-
-        // Tabbed info
-        depends: [],
-        config: [],
-        ports: [],
-        volumeMounts: [],
-
-        // TODO: no UI for these yet (advanced features)
-        additionalResources: [],
-        developerEnvironment: undefined,
-        repositories: [],
-        command: [],
-        args: [],
-        catalog: 'user',
-        tags: []
-    });
+    const [spec, setSpec] = useState<V1.Service>(newSpec());
 
     // User selection
     const [selectedTab, setSelectedTab] = useState('BasicInfo');

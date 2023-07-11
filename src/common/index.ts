@@ -49,43 +49,6 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";*/
 //export { Container, Alert, Carousel, Button, Form, FormControl, FormGroup, FormLabel, Accordion, Card, Col, Row, Modal, Table, ListGroup, Jumbotron, Dropdown, DropdownButton, Navbar, Nav, NavDropdown };
 //export {FontAwesomeIcon, faPlus, faCloudMoon, faCloudSun, faCheckCircle, faExclamationCircle, faPowerOff, faSpinner, faTerminal, faTrash, faRocket, faStop, faCaretDown, faLink, faTimes, faExpand, faEllipsisV, faChevronLeft}
 
-export const UNAUTHORIZED_401 = (reason: Error) => {return reason.message.includes('Unauthorized');}
-export const CONFLICT_409 = (reason: Error) => {return reason.message.includes('Conflict');}
-
-const handleError = (message: string, reason: Error, onUnath?: () => void) => {
-    console.error(`${message}: `, reason);
-    console.error("Should redirect to login view...");
-    const isAuthErr = UNAUTHORIZED_401(reason);
-
-    if (isAuthErr) {
-        // Clear any stale auth info
-        localStorage.removeItem('auth');
-
-        if (onUnath) {
-            onUnath();
-        }
-
-        // Hard redirect to login (include return route)
-        console.error("Redirecting to login view...");
-        if (window.location.pathname !== '/' && !window.location.pathname.includes('login')) {
-            window.location.href = '/login?rd=' + encodeURIComponent(window.location.pathname);
-        }
-    } else {
-        console.log('Full reason: ', reason);
-    }
-
-}
-
-const waitFor = (condition: () => Promise<boolean>, period: number = 2000) => {
-    let interval = setInterval(async () => {
-        // Check if condition is true
-        condition().then(bool => {
-            bool && clearInterval(interval);
-        }).catch(reason => clearInterval(interval));
-    }, period);
-}
-
-export { handleError, waitFor };
 
 export * from './services';
 export * from './layout';

@@ -1,22 +1,28 @@
+// React + plugins
 import {useState} from 'react';
 import {Navigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-
+import ReactGA from "react-ga";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
+import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
-import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
-import {CONFLICT_409, handleError, V1} from '../../common';
-import Taglist from "./Taglist";
 
-import './SpecCard.css';
+// FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCopy} from "@fortawesome/free-solid-svg-icons/faCopy";
+import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV';
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
-import ReactGA from "react-ga";
-import {newStack} from "../../common/services/userapps.service";
-import {faCopy} from "@fortawesome/free-solid-svg-icons";
-import {ButtonGroup, Dropdown} from "react-bootstrap";
+
+// Custom helpers
+import Taglist from "./Taglist";
+import {newStack, copySpec, CONFLICT_409, handleError, V1} from "../../common/services";
+
+import '../../index.css';
+import './SpecCard.css';
+
 
 // TODO: Abstract this?
 
@@ -56,29 +62,22 @@ function SpecCard(props: CardProps) {
     }
 
     const cloneSpec = (): void => {
-        const spec = {...props.spec};
+        const specCopy = copySpec(props.spec);
 
-        spec.id = '';
-        spec.catalog = 'user';
-        spec.label = 'Copy of ' + (spec.label || spec.key);
-        spec.key = spec.key + 'copy';
-        spec.resourceLimits = undefined;
-        spec.repositories = spec.repositories || [];
-
-        V1.AppSpecService.createService(spec).then(appSpec => {
+        V1.AppSpecService.createService(specCopy).then(appSpec => {
             ReactGA.event({
                 category: 'application',
                 action: 'clone',
                 label: appSpec.key
             });
             props.specs.push(appSpec);
-            setRedirect(`/my-catalog`);
+            setRedirect(`/my-catalog/${appSpec.key}`);
         }).catch(reason => {
             if (CONFLICT_409(reason)) {
-                // Copy of this spec already exists, redirect to catalog to see it
-                setRedirect(`/my-catalog`);
+                // Copy of this spec already exists, redirect to the copy
+                setRedirect(`/my-catalog/${specCopy.key}`);
             } else {
-                handleError(`Failed to clone ${spec.key} app spec`, reason)
+                handleError(`Failed to clone ${specCopy.key} app spec`, reason)
             }
         });
     }
