@@ -12,8 +12,11 @@ export class SystemService {
      * @throws ApiError
      */
     public static async getVersion(): Promise<{
+        name?: string,
         version?: string,
         hash?: string,
+        branch?: string,
+        buildnumber?: string,
     }> {
         const result = await __request({
             method: 'GET',
