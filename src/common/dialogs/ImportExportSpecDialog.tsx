@@ -140,10 +140,23 @@ const ImportExportSpecDialog = (props: ImportExportSpecDialogProps) => {
             }}>
                 {
                     props.spec ? <>
-                        <pre>{JSON.stringify(props.spec, null ,4)}</pre>
+                        <pre style={{
+                            padding: '10px',
+                            borderRadius: '5px',
+                            borderWidth: '1pt',
+                            borderStyle: 'solid',
+                            borderColor: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                            backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
+                            color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                        }}>{JSON.stringify(props.spec, null ,4)}</pre>
                     </> :
                     <>
-                        <FormControl style={{height: props.height || '40vh'}} as={'textarea'} required value={specJsonToImport} onChange={(e) => handleSpecJsonChanged(e)}></FormControl>
+                        <FormControl style={{
+                            height: props.height || '40vh',
+                            borderColor: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                            backgroundColor: darkThemeEnabled ? colors.foregroundColor.dark : colors.foregroundColor.light,
+                            color: darkThemeEnabled ? colors.textColor.dark : colors.textColor.light,
+                        }} as={'textarea'} required value={specJsonToImport} onChange={(e) => handleSpecJsonChanged(e)}></FormControl>
                     </>
                 }
 
