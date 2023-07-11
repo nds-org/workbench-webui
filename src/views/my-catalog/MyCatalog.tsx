@@ -90,12 +90,12 @@ const MyCatalogPage = (props: any) => {
                     action: 'clone',
                     label: appSpec.key
                 });
-                props.specs.push(appSpec);
+                specs.push(appSpec);
                 setRedirect('/my-catalog/'+specCopy.key);
             }).catch(reason => {
                 if (CONFLICT_409(reason)) {
                     // Copy of this spec already exists, redirect to catalog to see it
-                    setRedirect(`/my-catalog`);
+                    setRedirect(`/my-catalog/${specCopy.key}`);
                 } else {
                     handleError(`Failed to clone ${specCopy.key} app spec`, reason)
                 }
@@ -143,7 +143,7 @@ const MyCatalogPage = (props: any) => {
             }
             <div style={{ height: "10vh" }}></div>
             <h2 className={'marginTop pull-left'}>My Catalog</h2>
-            <Button className={'btn-secondary btn-lg pull-right m-10'} onClick={createSpec}>
+            <Button className={'btn-success btn-lg pull-right m-10'} onClick={createSpec}>
                 <FontAwesomeIcon icon={faPlus} /> Create New Application
             </Button>
             <Button className={'btn-secondary btn-lg pull-right m-10'} onClick={importSpec}>
@@ -207,6 +207,7 @@ const MyCatalogPage = (props: any) => {
 
             <ImportExportSpecDialog spec={selectedSpec}
                                     show={showImportExportSpec}
+                                    height={'70vh'}
                                     onClose={() => setShowImportExportSpec(false)}
                                     setRedirect={setRedirect}></ImportExportSpecDialog>
 

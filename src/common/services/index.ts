@@ -5,7 +5,7 @@
 import * as V1 from './openapi/v1';
 import * as V2 from './openapi/v2';
 
-import { deepCopy, newStack, newStackService, copySpec } from './userapps.service';
+import { deepCopy, newSpec, newStack, newStackService, copySpec } from './userapps.service';
 
 /*const token = cookies.get('token');
 if (token) {
@@ -63,4 +63,4 @@ const waitFor = (condition: () => Promise<boolean>, period: number = 2000) => {
     }, period);
 }
 
-export { handleError, waitFor, V1, V2, deepCopy, copySpec, newStack, newStackService };
+export { copySpec, deepCopy, handleError, newSpec, newStack, newStackService, V1, V2, waitFor };

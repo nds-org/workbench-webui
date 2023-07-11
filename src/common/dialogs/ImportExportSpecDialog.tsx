@@ -1,13 +1,14 @@
+import {Dispatch, SetStateAction, useState} from "react";
 import {useSelector} from "react-redux";
-import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import FormControl from "react-bootstrap/FormControl";
+import Modal from "react-bootstrap/Modal";
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+
 import {colors} from "../../App";
-import {deepCopy, V1} from "../services";
-import {FormControl} from "react-bootstrap";
-import React, {Dispatch, SetStateAction, useState} from "react";
-import {newSpec} from "../services/userapps.service";
+import {V1, newSpec} from "../services";
 
 interface ImportExportSpecDialogProps {
     // Content properties
@@ -27,7 +28,6 @@ interface ImportExportSpecDialogProps {
 const ImportExportSpecDialog = (props: ImportExportSpecDialogProps) => {
     // Global state
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
-    const user = useSelector((state: any) => state.auth.user);
 
     const [specJsonToImport, setSpecJsonToImport] = useState<string | undefined>(JSON.stringify(newSpec(), null ,2));
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -87,6 +87,12 @@ const ImportExportSpecDialog = (props: ImportExportSpecDialogProps) => {
             if (!spec?.key) {
                 console.error('Error: you must assign a unique key to this service to save it');
                 setErrorMessage('"key" is required');
+                return;
+            }
+
+            if (!spec?.image.name) {
+                console.error('Error: you must assign a Docker image name to run for this app');
+                setErrorMessage('"image.name" is required');
                 return;
             }
 
