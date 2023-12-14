@@ -34,7 +34,7 @@ import ReactGA from "react-ga";
 import './MyApps.css';
 
 const navigate = (stk: V1.Stack, ep: any) => {
-    window.open(`${ep.protocol}://${ep.host}`, '_blank');
+    window.open(`${ep.url}`, '_blank');
 }
 
 const sortBy = (s1: V1.Stack, s2: V1.Stack) => {
