@@ -3,16 +3,16 @@ import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import ReactGA from "react-ga";
 import Button from "react-bootstrap/Button";
-import {Navigate} from "react-router-dom";
 import {useQueryParam} from "use-query-params";
+import {Navigate} from "react-router-dom";
 
 function ErrorPage(props: { code: string; }) {
     // TODO: light/dark theming
-    const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
+    //const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
 
     const env = useSelector((state: any) => state.env);
     const [redirect, setRedirect] = useState<string>('');
-    const [rd, setRd] = useQueryParam<string>('rd')
+    const [rd] = useQueryParam<string>('rd')
 
     useEffect(() => {
         if (env?.customization?.product_name) {

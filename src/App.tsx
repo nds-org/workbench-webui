@@ -1,5 +1,5 @@
 import Container from "react-bootstrap/Container";
-import {Route, Routes, BrowserRouter, Navigate} from "react-router-dom";
+import {Route, Routes, BrowserRouter} from "react-router-dom";
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
