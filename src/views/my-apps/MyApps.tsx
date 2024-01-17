@@ -289,7 +289,7 @@ function MyAppsPage(props: any) {
                                     <Col xs={3} style={{ textAlign: "right", marginTop: "10px" }}>
                                         <Button variant="link" onClick={() => confirmDelete(stack)} style={{ color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black' }} title={'Remove application (' + stack.id + ')'}><FontAwesomeIcon icon={faTrash} /></Button>
                                         {
-                                            user?.groups?.includes('/workbench-developers') && <Button variant="link" onClick={() => editStack(stack)}
+                                            (user?.groups?.includes('role:workbench-dev') || user?.groups?.includes('/workbench-developers')) && <Button variant="link" onClick={() => editStack(stack)}
                                                     style={{color: darkThemeEnabled && stack.status === 'stopped' ? 'white' : 'black'}}
                                                     title={'Edit application (' + stack.id + ')'}><FontAwesomeIcon
                                                 icon={faEdit}/></Button>
