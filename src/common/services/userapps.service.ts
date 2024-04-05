@@ -3,10 +3,26 @@
  */
 
 
-import { V1 } from ".";
+import {handleError, V1} from ".";
+import ReactGA from "react-ga";
 
 export const deepCopy = (obj: any) => {
     return JSON.parse(JSON.stringify(obj));
+}
+
+export const installUserapp = (appSpec: V1.Service, allSpecs: Array<V1.Service>): Promise<void | V1.Stack> => {
+    const userApp: V1.Stack = newStack(appSpec, allSpecs);
+
+    // POST /stacks
+    return V1.UserAppService.createUserapp(userApp).then(stk => {
+        ReactGA.event({
+            category: 'application',
+            action: 'add',
+            label: stk.key
+        });
+
+        return stk;
+    }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason))
 }
 
 export const newSpec = (): V1.Service => ({

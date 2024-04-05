@@ -18,10 +18,11 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 // Custom helpers
 import Taglist from "./Taglist";
-import {newStack, copySpec, CONFLICT_409, handleError, V1} from "../../common/services";
+import {copySpec, CONFLICT_409, handleError, V1} from "../../common/services";
 
 import '../../index.css';
 import './SpecCard.css';
+import {installUserapp} from "../../common/services/userapps.service";
 
 
 // TODO: Abstract this?
@@ -47,18 +48,13 @@ function SpecCard(props: CardProps) {
 
     const installApplication = (): void => {
         const appSpec = props.spec;
-        const userApp: V1.Stack = newStack(appSpec, props.specs);
-
-        // POST /stacks
-        V1.UserAppService.createUserapp(userApp).then(stk => {
-            ReactGA.event({
-                category: 'application',
-                action: 'add',
-                label: stk.key
-            });
-            props.stacks.push(stk);
-            setRedirect(`/my-apps`);
-        }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
+        const allSpecs = props.specs;
+        installUserapp(appSpec, allSpecs).then(stk => {
+            if (stk) {
+                props.stacks.push(stk);
+                setRedirect(`/my-apps`);
+            }
+        });
     }
 
     const cloneSpec = (): void => {
