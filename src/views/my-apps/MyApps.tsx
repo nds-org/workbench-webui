@@ -132,7 +132,7 @@ function MyAppsPage(props: any) {
                 setRefreshInterval(undefined);
             }
         }
-        
+
         // If quickstart queryParam provided, start and navigate to the chosen app
         if (quickstart) {
             console.log('Quick-starting app: ', quickstart);
@@ -146,7 +146,7 @@ function MyAppsPage(props: any) {
             } else if (existing && existing?.status === 'stopped') {
                 console.log('Existing app found! Starting existing app: ', existing);
                 startStack(existing);
-            } else if (!existing) {
+            } else if (!existing && !quickStartThread) {
                 const timeout = setTimeout(() => {
                     // Stack exists for this app, start it up
                     console.log('Checking all specs to create new app: ', specs);
