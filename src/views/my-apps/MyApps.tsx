@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import '../../index.css';
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
@@ -96,7 +96,7 @@ function MyAppsPage(props: any) {
         }
     }, [env?.analytics_tracking_id]);
 
-    const startStack = (stack: V1.Stack) => {
+    const startStack = useCallback((stack: V1.Stack) => {
         const stackId = stack.id + "";
         return V1.UserAppService.startStack(stackId)
             .catch(reason => handleError("Failed to start stack", reason))
@@ -113,7 +113,7 @@ function MyAppsPage(props: any) {
                 console.log("Stack is now starting...");
                 refresh();
             });
-    }
+    }, [env]);
 
     useEffect(() => {
          const transient = stacks.filter(stk => stk?.status?.endsWith('ing'));
@@ -170,7 +170,7 @@ function MyAppsPage(props: any) {
                 setQuickStartThread(timeout);
             }
         }
-    }, [autoRefresh, refreshInterval, stacks, stacks.length, quickstart, setQuickstart]);
+    }, [autoRefresh, refreshInterval, stacks, stacks.length, quickstart, setQuickstart, quickStartThread, specs, startStack]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
