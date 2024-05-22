@@ -36,7 +36,9 @@ import {StringParam, useQueryParam} from "use-query-params";
 import {installUserapp} from "../../common/services/userapps.service";
 
 const navigate = (stk: V1.Stack, ep: any) => {
-    window.open(`${ep.url}`, '_blank');
+    if (ep?.url) {
+        window.open(ep.url, '_blank');
+    }
 }
 
 const sortBy = (s1: V1.Stack, s2: V1.Stack) => {
