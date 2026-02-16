@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import '../../index.css';
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
@@ -32,9 +32,13 @@ import {colors} from "../../App";
 import ReactGA from "react-ga";
 
 import './MyApps.css';
+import {StringParam, useQueryParam} from "use-query-params";
+import {installUserapp} from "../../common/services/userapps.service";
 
 const navigate = (stk: V1.Stack, ep: any) => {
-    window.open(`${ep.url}`, '_blank');
+    if (ep?.url) {
+        window.open(ep.url, '_blank');
+    }
 }
 
 const sortBy = (s1: V1.Stack, s2: V1.Stack) => {
@@ -58,6 +62,9 @@ function MyAppsPage(props: any) {
     const darkThemeEnabled = useSelector((state: any) => state.preferences.darkThemeEnabled);
     const env = useSelector((state: any) => state.env);
     const user = useSelector((state: any) => state.auth.user);
+
+    const [quickstart, setQuickstart] = useQueryParam('quickstart', StringParam);
+    const [quickStartThread, setQuickStartThread] = useState<any>(undefined);
 
     // Server data
     const [stacks, setStacks] = useState<Array<V1.Stack>>([]);
@@ -91,6 +98,25 @@ function MyAppsPage(props: any) {
         }
     }, [env?.analytics_tracking_id]);
 
+    const startStack = useCallback((stack: V1.Stack) => {
+        const stackId = stack.id + "";
+        return V1.UserAppService.startStack(stackId)
+            .catch(reason => handleError("Failed to start stack", reason))
+            .then((resp) => {
+                if (!resp) return;
+
+                if (env?.auth?.gaTrackingId) {
+                    ReactGA.event({
+                        category: 'application',
+                        action: 'start',
+                        label: stack.key
+                    });
+                }
+                console.log("Stack is now starting...");
+                refresh();
+            });
+    }, [env]);
+
     useEffect(() => {
          const transient = stacks.filter(stk => stk?.status?.endsWith('ing'));
          if (transient.length && !autoRefresh) {
@@ -108,7 +134,45 @@ function MyAppsPage(props: any) {
                 setRefreshInterval(undefined);
             }
         }
-    }, [autoRefresh, refreshInterval, stacks, stacks.length]);
+
+        // If quickstart queryParam provided, start and navigate to the chosen app
+        if (quickstart) {
+            console.log('Quick-starting app: ', quickstart);
+            const existing = stacks.find(s => s.key === quickstart);
+
+            if (existing && existing?.status === 'started') {
+                const service = existing.services?.find(svc => svc.endpoints?.length);
+                const endpoint = service?.endpoints?.find(ep => ep.host);
+                navigate(existing, endpoint);
+                setQuickstart(undefined);
+            } else if (existing && existing?.status === 'stopped') {
+                console.log('Existing app found! Starting existing app: ', existing);
+                startStack(existing);
+            } else if (!existing && !quickStartThread) {
+                const timeout = setTimeout(() => {
+                    // Stack exists for this app, start it up
+                    console.log('Checking all specs to create new app: ', specs);
+
+                    // Otherwise install a new app and start that up
+                    const appSpec = specs.find(s => s.key === quickstart);
+                    console.log('Found spec to create new app: ', appSpec);
+
+                    if (!appSpec) {
+                        console.log('No spec found, aborting: ', appSpec);
+                        return;
+                    }
+                    console.log('Installing new app from spec: ', appSpec);
+                    installUserapp(appSpec, specs).then(stk => {
+                        if (stk) {
+                            console.log('Starting new app: ', stk);
+                            startStack(stk);
+                        }
+                    });
+                }, 3000);
+                setQuickStartThread(timeout);
+            }
+        }
+    }, [autoRefresh, refreshInterval, stacks, stacks.length, quickstart, setQuickstart, quickStartThread, specs, startStack]);
 
     useEffect(() => {
         if (!Object.keys(env).length) return;
@@ -151,25 +215,6 @@ function MyAppsPage(props: any) {
             setStacks(stks);
             return stks;
         });
-    }
-
-    const startStack = (stack: V1.Stack) => {
-        const stackId = stack.id + "";
-        return V1.UserAppService.startStack(stackId)
-            .catch(reason => handleError("Failed to start stack", reason))
-            .then((resp) => {
-                if (!resp) return;
-
-                if (env?.auth?.gaTrackingId) {
-                    ReactGA.event({
-                        category: 'application',
-                        action: 'start',
-                        label: stack.key
-                    });
-                }
-                console.log("Stack is now starting...");
-                refresh();
-            });
     }
 
     const stopStack = (stack: V1.Stack) => {

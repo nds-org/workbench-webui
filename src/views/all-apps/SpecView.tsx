@@ -11,7 +11,7 @@ import {useSelector} from "react-redux";
 import ReactGA from "react-ga";
 
 import './SpecView.css';
-import {newStack} from "../../common/services/userapps.service";
+import {installUserapp} from "../../common/services/userapps.service";
 import {faPlus} from "@fortawesome/free-solid-svg-icons/faPlus";
 
 type SpecViewParams = {
@@ -36,17 +36,11 @@ function SpecView() {
         if (!appSpec) {
             return;
         }
-        const userApp: V1.Stack = newStack(appSpec, specs);
-
-        // POST /stacks
-        V1.UserAppService.createUserapp(userApp).then(stk => {
-            ReactGA.event({
-                category: 'application',
-                action: 'add',
-                label: stk.key
-            });
-            setRedirect(`/my-apps`);
-        }).catch(reason => handleError(`Failed to add ${userApp.key} user app`, reason));
+        installUserapp(appSpec, specs).then(stk => {
+            if (stk) {
+                setRedirect(`/my-apps`);
+            }
+        });
     }
 
     useEffect(() => {
