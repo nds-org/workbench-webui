@@ -8,6 +8,12 @@ on:
       - main
       - develop
   push:
+    paths-ignore:
+      - '.github/**'
+      - '.gitignore'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'README.md'
     branches:
       - main
       - develop
