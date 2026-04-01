@@ -1,5 +1,5 @@
 import Container from "react-bootstrap/Container";
-import {Route, Routes, BrowserRouter, Navigate} from "react-router-dom";
+import {Route, Routes, BrowserRouter} from "react-router-dom";
 import styled from "styled-components";
 import theme from "styled-theming";
 import { QueryParamProvider } from 'use-query-params';
@@ -17,6 +17,7 @@ import {V1, V2} from "./common";
 import EditServicePage from "./views/my-apps/EditService";
 import MyCatalogPage from "./views/my-catalog/MyCatalog";
 import AddEditSpecPage from "./views/my-catalog/AddEditSpec";
+import ErrorPage from "./common/errors/error";
 
 export const colors = {
     backgroundColor: { light: "#FBFBFB", dark: "#475362" },
@@ -98,7 +99,9 @@ function App() {
                                 <Route path="/all-apps/:specKey" element={<SpecView />} />
                                 <Route path="/my-apps/:stackServiceId/console" element={<ConsolePage />} />
                                 <Route path="/swagger" element={<SwaggerUiPage />} />
-                                <Route path="/*" element={<Navigate to="/" replace />} />
+                                <Route path="/401.html" element={<ErrorPage code={'401'} />} />
+                                <Route path="/503.html" element={<ErrorPage code={'503'} />} />
+                                <Route path="/*" element={<ErrorPage code={'404'} />} />
                             </Routes>
                         </QueryParamProvider>
                     </BrowserRouter>
